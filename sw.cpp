@@ -1,13 +1,16 @@
+#pragma sw require header org.sw.demo.google.protobuf.protoc
+
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.2.2");
+    // try to remove static later
+    auto &tgbot = s.addStaticLibrary("tgbot", "1.2.2");
     //tgbot += Git("https://github.com/reo7sp/tgbot-cpp", "v{M}.{m}{po}");
 
     auto &apitool = tgbot.addExecutable("apitool");
     {
         auto &t = apitool;
         t += cpp17;
-        t += "tools/api_tool.cpp";
+        t += "tools/.*"_rr;
         t += "pub.egorpugin.primitives.emitter-master"_dep;
         t += "pub.egorpugin.primitives.http-master"_dep;
         t += "pub.egorpugin.primitives.xml-master"_dep;
@@ -28,9 +31,8 @@ void build(Solution &s)
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.CompileOptions.push_back("/Zc:__cplusplus");
 
-        tgbot.Public += "org.sw.demo.boost.algorithm"_dep;
-        tgbot.Public += "org.sw.demo.boost.lexical_cast"_dep;
-        tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
+        tgbot += "org.sw.demo.boost.algorithm"_dep;
+        tgbot += "org.sw.demo.nlohmann.json"_dep;
         tgbot.Public += "org.sw.demo.badger.curl.libcurl"_dep;
 
         {
@@ -39,10 +41,12 @@ void build(Solution &s)
                 << cmd::wdir(tgbot.BinaryDir)
                 << cmd::in("TelegramBotAPI.html")
                 << cmd::end()
-                << cmd::out("types.inl.h")
-                << cmd::out("methods.inl.h")
-                << cmd::out("methods.inl.cpp", cmd::Skip)
+                << cmd::out("tgapi.proto")
                 ;
+            ProtobufData d;
+            d.public_protobuf = true;
+            d.idirs.push_back(tgbot.BinaryDir);
+            gen_protobuf_cpp("org.sw.demo.google.protobuf"_dep, tgbot, "tgapi.proto", d);
         }
     }
 

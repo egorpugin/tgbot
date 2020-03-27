@@ -1,11 +1,10 @@
 #ifndef TGBOT_CPP_API_H
 #define TGBOT_CPP_API_H
 
-#include "tgbot/TgTypeParser.h"
 #include "tgbot/net/HttpClient.h"
-#include "tgbot/net/HttpReqArg.h"
 #include "tgbot/Types.h"
-//#include <boost/property_tree/ptree.hpp>
+
+#include <tgapi.pb.h>
 
 #include <cstdint>
 #include <memory>
@@ -33,11 +32,10 @@ public:
 #include <methods.inl.h>
 
 private:
-    nlohmann::json sendRequest(const std::string& method, const std::vector<HttpReqArg>& args = std::vector<HttpReqArg>()) const;
+    String sendRequest(const std::string& method, const std::string &json) const;
 
     const std::string _token;
     const HttpClient& _httpClient;
-    const TgTypeParser _tgTypeParser;
 };
 
 }

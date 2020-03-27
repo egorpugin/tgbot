@@ -21,13 +21,13 @@ TgLongPoll::TgLongPoll(const Bot& bot, std::int32_t limit, std::int32_t timeout,
 }
 
 void TgLongPoll::start() {
-    auto updates = _api->getUpdates(_lastUpdateId, _limit, _timeout, _allowUpdates);
+    /*auto updates = _api->getUpdates(_lastUpdateId, _limit, _timeout, _allowUpdates);
     for (Update::Ptr& item : updates) {
         if (item->update_id >= _lastUpdateId) {
             _lastUpdateId = item->update_id + 1;
         }
         _eventHandler->handleUpdate(item);
-    }
+    }*/
 }
 
 }

@@ -3,8 +3,6 @@
 
 #include "tgbot/net/HttpClient.h"
 #include "tgbot/net/Url.h"
-#include "tgbot/net/HttpReqArg.h"
-#include "tgbot/net/HttpParser.h"
 
 #include <string>
 #include <vector>
@@ -31,15 +29,12 @@ public:
      * If there's no args specified, a GET request will be sent, otherwise a POST request will be sent.
      * If at least 1 arg is marked as file, the content type of a request will be multipart/form-data, otherwise it will be application/x-www-form-urlencoded.
      */
-    std::string makeRequest(const Url& url, const std::vector<HttpReqArg>& args) const override;
+    std::string makeRequest(const Url& url, const std::string &json) const override;
 
     /**
      * @brief Raw curl settings storage for fine tuning.
      */
     CURL* curlSettings;
-
-private:
-    const HttpParser _httpParser;
 };
 
 }

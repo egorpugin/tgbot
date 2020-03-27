@@ -21,8 +21,6 @@ struct Field
     void save(nlohmann::json &j) const;
     void emitField(primitives::CppEmitter &ctx) const;
     void emitFieldType(primitives::CppEmitter &ctx) const;
-    bool is_simple() const;
-    static String prepare_type(String t);
 };
 
 struct Type
@@ -42,6 +40,7 @@ struct Type
     void emitCreateType(primitives::CppEmitter &ctx) const;
     void emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;
+    void emitProtobuf(primitives::CppEmitter &ctx) const;
 };
 
 struct Parser
@@ -74,4 +73,5 @@ struct Emitter
 
     String emitTypes();
     void emitMethods() const;
+    String emitProtobuf() const;
 };

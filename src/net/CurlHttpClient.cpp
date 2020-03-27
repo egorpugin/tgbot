@@ -3,11 +3,12 @@
 #include <curl/curl.h>
 
 #include <cstddef>
+#include <stdexcept>
 #include <string>
 
 namespace TgBot {
 
-CurlHttpClient::CurlHttpClient() : _httpParser() {
+CurlHttpClient::CurlHttpClient() {
     curlSettings = curl_easy_init();
 }
 
@@ -20,7 +21,7 @@ static std::size_t curlWriteString(char* ptr, std::size_t size, std::size_t nmem
     return size * nmemb;
 }
 
-std::string CurlHttpClient::makeRequest(const Url& url, const std::vector<HttpReqArg>& args) const {
+std::string CurlHttpClient::makeRequest(const Url& url, const std::string &json) const {
     // Copy settings for each call because we change CURLOPT_URL and other stuff.
     // This also protects multithreaded case.
     auto curl = curl_easy_duphandle(curlSettings);
@@ -36,7 +37,7 @@ std::string CurlHttpClient::makeRequest(const Url& url, const std::vector<HttpRe
     curl_mime* mime;
     curl_mimepart* part;
     mime = curl_mime_init(curl);
-    if (!args.empty()) {
+    /*if (!args.empty()) {
         for (const HttpReqArg& a : args) {
             part = curl_mime_addpart(mime);
 
@@ -48,7 +49,7 @@ std::string CurlHttpClient::makeRequest(const Url& url, const std::vector<HttpRe
             }
         }
         curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
-    }
+    }*/
 
     std::string response;
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -63,7 +64,7 @@ std::string CurlHttpClient::makeRequest(const Url& url, const std::vector<HttpRe
         throw std::runtime_error(std::string("curl error: ") + curl_easy_strerror(res));
     }
 
-    return _httpParser.extractBody(response);
+    return response;
 }
 
 }
