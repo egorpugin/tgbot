@@ -11,7 +11,7 @@ namespace TgBot
 {
 
 using Boolean = bool;
-using Integer = std::int32_t;
+using Integer = std::int64_t;
 using Float = float;
 using String = std::string;
 
