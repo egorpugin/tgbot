@@ -1,4 +1,4 @@
-#include "tgbot/net/TgLongPoll.h"
+#include "tgbot/TgLongPoll.h"
 
 #include "tgbot/Api.h"
 #include "tgbot/Bot.h"

@@ -1,7 +1,7 @@
 #include "tgbot/Bot.h"
 
 #include "tgbot/EventBroadcaster.h"
-#include "tgbot/net/CurlHttpClient.h"
+#include "tgbot/CurlHttpClient.h"
 
 #include <memory>
 #include <string>

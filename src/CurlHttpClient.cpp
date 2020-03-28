@@ -1,4 +1,4 @@
-#include "tgbot/net/CurlHttpClient.h"
+#include "tgbot/CurlHttpClient.h"
 
 #include <curl/curl.h>
 

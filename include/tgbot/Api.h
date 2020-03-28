@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tgbot/net/HttpClient.h"
+#include "tgbot/HttpClient.h"
 #include "tgbot/Types.h"
 
 #include <string>
