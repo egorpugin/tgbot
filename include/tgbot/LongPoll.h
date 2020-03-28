@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <memory>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -18,10 +16,10 @@ class EventHandler;
  *
  * @ingroup net
  */
-class TGBOT_API TgLongPoll
+class TGBOT_API LongPoll
 {
 public:
-    TgLongPoll(const Bot &bot, std::int32_t limit = 100, std::int32_t timeout = 10, const std::vector<std::string> &updates = {});
+    LongPoll(const Bot &bot, std::int32_t limit = 100, std::int32_t timeout = 10, const std::vector<std::string> &updates = {});
 
     /**
      * @brief Starts long poll. After new update will come, this method will parse it

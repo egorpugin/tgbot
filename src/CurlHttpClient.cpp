@@ -2,9 +2,7 @@
 
 #include <curl/curl.h>
 
-#include <cstddef>
 #include <stdexcept>
-#include <string>
 
 namespace TgBot
 {
@@ -19,7 +17,7 @@ CurlHttpClient::~CurlHttpClient()
     curl_easy_cleanup(curlSettings);
 }
 
-static std::size_t curlWriteString(char* ptr, std::size_t size, std::size_t nmemb, void* userdata)
+static std::size_t curlWriteString(char *ptr, std::size_t size, std::size_t nmemb, void *userdata)
 {
     static_cast<std::string*>(userdata)->append(ptr, size * nmemb);
     return size * nmemb;
@@ -27,9 +25,16 @@ static std::size_t curlWriteString(char* ptr, std::size_t size, std::size_t nmem
 
 std::string CurlHttpClient::makeRequest(const std::string &url, const std::string &json) const
 {
+    /*
+    * If there's no args specified, a GET request will be sent, otherwise a POST request will be sent.
+    * If at least 1 arg is marked as file, the content type of a request will be multipart/form-data, otherwise it will be application/x-www-form-urlencoded.
+    */
+
+    // TODO: add sending files
+
     // Copy settings for each call because we change CURLOPT_URL and other stuff.
     // This also protects multithreaded case.
-    auto curl = curl_easy_duphandle(curlSettings);
+    auto curl = curl_easy_duphandle(getCurl());
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 

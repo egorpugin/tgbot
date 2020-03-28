@@ -3,18 +3,12 @@
 #include "tgbot/HttpClient.h"
 #include "tgbot/Types.h"
 
-#include <string>
-
 namespace TgBot
 {
-
-class Bot;
 
 /**
  * @brief This class executes telegram api methods.
  * Telegram docs: <https://core.telegram.org/bots/api#available-methods>
- *
- * @ingroup general
  */
 class TGBOT_API Api
 {

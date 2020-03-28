@@ -118,6 +118,7 @@ static nlohmann::json toJson(const Variant<Args...> &r)
 static nlohmann::json sendRequest(const HttpClient &c, const std::string &token, const std::string &method, const nlohmann::json &req)
 {
     std::string url = "https://api.telegram.org/bot";
+    // std::string url = "https://api.telegram.org/file/bot"; // file downloads
     url += token;
     url += "/";
     url += method;
@@ -139,17 +140,5 @@ Api::Api(const std::string &token, const HttpClient &httpClient)
     : token(token), httpClient(httpClient)
 {
 }
-
-/*string Api::downloadFile(const string& filePath, const std::vector<HttpReqArg>& args) const
-{
-    string url = "https://api.telegram.org/file/bot";
-    url += _token;
-    url += "/";
-    url += filePath;
-
-    string serverResponse = _httpClient.makeRequest(url, args);
-
-    return serverResponse;
-}*/
 
 }

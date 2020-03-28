@@ -1,4 +1,4 @@
-#include "tgbot/TgLongPoll.h"
+#include "tgbot/LongPoll.h"
 
 #include "tgbot/Api.h"
 #include "tgbot/Bot.h"
@@ -7,7 +7,7 @@
 namespace TgBot
 {
 
-TgLongPoll::TgLongPoll(const Bot &bot, std::int32_t limit, std::int32_t timeout, const std::vector<std::string> &allowUpdates)
+LongPoll::LongPoll(const Bot &bot, std::int32_t limit, std::int32_t timeout, const std::vector<std::string> &allowUpdates)
     : api(bot.getApi())
     , eventHandler(bot.getEventHandler())
     , limit(limit)
@@ -16,7 +16,7 @@ TgLongPoll::TgLongPoll(const Bot &bot, std::int32_t limit, std::int32_t timeout,
 {
 }
 
-void TgLongPoll::start()
+void LongPoll::start()
 {
     auto updates = api.getUpdates(lastUpdateId, limit, timeout, allowUpdates);
     for (const auto &item : updates)

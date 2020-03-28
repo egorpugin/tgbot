@@ -4,9 +4,7 @@
 
 #include <functional>
 #include <initializer_list>
-#include <string>
 #include <unordered_map>
-#include <vector>
 
 namespace TgBot
 {
@@ -20,8 +18,6 @@ class EventHandler;
  */
 class TGBOT_API EventBroadcaster
 {
-    friend EventHandler;
-
 public:
     typedef std::function<void(const Message&)> MessageListener;
     typedef std::function<void(const InlineQuery&)> InlineQueryListener;
@@ -156,6 +152,8 @@ private:
     std::vector<InlineQueryListener> _onInlineQueryListeners;
     std::vector<ChosenInlineResultListener> _onChosenInlineResultListeners;
     std::vector<CallbackQueryListener> _onCallbackQueryListeners;
+
+    friend EventHandler;
 };
 
 } // namespace TgBot
