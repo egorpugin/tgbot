@@ -21,7 +21,7 @@ class EventHandler;
 class TGBOT_API TgLongPoll
 {
 public:
-    TgLongPoll(const Bot &bot, std::int32_t limit = 100, std::int32_t timeout = 10, const std::optional<std::vector<std::string>> &updates = {});
+    TgLongPoll(const Bot &bot, std::int32_t limit = 100, std::int32_t timeout = 10, const std::vector<std::string> &updates = {});
 
     /**
      * @brief Starts long poll. After new update will come, this method will parse it
@@ -30,12 +30,12 @@ public:
     void start();
 
 private:
-    const Api &_api;
-    const EventHandler &_eventHandler;
-    std::int32_t _lastUpdateId = 0;
-    std::int32_t _limit;
-    std::int32_t _timeout;
-    std::optional<std::vector<std::string>> _allowUpdates;
+    const Api &api;
+    const EventHandler &eventHandler;
+    std::int32_t lastUpdateId = 0;
+    std::int32_t limit;
+    std::int32_t timeout;
+    std::vector<std::string> allowUpdates;
 };
 
 }

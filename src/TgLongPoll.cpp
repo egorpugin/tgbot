@@ -7,23 +7,23 @@
 namespace TgBot
 {
 
-TgLongPoll::TgLongPoll(const Bot &bot, std::int32_t limit, std::int32_t timeout, const std::optional<std::vector<std::string>> &allowUpdates)
-    : _api(bot.getApi())
-    , _eventHandler(bot.getEventHandler())
-    , _limit(limit)
-    , _timeout(timeout)
-    , _allowUpdates(allowUpdates)
+TgLongPoll::TgLongPoll(const Bot &bot, std::int32_t limit, std::int32_t timeout, const std::vector<std::string> &allowUpdates)
+    : api(bot.getApi())
+    , eventHandler(bot.getEventHandler())
+    , limit(limit)
+    , timeout(timeout)
+    , allowUpdates(allowUpdates)
 {
 }
 
 void TgLongPoll::start()
 {
-    auto updates = _api.getUpdates(_lastUpdateId, _limit, _timeout, _allowUpdates);
+    auto updates = api.getUpdates(lastUpdateId, limit, timeout, allowUpdates);
     for (const auto &item : updates)
     {
-        if (item->update_id >= _lastUpdateId)
-            _lastUpdateId = item->update_id + 1;
-        _eventHandler.handleUpdate(*item);
+        if (item->update_id >= lastUpdateId)
+            lastUpdateId = item->update_id + 1;
+        eventHandler.handleUpdate(*item);
     }
 }
 

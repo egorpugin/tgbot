@@ -9,14 +9,14 @@ namespace TgBot
 
 void EventHandler::handleUpdate(const Update &update) const
 {
-    if (update.inline_query && *update.inline_query)
-        broadcaster.broadcastInlineQuery(**update.inline_query);
-    if (update.chosen_inline_result && *update.chosen_inline_result)
-        broadcaster.broadcastChosenInlineResult(**update.chosen_inline_result);
-    if (update.callback_query && *update.callback_query)
-        broadcaster.broadcastCallbackQuery(**update.callback_query);
-    if (update.message && *update.message)
-        handleMessage(**update.message);
+    if (update.inline_query)
+        broadcaster.broadcastInlineQuery(*update.inline_query);
+    if (update.chosen_inline_result)
+        broadcaster.broadcastChosenInlineResult(*update.chosen_inline_result);
+    if (update.callback_query)
+        broadcaster.broadcastCallbackQuery(*update.callback_query);
+    if (update.message)
+        handleMessage(*update.message);
 }
 
 void EventHandler::handleMessage(const Message &message) const
