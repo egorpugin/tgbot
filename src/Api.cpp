@@ -3,7 +3,7 @@
 #include <nlohmann/json.hpp>
 
 #define FROM_JSON(name, var) if (j.contains(#name)) fromJson(j[#name], var)
-#define TO_JSON(name, var) j[#name] = toJson(var)
+#define TO_JSON(name, var) if (auto v = toJson(var); !v.is_null()) j[#name] = v
 #define SEND_REQUEST(api) sendRequest(httpClient, token, #api, j)
 
 namespace TgBot
