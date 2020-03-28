@@ -4,6 +4,7 @@
 
 #define FROM_JSON(name, var) if (j.contains(#name)) fromJson(j[#name], var)
 #define TO_JSON(name, var) j[#name] = toJson(var)
+#define SEND_REQUEST(api) sendRequest(httpClient, token, #api, j)
 
 namespace TgBot
 {
@@ -81,39 +82,33 @@ static nlohmann::json toJson(const Variant<Args...> &r)
 
 //
 
-template <class T>
-static Ptr<T> toPtr(const nlohmann::json &j)
+static nlohmann::json sendRequest(const HttpClient &c, const std::string &token, const std::string &method, const nlohmann::json &req)
 {
-    return std::make_shared<T>(std::move(fromJson<T>(j)));
+    std::string url = "https://api.telegram.org/bot";
+    url += token;
+    url += "/";
+    url += method;
+
+    std::string serverResponse = c.makeRequest(url, req.dump());
+    if (!serverResponse.compare(0, 6, "<html>"))
+        throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
+
+    auto result = nlohmann::json::parse(serverResponse);
+    if (result["ok"] == true)
+        return std::move(result["result"]);
+    else
+        throw std::runtime_error(result["description"].get<String>());
 }
 
 #include <methods.inl.cpp>
 
 Api::Api(const std::string &token, const HttpClient &httpClient)
-    : _token(token), _httpClient(httpClient)
+    : token(token), httpClient(httpClient)
 {
 }
 
-nlohmann::json Api::sendRequest(const std::string& method, const nlohmann::json &req) const {
-    std::string url = "https://api.telegram.org/bot";
-    url += _token;
-    url += "/";
-    url += method;
-
-    std::string serverResponse = _httpClient.makeRequest(url, req.dump());
-    if (!serverResponse.compare(0, 6, "<html>")) {
-        throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
-    }
-
-    auto result = nlohmann::json::parse(serverResponse);
-    if (result["ok"] == true) {
-        return std::move(result["result"]);
-    } else {
-        throw std::runtime_error(result["description"].get<String>());
-    }
-}
-
-/*string Api::downloadFile(const string& filePath, const std::vector<HttpReqArg>& args) const {
+/*string Api::downloadFile(const string& filePath, const std::vector<HttpReqArg>& args) const
+{
     string url = "https://api.telegram.org/file/bot";
     url += _token;
     url += "/";

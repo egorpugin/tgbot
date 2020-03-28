@@ -24,8 +24,6 @@ using Variant = std::variant<Args...>;
 template <class T>
 using Vector = std::vector<T>;
 
-namespace this_namespace = TgBot;
-
 template <class T>
 auto createPtr()
 {

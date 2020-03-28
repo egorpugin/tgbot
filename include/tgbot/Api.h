@@ -3,8 +3,6 @@
 #include "tgbot/net/HttpClient.h"
 #include "tgbot/Types.h"
 
-#include <nlohmann/json_fwd.hpp>
-
 #include <string>
 
 namespace TgBot
@@ -13,7 +11,8 @@ namespace TgBot
 class Bot;
 
 /**
- * @brief This class executes telegram api methods. Telegram docs: <https://core.telegram.org/bots/api#available-methods>
+ * @brief This class executes telegram api methods.
+ * Telegram docs: <https://core.telegram.org/bots/api#available-methods>
  *
  * @ingroup general
  */
@@ -25,10 +24,8 @@ public:
 #include <methods.inl.h>
 
 private:
-    nlohmann::json sendRequest(const std::string &method, const nlohmann::json &) const;
-
-    const std::string _token;
-    const HttpClient& _httpClient;
+    const std::string token;
+    const HttpClient &httpClient;
 };
 
 }

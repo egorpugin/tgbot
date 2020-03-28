@@ -1,7 +1,7 @@
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.2.2");
-    //tgbot += Git("https://github.com/reo7sp/tgbot-cpp", "v{M}.{m}{po}");
+    auto &tgbot = s.addLibrary("egorpugin.tgbot", "1.0.0");
+    tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto &apitool = tgbot.addExecutable("apitool");
     {
@@ -28,8 +28,8 @@ void build(Solution &s)
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.CompileOptions.push_back("/Zc:__cplusplus");
 
-        tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
-        tgbot.Public += "org.sw.demo.badger.curl.libcurl"_dep;
+        tgbot += "org.sw.demo.nlohmann.json"_dep;
+        tgbot += "org.sw.demo.badger.curl.libcurl"_dep;
 
         {
             auto c = tgbot.addCommand();
@@ -50,6 +50,7 @@ void build(Solution &s)
         bot += "test_bot.cpp";
         bot += tgbot;
         bot +=
+            "org.sw.demo.badger.curl.libcurl"_dep,
             "pub.egorpugin.primitives.filesystem-master"_dep,
             "pub.egorpugin.primitives.templates-master"_dep,
             "pub.egorpugin.primitives.sw.main-master"_dep

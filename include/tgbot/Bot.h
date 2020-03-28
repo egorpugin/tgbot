@@ -5,7 +5,6 @@
 
 #include <memory>
 #include <string>
-#include <utility>
 
 namespace TgBot
 {
@@ -21,44 +20,37 @@ class HttpClient;
 class TGBOT_API Bot
 {
 public:
-    explicit Bot(std::string token, const HttpClient &httpClient = _getDefaultHttpClient());
-    ~Bot();
+    explicit Bot(const std::string &token, const HttpClient &httpClient = getDefaultHttpClient());
+    ~Bot(); // deletes unique_ptr
 
-    /**
-     * @return Token for accessing api.
-     */
-    inline const std::string& getToken() const {
-        return _token;
+    /// returns token for accessing api
+    const std::string &getToken() const {
+        return token;
     }
 
-    /**
-     * @return Object which can execute Telegram Bot API methods.
-     */
-    inline const Api& getApi() const {
-        return _api;
+    /// returns object which can execute Telegram Bot API methods
+    const Api &getApi() const {
+        return api;
     }
 
-    /**
-     * @return Object which holds all event listeners.
-     */
-    inline EventBroadcaster& getEvents() {
-        return *_eventBroadcaster;
+    /// returns object which holds all event listeners
+    EventBroadcaster &getEvents() {
+        return *eventBroadcaster;
     }
 
-    /**
-     * @return Object which handles new update objects. Usually it's only needed for TgLongPoll, TgWebhookLocalServer and TgWebhookTcpServer objects.
-     */
-    inline const EventHandler& getEventHandler() const {
-        return _eventHandler;
+    /// returns object which handles new update objects.
+    /// Usually it's only needed for TgLongPoll, TgWebhookLocalServer and TgWebhookTcpServer objects
+    const EventHandler &getEventHandler() const {
+        return eventHandler;
     }
 
 private:
-    static HttpClient &_getDefaultHttpClient();
+    const std::string token;
+    const Api api;
+    std::unique_ptr<EventBroadcaster> eventBroadcaster;
+    const EventHandler eventHandler;
 
-    const std::string _token;
-    const Api _api;
-    std::unique_ptr<EventBroadcaster> _eventBroadcaster;
-    const EventHandler _eventHandler;
+    static HttpClient &getDefaultHttpClient();
 };
 
 }

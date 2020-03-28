@@ -98,7 +98,7 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
     {
         auto t = types[0];
         auto simple = is_simple(t);
-        ctx.addText((simple ? "" : "this_namespace::Ptr<") + t + (simple ? "" : ">"));
+        ctx.addText((simple ? "" : "Ptr<") + t + (simple ? "" : ">"));
         auto a = array;
         while (a--)
             ctx.addText(">");
@@ -128,8 +128,6 @@ void Type::emitType(primitives::CppEmitter &ctx) const
     if (!is_oneof())
     {
         ctx.beginBlock("struct " + name);
-        ctx.addLine("using Ptr = this_namespace::Ptr<" + name + ">;");
-        ctx.emptyLines();
         for (auto &f : fields)
             f.emitField(ctx);
         ctx.endBlock(true);
@@ -213,7 +211,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     cpp.addLine("nlohmann::json j;");
     for (auto &f : fields)
         cpp.addLine("TO_JSON(" + f.name + ", " + f.name + ");");
-    cpp.addLine("j = sendRequest(\"" + name + "\", j);");
+    cpp.addLine("j = SEND_REQUEST(" + name + ");");
     cpp.addLine();
     return_type.emitFieldType(cpp);
     cpp.addText(" r;");
