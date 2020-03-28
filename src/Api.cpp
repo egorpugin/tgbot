@@ -9,6 +9,22 @@
 namespace TgBot
 {
 
+// must provide decls first
+
+template <class T>
+static void fromJson(const nlohmann::json &j, T &v);
+
+template <class T>
+static void fromJson(const nlohmann::json &j, Optional<T> &v);
+
+template <class T>
+static void fromJson(const nlohmann::json &j, Ptr<T> &v);
+
+template <class T>
+static void fromJson(const nlohmann::json &j, Vector<T> &v);
+
+//
+
 template <class T>
 static void fromJson(const nlohmann::json &j, T &v)
 {
@@ -40,6 +56,23 @@ static void fromJson(const nlohmann::json &j, Vector<T> &v)
         v.emplace_back(std::move(t));
     }
 }
+
+// must provide decls first
+
+template <class T>
+static nlohmann::json toJson(const T &r);
+
+template <class T>
+static nlohmann::json toJson(const Optional<T> &r);
+
+template <class T>
+static nlohmann::json toJson(const Ptr<T> &r);
+
+template <class T>
+static nlohmann::json toJson(const Vector<T> &r);
+
+template <class ... Args>
+static nlohmann::json toJson(const Variant<Args...> &r);
 
 //
 
