@@ -1,6 +1,6 @@
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("egorpugin.tgbot", "1.0.0");
+    auto &tgbot = s.addLibrary("tgbot", "1.0.0");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto &apitool = tgbot.addExecutable("apitool");
@@ -42,18 +42,5 @@ void build(Solution &s)
                 << cmd::out("methods.inl.cpp", cmd::Skip)
                 ;
         }
-    }
-
-    {
-        auto &bot = s.addTarget<ExecutableTarget>("test_bot");
-        bot += cpp17;
-        bot += "test_bot.cpp";
-        bot += tgbot;
-        bot +=
-            "org.sw.demo.badger.curl.libcurl"_dep,
-            "pub.egorpugin.primitives.filesystem-master"_dep,
-            "pub.egorpugin.primitives.templates-master"_dep,
-            "pub.egorpugin.primitives.sw.main-master"_dep
-            ;
     }
 }
