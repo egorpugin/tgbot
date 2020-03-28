@@ -1,5 +1,4 @@
-#ifndef TGBOT_HTTPCLIENT_H
-#define TGBOT_HTTPCLIENT_H
+#pragma once
 
 #include <string>
 
@@ -27,4 +26,3 @@ public:
 
 }
 
-#endif //TGBOT_HTTPCLIENT_H

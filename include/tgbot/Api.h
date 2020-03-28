@@ -1,5 +1,4 @@
-#ifndef TGBOT_CPP_API_H
-#define TGBOT_CPP_API_H
+#pragma once
 
 #include "tgbot/net/HttpClient.h"
 #include "tgbot/Types.h"
@@ -8,7 +7,8 @@
 
 #include <string>
 
-namespace TgBot {
+namespace TgBot
+{
 
 class Bot;
 
@@ -17,8 +17,8 @@ class Bot;
  *
  * @ingroup general
  */
-class TGBOT_API Api {
-
+class TGBOT_API Api
+{
 public:
     Api(const std::string &token, const HttpClient &httpClient);
 
@@ -32,5 +32,3 @@ private:
 };
 
 }
-
-#endif //TGBOT_CPP_API_H

@@ -6,7 +6,8 @@
 #include <memory>
 #include <string>
 
-namespace TgBot {
+namespace TgBot
+{
 
 Bot::Bot(std::string token, const HttpClient& httpClient)
     : _token(std::move(token))
@@ -19,7 +20,8 @@ Bot::~Bot()
 {
 }
 
-HttpClient& Bot::_getDefaultHttpClient() {
+HttpClient& Bot::_getDefaultHttpClient()
+{
     static CurlHttpClient instance;
     return instance;
 }

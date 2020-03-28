@@ -1,5 +1,4 @@
-#ifndef TGBOT_TGLONGPOLL_H
-#define TGBOT_TGLONGPOLL_H
+#pragma once
 
 #include <cstdint>
 #include <memory>
@@ -22,17 +21,17 @@ class EventHandler;
 class TGBOT_API TgLongPoll
 {
 public:
-    TgLongPoll(const Api &api, const EventHandler* eventHandler, std::int32_t, std::int32_t, const std::optional<std::vector<std::string>> &);
-    TgLongPoll(const Bot &bot, std::int32_t = 100, std::int32_t = 10, const std::optional<std::vector<std::string>> & = {});
+    TgLongPoll(const Bot &bot, std::int32_t limit = 100, std::int32_t timeout = 10, const std::optional<std::vector<std::string>> &updates = {});
 
     /**
-     * @brief Starts long poll. After new update will come, this method will parse it and send to EventHandler which invokes your listeners. Designed to be executed in a loop.
+     * @brief Starts long poll. After new update will come, this method will parse it
+     * and send to EventHandler which invokes your listeners. Designed to be executed in a loop.
      */
     void start();
 
 private:
     const Api &_api;
-    const EventHandler* _eventHandler;
+    const EventHandler &_eventHandler;
     std::int32_t _lastUpdateId = 0;
     std::int32_t _limit;
     std::int32_t _timeout;
@@ -40,5 +39,3 @@ private:
 };
 
 }
-
-#endif //TGBOT_TGLONGPOLL_H

@@ -1,5 +1,4 @@
-#ifndef TGBOT_CPP_BOT_H
-#define TGBOT_CPP_BOT_H
+#pragma once
 
 #include "tgbot/Api.h"
 #include "tgbot/EventHandler.h"
@@ -8,7 +7,8 @@
 #include <string>
 #include <utility>
 
-namespace TgBot {
+namespace TgBot
+{
 
 class EventBroadcaster;
 class HttpClient;
@@ -18,8 +18,8 @@ class HttpClient;
  *
  * @ingroup general
  */
-class TGBOT_API Bot {
-
+class TGBOT_API Bot
+{
 public:
     explicit Bot(std::string token, const HttpClient &httpClient = _getDefaultHttpClient());
     ~Bot();
@@ -62,5 +62,3 @@ private:
 };
 
 }
-
-#endif //TGBOT_CPP_BOT_H

@@ -18,7 +18,7 @@ using String = std::string;
 template <class T>
 using Optional = std::optional<T>;
 template <class T>
-using Ptr = std::shared_ptr<T>; // change to unique?
+using Ptr = std::unique_ptr<T>;
 template <class ... Args>
 using Variant = std::variant<Args...>;
 template <class T>
@@ -29,7 +29,7 @@ namespace this_namespace = TgBot;
 template <class T>
 auto createPtr()
 {
-    return std::make_shared<T>();
+    return std::make_unique<T>();
 }
 
 #include "types.inl.h"

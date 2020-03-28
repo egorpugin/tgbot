@@ -1,9 +1,6 @@
-#ifndef TGBOT_CURLHTTPCLIENT_H
-#define TGBOT_CURLHTTPCLIENT_H
+#pragma once
 
-#include "tgbot/net/HttpClient.h"
-
-#include <string>
+#include "HttpClient.h"
 
 // fwd decl
 typedef void CURL;
@@ -37,5 +34,3 @@ public:
 };
 
 }
-
-#endif //TGBOT_CURLHTTPCLIENT_H

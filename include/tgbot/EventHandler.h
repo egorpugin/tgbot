@@ -1,26 +1,23 @@
-#ifndef TGBOT_EVENTHANDLER_H
-#define TGBOT_EVENTHANDLER_H
+#pragma once
 
 #include "tgbot/Types.h"
 
-namespace TgBot {
+namespace TgBot
+{
 
 class EventBroadcaster;
 
-class TGBOT_API EventHandler {
-
+class TGBOT_API EventHandler
+{
 public:
-    explicit EventHandler(const EventBroadcaster& broadcaster) : _broadcaster(broadcaster) {
-    }
+    explicit EventHandler(const EventBroadcaster &broadcaster) : broadcaster(broadcaster) {}
 
-    void handleUpdate(const Update::Ptr& update) const;
+    void handleUpdate(const Update &update) const;
 
 private:
-    const EventBroadcaster& _broadcaster;
+    const EventBroadcaster &broadcaster;
 
-    void handleMessage(const Message::Ptr& message) const;
+    void handleMessage(const Message &message) const;
 };
 
 }
-
-#endif //TGBOT_EVENTHANDLER_H

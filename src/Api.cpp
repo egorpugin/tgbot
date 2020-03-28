@@ -2,15 +2,6 @@
 
 #include <nlohmann/json.hpp>
 
-#include <cstdint>
-#include <string>
-#include <vector>
-#include <utility>
-
-#define GET_RETURN_VALUE_ARRAY(t)                                                                                      \
-    for (const auto& i : j)                                                                                            \
-    r.push_back(create##t(i))
-
 #define FROM_JSON(name, var) if (j.contains(#name)) fromJson(j[#name], var)
 #define TO_JSON(name, var) j[#name] = toJson(var)
 
@@ -28,13 +19,13 @@ static void fromJson(const nlohmann::json &j, Optional<T> &v)
 {
     T t;
     fromJson(j, t);
-    v = t;
+    v = std::move(t);
 }
 
 template <class T>
 static void fromJson(const nlohmann::json &j, Ptr<T> &v)
 {
-    v = std::make_shared<T>();
+    v = createPtr<T>();
     fromJson(j, *v);
 }
 
@@ -45,7 +36,7 @@ static void fromJson(const nlohmann::json &j, Vector<T> &v)
     {
         T t;
         fromJson(i, t);
-        v.push_back(t);
+        v.emplace_back(std::move(t));
     }
 }
 
