@@ -36,7 +36,6 @@ static bool is_simple(const String &t)
 
 static String get_pb_type(String t, bool optional)
 {
-    t = prepare_type(t);
     //if (!optional)
     {
         if (t == "Integer")
@@ -99,7 +98,6 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
     {
         auto t = types[0];
         auto simple = is_simple(t);
-        t = prepare_type(t);
         ctx.addText((simple ? "" : "this_namespace::Ptr<") + t + (simple ? "" : ">"));
         auto a = array;
         while (a--)
@@ -149,37 +147,33 @@ void Type::emitType(primitives::CppEmitter &ctx) const
 
 void Type::emitCreateType(primitives::CppEmitter &ctx) const
 {
-    ctx.beginFunction("static Ptr<" + name + "> create" + name + "(const nlohmann::json &j)");
-    ctx.addLine("auto r = createPtr<" + name + ">();");
+    // from json
+    ctx.addLine("template <>");
+    ctx.beginFunction("static void fromJson(const nlohmann::json &j, " + name + " &v)");
     for (auto &f : fields)
-    {
-        if (is_simple(f.types[0]) && f.array == 0)
-            ctx.addLine("GET_SIMPLE_FIELD(" + f.name + ");");
-        else if (f.array)
-        {
-            //if (f.optional)
-                ctx.addLine("throw std::runtime_error(\"ni\"); // array: " + f.name);
-            //else
-                //ctx.addLine("GET_ARRAY(" + f.name + ", " + f.prepare_type(f.types[0]) + ");");
-        }
-        else if (f.types.size() > 1)
-            ctx.addLine("throw std::runtime_error(\"ni\"); // variant: " + f.name);
-        else
-            ctx.addLine("GET_FIELD(" + f.name + ", " + prepare_type(f.types[0]) + ");");
-    }
-    ctx.addLine("return r;");
+        ctx.addLine("FROM_JSON(" + f.name + ", v." + f.name + ");");
+    ctx.endFunction();
+    ctx.emptyLines();
+
+    // to json
+    ctx.addLine("template <>");
+    ctx.beginFunction("static nlohmann::json toJson(const " + name + " &r)");
+    ctx.addLine("nlohmann::json j;");
+    for (auto &f : fields)
+        ctx.addLine("TO_JSON(" + f.name + ", r." + f.name + ");");
+    ctx.addLine("return j;");
     ctx.endFunction();
     ctx.emptyLines();
 }
 
 void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const
 {
-    h.addLine("api::" + prepare_type(return_type.types[0]) + " " + name + "(const api::" + name + "Request &) const;");
-
+    h.addLine();
     cpp.addLine();
 
     if (!return_type.types.empty())
     {
+        return_type.emitFieldType(h);
         return_type.emitFieldType(cpp);
     }
 
@@ -208,40 +202,22 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     cpp.decreaseIndent();
     cpp.addLine(") const");
 
+    h.addText(" " + name + "(");
+    h.increaseIndent();
+    get_parameters(h, true, lno);
+    h.decreaseIndent();
+    h.addLine(") const;");
+    h.emptyLines();
+
     cpp.beginBlock();
-    cpp.addLine("std::vector<HttpReqArg> args;");
-    cpp.addLine("args.reserve(" + std::to_string(fields.size()) + ");");
+    cpp.addLine("nlohmann::json j;");
     for (auto &f : fields)
-    {
-        if (f.optional)
-            cpp.increaseIndent("if (" + f.name + ")");
-        if (f.types.size() > 1)
-            cpp.addLine("throw std::runtime_error(\"ni\"); // variant");
-        else
-        {
-            if (f.array)
-                cpp.addLine("throw std::runtime_error(\"ni\"); // array");
-            else
-                cpp.addLine("args.emplace_back(\"" + f.name + "\", " + (f.optional ? "*" : "") + f.name + ");");
-        }
-        if (f.optional)
-            cpp.decreaseIndent();
-    }
-    cpp.addLine("auto j = sendRequest(\"" + name + "\", args);");
+        cpp.addLine("TO_JSON(" + f.name + ", " + f.name + ");");
+    cpp.addLine("j = sendRequest(\"" + name + "\", j);");
     cpp.addLine();
     return_type.emitFieldType(cpp);
-    cpp.addText(" r");
-    if (return_type.array == 0)
-    {
-        cpp.addText(" = ");
-        if (is_simple(return_type.types[0]))
-            cpp.addText("{}");
-        else
-            cpp.addText("create" + prepare_type(return_type.types[0]) + "(j)");
-    }
-    cpp.addText(";");
-    if (return_type.array)
-        cpp.addLine("GET_RETURN_VALUE_ARRAY(" + prepare_type(return_type.types[0]) + ");");
+    cpp.addText(" r;");
+    cpp.addLine("fromJson(j, r);");
     cpp.addLine("return r;");
     cpp.endBlock();
     cpp.emptyLines();
@@ -391,6 +367,7 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name)
                         )
                     {
                         t.return_type.types.push_back(m[1].str());
+                        t.return_type.types[0] = prepare_type(t.return_type.types[0]);
                         std::smatch m2;
                         if (std::regex_search(t.description, m2, r5))
                             t.return_type.array++;
@@ -470,6 +447,8 @@ void Parser::parseType(Type &t, xmlNode *tb) const
         pystring::split(tt, f.types, " or ");
         if (f.types.size() == 1)
             pystring::split(tt, f.types, " and ");
+        for (auto &t : f.types)
+            t = prepare_type(t);
 
         auto comment = getNext(field_type, "td");
         checkNullptr(comment);
@@ -531,7 +510,12 @@ void Emitter::emitMethods() const
 {
     primitives::CppEmitter h, cpp;
     for (auto &[n, t] : types)
-        cpp.addLine("static Ptr<" + t.name + "> create" + t.name + "(const nlohmann::json &j);");
+    {
+        cpp.addLine("template <>");
+        cpp.addLine("static void fromJson<" + t.name + ">(const nlohmann::json &, " + t.name + " &);");
+        cpp.addLine("template <>");
+        cpp.addLine("static nlohmann::json toJson(const " + t.name + " &);");
+    }
     cpp.emptyLines();
     for (auto &[n, t] : types)
         t.emitCreateType(cpp);
@@ -612,6 +596,7 @@ int main(int argc, char **argv)
     write_file("types.inl.h", e.emitTypes());
     e.emitMethods();
 
+    // pb impl won't work because of vector<vector<>> types :(
     write_file("tgapi.proto", e.emitProtobuf());
 
     return 0;

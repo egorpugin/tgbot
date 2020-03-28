@@ -1,9 +1,6 @@
-#pragma sw require header org.sw.demo.google.protobuf.protoc
-
 void build(Solution &s)
 {
-    // try to remove static later
-    auto &tgbot = s.addStaticLibrary("tgbot", "1.2.2");
+    auto &tgbot = s.addLibrary("tgbot", "1.2.2");
     //tgbot += Git("https://github.com/reo7sp/tgbot-cpp", "v{M}.{m}{po}");
 
     auto &apitool = tgbot.addExecutable("apitool");
@@ -31,8 +28,7 @@ void build(Solution &s)
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.CompileOptions.push_back("/Zc:__cplusplus");
 
-        tgbot += "org.sw.demo.boost.algorithm"_dep;
-        tgbot += "org.sw.demo.nlohmann.json"_dep;
+        tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
         tgbot.Public += "org.sw.demo.badger.curl.libcurl"_dep;
 
         {
@@ -41,12 +37,10 @@ void build(Solution &s)
                 << cmd::wdir(tgbot.BinaryDir)
                 << cmd::in("TelegramBotAPI.html")
                 << cmd::end()
-                << cmd::out("tgapi.proto")
+                << cmd::out("types.inl.h")
+                << cmd::out("methods.inl.h")
+                << cmd::out("methods.inl.cpp", cmd::Skip)
                 ;
-            ProtobufData d;
-            d.public_protobuf = true;
-            d.idirs.push_back(tgbot.BinaryDir);
-            gen_protobuf_cpp("org.sw.demo.google.protobuf"_dep, tgbot, "tgapi.proto", d);
         }
     }
 

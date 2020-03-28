@@ -4,12 +4,9 @@
 #include "tgbot/net/HttpClient.h"
 #include "tgbot/Types.h"
 
-#include <tgapi.pb.h>
+#include <nlohmann/json_fwd.hpp>
 
-#include <cstdint>
-#include <memory>
 #include <string>
-#include <vector>
 
 namespace TgBot {
 
@@ -22,17 +19,13 @@ class Bot;
  */
 class TGBOT_API Api {
 
-typedef std::shared_ptr<std::vector<std::string>> StringArrayPtr;
-
-friend class Bot;
-
 public:
-    Api(std::string token, const HttpClient& httpClient);
+    Api(const std::string &token, const HttpClient &httpClient);
 
 #include <methods.inl.h>
 
 private:
-    String sendRequest(const std::string& method, const std::string &json) const;
+    nlohmann::json sendRequest(const std::string &method, const nlohmann::json &) const;
 
     const std::string _token;
     const HttpClient& _httpClient;
