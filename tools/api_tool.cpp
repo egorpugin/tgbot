@@ -76,7 +76,11 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
     if (types.empty())
         throw SW_RUNTIME_ERROR("Empty types");
 
-    if (optional)
+    auto t = types[0];
+    auto simple = is_simple(t);
+    auto opt = optional && simple;
+
+    if (opt) // we do not need Optional since we have Ptr already
         ctx.addText("Optional<");
     auto a = array;
     while (a--)
@@ -91,20 +95,16 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
         auto a = array;
         while (a--)
             ctx.addText(">");
-        if (optional)
-            ctx.addText(">");
     }
     else
     {
-        auto t = types[0];
-        auto simple = is_simple(t);
-        ctx.addText((simple ? "" : "Ptr<") + t + (simple ? "" : ">"));
+        ctx.addText((simple ? "" : "this_namespace::Ptr<") + t + (simple ? "" : ">"));
         auto a = array;
         while (a--)
             ctx.addText(">");
-        if (optional)
-            ctx.addText(">");
     }
+    if (opt)
+        ctx.addText(">");
 }
 
 void Type::save(nlohmann::json &j) const
@@ -128,6 +128,8 @@ void Type::emitType(primitives::CppEmitter &ctx) const
     if (!is_oneof())
     {
         ctx.beginBlock("struct " + name);
+        ctx.addLine("using Ptr = this_namespace::Ptr<" + name + ">;");
+        ctx.emptyLines();
         for (auto &f : fields)
             f.emitField(ctx);
         ctx.endBlock(true);
@@ -147,7 +149,7 @@ void Type::emitCreateType(primitives::CppEmitter &ctx) const
 {
     // from json
     ctx.addLine("template <>");
-    ctx.beginFunction("static void fromJson(const nlohmann::json &j, " + name + " &v)");
+    ctx.beginFunction("void fromJson(const nlohmann::json &j, " + name + " &v)");
     for (auto &f : fields)
         ctx.addLine("FROM_JSON(" + f.name + ", v." + f.name + ");");
     ctx.endFunction();
@@ -155,7 +157,7 @@ void Type::emitCreateType(primitives::CppEmitter &ctx) const
 
     // to json
     ctx.addLine("template <>");
-    ctx.beginFunction("static nlohmann::json toJson(const " + name + " &r)");
+    ctx.beginFunction("nlohmann::json toJson(const " + name + " &r)");
     ctx.addLine("nlohmann::json j;");
     for (auto &f : fields)
         ctx.addLine("TO_JSON(" + f.name + ", r." + f.name + ");");
@@ -510,9 +512,9 @@ void Emitter::emitMethods() const
     for (auto &[n, t] : types)
     {
         cpp.addLine("template <>");
-        cpp.addLine("static void fromJson<" + t.name + ">(const nlohmann::json &, " + t.name + " &);");
+        cpp.addLine("void fromJson<" + t.name + ">(const nlohmann::json &, " + t.name + " &);");
         cpp.addLine("template <>");
-        cpp.addLine("static nlohmann::json toJson(const " + t.name + " &);");
+        cpp.addLine("nlohmann::json toJson(const " + t.name + " &);");
     }
     cpp.emptyLines();
     for (auto &[n, t] : types)
