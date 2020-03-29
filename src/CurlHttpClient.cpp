@@ -10,6 +10,9 @@ namespace TgBot
 CurlHttpClient::CurlHttpClient()
 {
     curlSettings = curl_easy_init();
+
+    // default options
+    curl_easy_setopt(getCurl(), CURLOPT_TCP_NODELAY, 1);
 }
 
 CurlHttpClient::~CurlHttpClient()
@@ -35,11 +38,13 @@ std::string CurlHttpClient::makeRequest(const std::string &url, const std::strin
     // Copy settings for each call because we change CURLOPT_URL and other stuff.
     // This also protects multithreaded case.
     auto curl = curl_easy_duphandle(getCurl());
+    //auto curl = getCurl();
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     struct curl_slist* headers = nullptr;
     //headers = curl_slist_append(headers, "Connection: close"); // disable keep-alive, why?
+    //headers = curl_slist_append(headers, "Connection: keep-alive");
     headers = curl_slist_append(headers, "Content-Type: application/json");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 

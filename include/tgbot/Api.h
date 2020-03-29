@@ -18,7 +18,7 @@ public:
 #include <methods.inl.h>
 
 private:
-    const std::string token;
+    const std::string &token;
     const HttpClient &httpClient;
 };
 
