@@ -1,6 +1,6 @@
 # tgbot
 
-C++ library for Telegram bot API with generated API types and methods
+C++17 library for Telegram bot API with generated API types and methods.
 
 Fork of https://github.com/reo7sp/tgbot-cpp
 
