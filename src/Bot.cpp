@@ -12,10 +12,14 @@ namespace TgBot
 Bot::Bot(const std::string &token)
     : token(token)
     , httpClient(std::make_unique<CurlHttpClient>())
-    , api(token, getHttpClient())
+    , api(*this)
     , eventBroadcaster(std::make_unique<EventBroadcaster>())
     , eventHandler(getEvents())
 {
+    base_url = "https://api.telegram.org/bot";
+    base_file_url = "https://api.telegram.org/file/bot";
+
+    httpClient->setTimeout(getDefaultTimeout()); // default timeout for apis
 }
 
 Bot::~Bot()
@@ -24,10 +28,13 @@ Bot::~Bot()
 
 Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) const
 {
+    // update timeout here for getUpdates()
+    httpClient->setTimeout(timeout);
+
     auto updates = api.getUpdates(offset, limit, timeout, allowed_updates);
     for (const auto &item : updates)
     {
-        if (item->update_id >= offset)
+        //if (item->update_id >= offset) // unconditionally!
             offset = item->update_id + 1;
         eventHandler.handleUpdate(*item);
     }

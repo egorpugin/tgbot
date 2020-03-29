@@ -5,6 +5,7 @@
 #include <curl/curl.h>
 
 #include <stdexcept>
+#include <thread>
 
 template <class F>
 struct ScopeExit
@@ -21,33 +22,6 @@ static std::size_t curlWriteString(char *ptr, std::size_t size, std::size_t nmem
     return size * nmemb;
 }
 
-static CURL *setupConnection(CURL *in, const std::string &url)
-{
-    // Copy settings for each call because we change CURLOPT_URL and other stuff.
-    // This also protects multithreaded case.
-    auto curl = curl_easy_duphandle(in);
-    //auto curl = in;
-
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-    return curl;
-}
-
-static std::string execute(CURL *curl)
-{
-    std::string response;
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWriteString);
-
-    auto res = curl_easy_perform(curl);
-    curl_easy_cleanup(curl);
-
-    if (res != CURLE_OK)
-        throw std::runtime_error(std::string("curl error: ") + curl_easy_strerror(res));
-
-    return response;
-}
-
 namespace TgBot
 {
 
@@ -56,7 +30,16 @@ CurlHttpClient::CurlHttpClient()
     curlSettings = curl_easy_init();
 
     // default options
-    curl_easy_setopt(getCurl(), CURLOPT_TCP_NODELAY, 1);
+    auto curl = getCurl();
+
+    curl_easy_setopt(curl, CURLOPT_TCP_NODELAY, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, connect_timeout);
+
+    curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
+    curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 120L);
+    curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 30L);
+    // python bot also sets TCP_KEEPCNT 8, but there is no such curl setting atm
 }
 
 CurlHttpClient::~CurlHttpClient()
@@ -64,15 +47,24 @@ CurlHttpClient::~CurlHttpClient()
     curl_easy_cleanup(curlSettings);
 }
 
+void CurlHttpClient::setTimeout(long t)
+{
+    if (t < connect_timeout)
+        return;
+    this->read_timeout = connect_timeout + t + 2;
+}
+
 std::string CurlHttpClient::makeRequest(const std::string &url, const std::string &json) const
 {
     auto curl = setupConnection(getCurl(), url);
 
     struct curl_slist *headers = nullptr;
+    headers = curl_slist_append(headers, "Connection: keep-alive");
     headers = curl_slist_append(headers, "Content-Type: application/json");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     ScopeExit se([headers] { curl_slist_free_all(headers); });
 
+    curl_easy_setopt(curl, CURLOPT_POST, 1L);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json.c_str());
 
     return execute(curl);
@@ -108,6 +100,41 @@ std::string CurlHttpClient::makeRequest(const std::string &url, const HttpReques
     ScopeExit se([mime] { curl_mime_free(mime); });
 
     return execute(curl);
+}
+
+CURL *CurlHttpClient::setupConnection(CURL *in, const std::string &url) const
+{
+    auto curl = use_connection_pool ? in : curl_easy_duphandle(in);
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, read_timeout);
+    return curl;
+}
+
+std::string CurlHttpClient::execute(CURL *curl) const
+{
+    std::string response;
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWriteString);
+
+    auto res = curl_easy_perform(curl);
+
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+    if (!use_connection_pool)
+        curl_easy_cleanup(curl);
+
+    if (http_code >= 500 || res)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(net_delay_on_error));
+        if (net_delay_on_error < 30)
+            net_delay_on_error *= 2;
+    }
+
+    if (res != CURLE_OK)
+        throw std::runtime_error(std::string("curl error: ") + curl_easy_strerror(res));
+
+    return response;
 }
 
 }

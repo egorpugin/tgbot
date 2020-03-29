@@ -5,22 +5,19 @@
 namespace TgBot
 {
 
-class CurlHttpClient;
+class Bot;
 
-/**
- * @brief This class executes telegram api methods.
- * Telegram docs: <https://core.telegram.org/bots/api#available-methods>
- */
+/// This class executes telegram api methods.
+/// Telegram docs: <https://core.telegram.org/bots/api#available-methods>
 class TGBOT_API Api
 {
 public:
-    Api(const std::string &token, const CurlHttpClient &httpClient);
+    Api(const Bot &);
 
 #include <methods.inl.h>
 
 private:
-    const std::string &token;
-    const CurlHttpClient &httpClient;
+    const Bot &bot;
 };
 
 }

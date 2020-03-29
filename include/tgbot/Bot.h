@@ -3,6 +3,9 @@
 #include "tgbot/Api.h"
 #include "tgbot/EventHandler.h"
 
+#define TGBOT_DEFAULT_UPDATE_LIMIT 100
+#define TGBOT_DEFAULT_UPDATE_TIMEOUT 10
+
 namespace TgBot
 {
 
@@ -23,7 +26,7 @@ public:
     const Api &getApi() const { return api; }
 
     /// used for fine tune setup of http connections
-    CurlHttpClient &getHttpClient() { return *httpClient; }
+    CurlHttpClient &getHttpClient() const { return *httpClient; }
 
     /// returns object which holds all event listeners
     EventBroadcaster &getEvents() { return *eventBroadcaster; }
@@ -34,12 +37,17 @@ public:
 
     /// returns last processed update id + 1
     /// Designed to be executed in a loop.
-    Integer processUpdates(Integer offset = 0, Integer limit = 100, Integer timeout = 20, const Vector<String> &allowed_updates = {}) const;
+    Integer processUpdates(Integer offset = 0, Integer limit = TGBOT_DEFAULT_UPDATE_LIMIT, Integer timeout = TGBOT_DEFAULT_UPDATE_TIMEOUT, const Vector<String> &allowed_updates = {}) const;
 
-    /// Calls getUpdates() in a loop.
+    /// Calls processUpdates() in a loop.
     /// Starts long poll. After new update will come, this method will parse it
     /// and send to EventHandler which invokes your listeners.
-    void longPoll(Integer limit = 100, Integer timeout = 20, const Vector<String> &allowed_updates = {}) const;
+    void longPoll(Integer limit = TGBOT_DEFAULT_UPDATE_LIMIT, Integer timeout = TGBOT_DEFAULT_UPDATE_TIMEOUT, const Vector<String> &allowed_updates = {}) const;
+
+    const std::string &getBaseUrl() const { return base_url; }
+    const std::string &getBaseFileUrl() const { return base_file_url; }
+
+    int getDefaultTimeout() const { return 10; }
 
 private:
     std::string token;
@@ -47,6 +55,8 @@ private:
     Api api;
     std::unique_ptr<EventBroadcaster> eventBroadcaster;
     EventHandler eventHandler;
+    std::string base_url;
+    std::string base_file_url;
 };
 
 }
