@@ -17,8 +17,8 @@ Using SW: https://software-network.org/
 
 Download client, unpack, add to PATH.
 
-```
-sw build
-```
+Build: `sw build`
+
+(Dev) Generate IDE project: `sw generate`
 
 Dependencies: nlohmann.json, libcurl.
