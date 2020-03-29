@@ -10,3 +10,15 @@ Fork of https://github.com/reo7sp/tgbot-cpp
 * Lots of cleanups.
 
 License: MIT
+
+# Build
+
+Using SW: https://software-network.org/
+
+Download client, unpack, add to PATH.
+
+```
+sw build
+```
+
+Dependencies: nlohmann.json, libcurl.
