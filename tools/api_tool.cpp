@@ -64,7 +64,7 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
 
     auto t = types[0];
     auto simple = is_simple(t);
-    auto opt = optional && simple;
+    auto opt = optional && (simple || types.size() != 1);
 
     if (opt) // we do not need Optional since we have Ptr already
         ctx.addText("Optional<");
