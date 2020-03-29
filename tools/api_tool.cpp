@@ -163,7 +163,8 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
         return_type.emitFieldType(cpp);
     }
 
-    auto get_parameters = [this](auto &ctx, bool defaults, int last_non_optional = -1)
+    bool has_input_file = false;
+    auto get_parameters = [this, &has_input_file](auto &ctx, bool defaults, int last_non_optional = -1)
     {
         for (const auto &[i,f] : enumerate(fields))
         {
@@ -176,6 +177,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
             ctx.addText(",");
             if (!f.optional && !defaults)
                 last_non_optional = i;
+            has_input_file |= std::find(f.types.begin(), f.types.end(), "InputFile") != f.types.end();
         }
         if (!fields.empty())
             ctx.trimEnd(1);
@@ -196,11 +198,21 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     h.emptyLines();
 
     cpp.beginBlock();
-    cpp.addLine("HttpRequestArguments args;");
-    cpp.addLine("args.reserve(" + std::to_string(fields.size()) + ");");
-    for (auto &f : fields)
-        cpp.addLine("TO_REQUEST_ARG(" + f.name + ");");
-    cpp.addLine("auto j = SEND_REQUEST(" + name + ");");
+    if (has_input_file)
+    {
+        cpp.addLine("HttpRequestArguments args;");
+        cpp.addLine("args.reserve(" + std::to_string(fields.size()) + ");");
+        for (auto &f : fields)
+            cpp.addLine("TO_REQUEST_ARG(" + f.name + ");");
+        cpp.addLine("auto j = SEND_REQUEST(" + name + ", args);");
+    }
+    else
+    {
+        cpp.addLine("nlohmann::json j;");
+        for (auto &f : fields)
+            cpp.addLine("TO_JSON(" + f.name + ", " + f.name + ");");
+        cpp.addLine("j = SEND_REQUEST(" + name + ", j.dump());");
+    }
     cpp.addLine();
     return_type.emitFieldType(cpp);
     cpp.addText(" r;");

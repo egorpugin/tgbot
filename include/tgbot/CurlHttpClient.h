@@ -1,6 +1,7 @@
 #pragma once
 
-#include "HttpClient.h"
+#include <string>
+#include <vector>
 
 // fwd decl
 typedef void CURL;
@@ -8,18 +9,21 @@ typedef void CURL;
 namespace TgBot
 {
 
+class HttpRequestArgument;
+using HttpRequestArguments = std::vector<HttpRequestArgument>;
+
 /// This class makes http requests via libcurl.
-class TGBOT_API CurlHttpClient : public HttpClient
+class TGBOT_API CurlHttpClient
 {
 public:
     CurlHttpClient();
-    ~CurlHttpClient() override;
+    ~CurlHttpClient();
 
     /// Get curl settings storage for fine tuning.
     CURL *getCurl() const { return curlSettings; }
 
-    std::string makeRequest(const std::string &url, const HttpRequestArguments &args) const override;
-    std::string makeRequest(const std::string &url, const std::string &json) const override;
+    std::string makeRequest(const std::string &url, const HttpRequestArguments &args) const;
+    std::string makeRequest(const std::string &url, const std::string &json) const;
 
 private:
     CURL *curlSettings;

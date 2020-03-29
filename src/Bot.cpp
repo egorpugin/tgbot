@@ -9,9 +9,10 @@
 namespace TgBot
 {
 
-Bot::Bot(const std::string &token, const HttpClient &httpClient)
+Bot::Bot(const std::string &token)
     : token(token)
-    , api(token, httpClient)
+    , httpClient(std::make_unique<CurlHttpClient>())
+    , api(token, getHttpClient())
     , eventBroadcaster(std::make_unique<EventBroadcaster>())
     , eventHandler(getEvents())
 {
@@ -19,12 +20,6 @@ Bot::Bot(const std::string &token, const HttpClient &httpClient)
 
 Bot::~Bot()
 {
-}
-
-HttpClient &Bot::getDefaultHttpClient()
-{
-    static CurlHttpClient instance;
-    return instance;
 }
 
 Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) const

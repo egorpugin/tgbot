@@ -1,10 +1,11 @@
 #pragma once
 
-#include "tgbot/HttpClient.h"
 #include "tgbot/Types.h"
 
 namespace TgBot
 {
+
+class CurlHttpClient;
 
 /**
  * @brief This class executes telegram api methods.
@@ -13,13 +14,13 @@ namespace TgBot
 class TGBOT_API Api
 {
 public:
-    Api(const std::string &token, const HttpClient &httpClient);
+    Api(const std::string &token, const CurlHttpClient &httpClient);
 
 #include <methods.inl.h>
 
 private:
     const std::string &token;
-    const HttpClient &httpClient;
+    const CurlHttpClient &httpClient;
 };
 
 }

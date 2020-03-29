@@ -1,16 +1,17 @@
 #include "tgbot/Api.h"
 
-#include "tgbot/HttpRequestArgument.h"
+#include "HttpRequestArgument.h"
+#include "tgbot/CurlHttpClient.h"
 
 #include <nlohmann/json.hpp>
 
 #define FROM_JSON(name, var) if (j.contains(#name)) fromJson(j[#name], var)
 #define TO_JSON(name, var) if (auto v = toJson(var); !v.is_null()) j[#name] = v
 #define TO_REQUEST_ARG(name) if (auto v = toRequestArgument(#name, name); v) args.push_back(std::move(*v))
-#define SEND_REQUEST(api) sendRequest(httpClient, token, #api, args)
+#define SEND_REQUEST(api, var) sendRequest(httpClient, token, #api, var)
 
 template <class T>
-static nlohmann::json sendRequest(const TgBot::HttpClient &c, const std::string &token, const std::string &method, const T &args)
+static nlohmann::json sendRequest(const TgBot::CurlHttpClient &c, const std::string &token, const std::string &method, const T &args)
 {
     std::string url = "https://api.telegram.org/bot";
     // std::string url = "https://api.telegram.org/file/bot"; // file downloads
@@ -35,7 +36,7 @@ namespace TgBot
 #include "ApiTemplates.h"
 #include <methods.inl.cpp>
 
-Api::Api(const std::string &token, const HttpClient &httpClient)
+Api::Api(const std::string &token, const CurlHttpClient &httpClient)
     : token(token), httpClient(httpClient)
 {
 }

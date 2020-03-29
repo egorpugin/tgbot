@@ -7,13 +7,13 @@ namespace TgBot
 {
 
 class EventBroadcaster;
-class HttpClient;
+class CurlHttpClient;
 
 /// This object holds other objects specific for this bot instance.
 class TGBOT_API Bot
 {
 public:
-    explicit Bot(const std::string &token, const HttpClient &httpClient = getDefaultHttpClient());
+    explicit Bot(const std::string &token);
     ~Bot(); // deletes unique_ptr
 
     /// returns token for accessing api
@@ -21,6 +21,9 @@ public:
 
     /// returns object which can execute Telegram Bot API methods
     const Api &getApi() const { return api; }
+
+    /// used for fine tune setup of http connections
+    CurlHttpClient &getHttpClient() { return *httpClient; }
 
     /// returns object which holds all event listeners
     EventBroadcaster &getEvents() { return *eventBroadcaster; }
@@ -40,11 +43,10 @@ public:
 
 private:
     std::string token;
+    std::unique_ptr<CurlHttpClient> httpClient;
     Api api;
     std::unique_ptr<EventBroadcaster> eventBroadcaster;
     EventHandler eventHandler;
-
-    static HttpClient &getDefaultHttpClient();
 };
 
 }
