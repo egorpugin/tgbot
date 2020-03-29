@@ -196,10 +196,11 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     h.emptyLines();
 
     cpp.beginBlock();
-    cpp.addLine("nlohmann::json j;");
+    cpp.addLine("HttpRequestArguments args;");
+    cpp.addLine("args.reserve(" + std::to_string(fields.size()) + ");");
     for (auto &f : fields)
-        cpp.addLine("TO_JSON(" + f.name + ", " + f.name + ");");
-    cpp.addLine("j = SEND_REQUEST(" + name + ");");
+        cpp.addLine("TO_REQUEST_ARG(" + f.name + ");");
+    cpp.addLine("auto j = SEND_REQUEST(" + name + ");");
     cpp.addLine();
     return_type.emitFieldType(cpp);
     cpp.addText(" r;");

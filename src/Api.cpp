@@ -1,121 +1,16 @@
 #include "tgbot/Api.h"
 
+#include "tgbot/HttpRequestArgument.h"
+
 #include <nlohmann/json.hpp>
 
 #define FROM_JSON(name, var) if (j.contains(#name)) fromJson(j[#name], var)
 #define TO_JSON(name, var) if (auto v = toJson(var); !v.is_null()) j[#name] = v
-#define SEND_REQUEST(api) sendRequest(httpClient, token, #api, j)
-
-namespace TgBot
-{
-
-// must provide decls first
+#define TO_REQUEST_ARG(name) if (auto v = toRequestArgument(#name, name); v) args.push_back(std::move(*v))
+#define SEND_REQUEST(api) sendRequest(httpClient, token, #api, args)
 
 template <class T>
-static void fromJson(const nlohmann::json &j, T &v);
-
-template <class T>
-static void fromJson(const nlohmann::json &j, Optional<T> &v);
-
-template <class T>
-static void fromJson(const nlohmann::json &j, Ptr<T> &v);
-
-template <class T>
-static void fromJson(const nlohmann::json &j, Vector<T> &v);
-
-//
-
-template <class T>
-static void fromJson(const nlohmann::json &j, T &v)
-{
-    v = j;
-}
-
-template <class T>
-static void fromJson(const nlohmann::json &j, Optional<T> &v)
-{
-    T t;
-    fromJson(j, t);
-    v = std::move(t);
-}
-
-template <class T>
-static void fromJson(const nlohmann::json &j, Ptr<T> &v)
-{
-    v = createPtr<T>();
-    fromJson(j, *v);
-}
-
-template <class T>
-static void fromJson(const nlohmann::json &j, Vector<T> &v)
-{
-    for (auto &i : j)
-    {
-        T t;
-        fromJson(i, t);
-        v.emplace_back(std::move(t));
-    }
-}
-
-// must provide decls first
-
-template <class T>
-static nlohmann::json toJson(const T &r);
-
-template <class T>
-static nlohmann::json toJson(const Optional<T> &r);
-
-template <class T>
-static nlohmann::json toJson(const Ptr<T> &r);
-
-template <class T>
-static nlohmann::json toJson(const Vector<T> &r);
-
-template <class ... Args>
-static nlohmann::json toJson(const Variant<Args...> &r);
-
-//
-
-template <class T>
-static nlohmann::json toJson(const T &r)
-{
-    return r;
-}
-
-template <class T>
-static nlohmann::json toJson(const Optional<T> &r)
-{
-    if (!r)
-        return {};
-    return toJson(*r);
-}
-
-template <class T>
-static nlohmann::json toJson(const Ptr<T> &r)
-{
-    if (!r)
-        return {};
-    return toJson(*r);
-}
-
-template <class T>
-static nlohmann::json toJson(const Vector<T> &r)
-{
-    nlohmann::json j;
-    for (auto &v : r)
-        j.push_back(toJson(v));
-    return j;
-}
-
-template <class ... Args>
-static nlohmann::json toJson(const Variant<Args...> &r)
-{
-    return std::visit([](auto &&r) { return toJson(r); }, r);
-}
-
-//
-
-static nlohmann::json sendRequest(const HttpClient &c, const std::string &token, const std::string &method, const nlohmann::json &req)
+static nlohmann::json sendRequest(const TgBot::HttpClient &c, const std::string &token, const std::string &method, const T &args)
 {
     std::string url = "https://api.telegram.org/bot";
     // std::string url = "https://api.telegram.org/file/bot"; // file downloads
@@ -123,7 +18,7 @@ static nlohmann::json sendRequest(const HttpClient &c, const std::string &token,
     url += "/";
     url += method;
 
-    std::string serverResponse = c.makeRequest(url, req.dump());
+    std::string serverResponse = c.makeRequest(url, args);
     if (!serverResponse.compare(0, 6, "<html>"))
         throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
 
@@ -131,9 +26,13 @@ static nlohmann::json sendRequest(const HttpClient &c, const std::string &token,
     if (result["ok"] == true)
         return std::move(result["result"]);
     else
-        throw std::runtime_error(result["description"].get<String>());
+        throw std::runtime_error(result["description"].get<std::string>());
 }
 
+namespace TgBot
+{
+
+#include "ApiTemplates.h"
 #include <methods.inl.cpp>
 
 Api::Api(const std::string &token, const HttpClient &httpClient)
