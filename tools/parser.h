@@ -39,6 +39,7 @@ struct Type
     void emitType(primitives::CppEmitter &ctx) const;
     void emitCreateType(primitives::CppEmitter &ctx) const;
     void emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const;
+    void emitMethodRequestType(primitives::CppEmitter &ctx) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;
     void emitProtobuf(primitives::CppEmitter &ctx) const;
 };

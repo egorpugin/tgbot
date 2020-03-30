@@ -131,6 +131,17 @@ void Type::emitType(primitives::CppEmitter &ctx) const
     ctx.emptyLines();
 }
 
+void Type::emitMethodRequestType(primitives::CppEmitter &ctx) const
+{
+    if (fields.empty())
+        return;
+    ctx.beginBlock("struct " + name + "Request");
+    for (auto &f : fields)
+        f.emitField(ctx);
+    ctx.endBlock(true);
+    ctx.emptyLines();
+}
+
 void Type::emitCreateType(primitives::CppEmitter &ctx) const
 {
     // from json
@@ -154,15 +165,6 @@ void Type::emitCreateType(primitives::CppEmitter &ctx) const
 
 void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const
 {
-    h.addLine();
-    cpp.addLine();
-
-    if (!return_type.types.empty())
-    {
-        return_type.emitFieldType(h);
-        return_type.emitFieldType(cpp);
-    }
-
     bool has_input_file = false;
     auto get_parameters = [this, &has_input_file](auto &ctx, bool defaults, int last_non_optional = -1)
     {
@@ -184,19 +186,40 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
         return last_non_optional;
     };
 
+    // before h.
+    cpp.addLine();
+    return_type.emitFieldType(cpp);
     cpp.addText(" Api::" + name + "(");
     cpp.increaseIndent();
     auto lno = get_parameters(cpp, false);
     cpp.decreaseIndent();
     cpp.addLine(") const");
 
+    // usual call
+    h.addLine("// " + description); // second desc to make intellisense happy
+    h.addLine();
+    return_type.emitFieldType(h);
     h.addText(" " + name + "(");
-    h.increaseIndent();
-    get_parameters(h, true, lno);
-    h.decreaseIndent();
-    h.addLine(") const;");
+    if (!fields.empty())
+    {
+        h.increaseIndent();
+        get_parameters(h, true, lno);
+        h.decreaseIndent();
+        h.addLine();
+    }
+    h.addText(") const;");
     h.emptyLines();
+    // with request struct
+    if (!fields.empty())
+    {
+        h.addLine("// " + description);
+        h.addLine();
+        return_type.emitFieldType(h);
+        h.addText(" " + name + "(const " + name + "Request &) const;");
+        h.emptyLines();
+    }
 
+    //
     cpp.beginBlock();
     if (has_input_file)
     {
@@ -220,6 +243,24 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     cpp.addLine("return r;");
     cpp.endBlock();
     cpp.emptyLines();
+
+    // with request struct
+    if (!fields.empty())
+    {
+        cpp.addLine();
+        return_type.emitFieldType(cpp);
+        cpp.addText(" Api::" + name + "(const " + name + "Request &r) const");
+        cpp.beginBlock();
+        cpp.addLine("return " + name + "(");
+        cpp.increaseIndent();
+        for (const auto &f : fields)
+            cpp.addLine("r." + f.name + ",");
+        cpp.trimEnd(1);
+        cpp.decreaseIndent();
+        cpp.addLine(");");
+        cpp.endBlock();
+        cpp.emptyLines();
+    }
 }
 
 void Type::emitFwdDecl(primitives::CppEmitter &ctx) const
@@ -307,6 +348,11 @@ String Emitter::emitTypes()
         if (!t.is_oneof())
             t.emitType(ctx);
     }
+    ctx.emptyLines();
+    ctx.addLine("// requests");
+    ctx.emptyLines();
+    for (auto &[n, m] : methods)
+        m.emitMethodRequestType(ctx);
     return ctx.getText();
 }
 
