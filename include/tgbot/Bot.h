@@ -3,9 +3,6 @@
 #include "tgbot/Api.h"
 #include "tgbot/EventHandler.h"
 
-#define TGBOT_DEFAULT_UPDATE_LIMIT 100
-#define TGBOT_DEFAULT_UPDATE_TIMEOUT 10
-
 namespace TgBot
 {
 
@@ -37,12 +34,12 @@ public:
 
     /// returns last processed update id + 1
     /// Designed to be executed in a loop.
-    Integer processUpdates(Integer offset = 0, Integer limit = TGBOT_DEFAULT_UPDATE_LIMIT, Integer timeout = TGBOT_DEFAULT_UPDATE_TIMEOUT, const Vector<String> &allowed_updates = {}) const;
+    Integer processUpdates(Integer offset = 0, Integer limit = default_update_limit, Integer timeout = default_update_timeout, const Vector<String> &allowed_updates = {}) const;
 
     /// Calls processUpdates() in a loop.
     /// Starts long poll. After new update will come, this method will parse it
     /// and send to EventHandler which invokes your listeners.
-    void longPoll(Integer limit = TGBOT_DEFAULT_UPDATE_LIMIT, Integer timeout = TGBOT_DEFAULT_UPDATE_TIMEOUT, const Vector<String> &allowed_updates = {}) const;
+    void longPoll(Integer limit = default_update_limit, Integer timeout = default_update_timeout, const Vector<String> &allowed_updates = {}) const;
 
     const std::string &getBaseUrl() const { return base_url; }
     const std::string &getBaseFileUrl() const { return base_file_url; }
@@ -57,6 +54,9 @@ private:
     EventHandler eventHandler;
     std::string base_url;
     std::string base_file_url;
+
+    static const int default_update_limit = 100;
+    static const int default_update_timeout = 10;
 };
 
 }

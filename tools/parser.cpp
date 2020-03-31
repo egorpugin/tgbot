@@ -5,6 +5,8 @@
 #include <iostream>
 #include <regex>
 
+// https://core.telegram.org/bots/api
+
 static String prepare_type(String t)
 {
     if (t == "True" || t == "False")
