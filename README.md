@@ -2,7 +2,11 @@
 
 C++17 library for Telegram bot API with generated API types and methods.
 
+* Current Bot API v4.7
+
 Fork of https://github.com/reo7sp/tgbot-cpp
+
+Features:
 
 * Generated API structures and methods. No manual typing errors and easily updatable for API changes.
 * Upgraded to C++ 17.
