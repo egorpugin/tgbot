@@ -12,7 +12,7 @@ namespace TgBot
 
 using Boolean = bool;
 using Integer = std::int64_t;
-using Float = float;
+using Float = double;
 using String = std::string;
 
 template <class T>
