@@ -1,5 +1,7 @@
 #include "api_tool.h"
 
+#include <primitives/exceptions.h>
+#include <primitives/http.h>
 #include <primitives/sw/main.h>
 #include <primitives/sw/cl.h>
 

@@ -3,11 +3,6 @@
 #include "types.h"
 
 #include <libxml/HTMLparser.h>
-#include <nlohmann/json.hpp>
-#include <primitives/emitter.h>
-#include <primitives/exceptions.h>
-#include <primitives/http.h>
-#include <primitives/templates.h>
 #include <primitives/xml.h>
 
 struct Parser

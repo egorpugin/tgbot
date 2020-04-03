@@ -1,5 +1,6 @@
 #include "parser.h"
 
+#include <primitives/exceptions.h>
 #include <pystring.h>
 
 #include <iostream>
