@@ -17,22 +17,6 @@ static bool is_simple(const String &t)
         ;
 }
 
-static String get_pb_type(String t, bool optional)
-{
-    //if (!optional)
-    {
-        if (t == "Integer")
-            return "int32";
-        if (t == "Boolean")
-            return "bool";
-        if (t == "Float")
-            return "float";
-        if (t == "String")
-            return "string";
-    }
-    return t;
-}
-
 void Field::save(nlohmann::json &j) const
 {
     j["name"] = name;
