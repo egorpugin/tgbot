@@ -11,5 +11,4 @@ struct Emitter
 
     String emitTypes();
     void emitMethods() const;
-    String emitProtobuf() const;
 };

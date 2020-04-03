@@ -273,55 +273,6 @@ void Type::emitFwdDecl(primitives::CppEmitter &ctx) const
         emitType(ctx);
 }
 
-void Type::emitProtobuf(primitives::CppEmitter &ctx) const
-{
-    bool is_method = !is_type();
-
-    ctx.increaseIndent("message " + name + (is_method ? "Request" : "") + " {");
-    int i = 0;
-    for (const auto &f : fields)
-    {
-        if (f.types.size() > 1)
-        {
-            ctx.increaseIndent("oneof " + f.name + " {");
-            for (auto &t : f.types)
-            {
-                auto t2 = get_pb_type(t, false);
-                ctx.addLine(t2 + " " + f.name + "_" + t2 + " = " + std::to_string(i + 1) + ";");
-                i++;
-            }
-            ctx.decreaseIndent("}");
-        }
-        else
-        {
-            auto t = get_pb_type(f.types[0], f.optional);
-
-            auto a = f.array;
-            bool ar = a > 1;
-            while (a > 1)
-            {
-                a--;
-                auto t2 = t + "_Repeated" + std::to_string(a);
-                ctx.increaseIndent("message " + t2 + " {");
-                ctx.addLine("repeated " + t + " " + f.name + " = 1;");
-                ctx.decreaseIndent("}");
-            }
-
-            ctx.addLine();
-            if (a > 0 || ar)
-            {
-                ctx.addText("repeated ");
-                if (ar)
-                    t = t + "_Repeated1";
-            }
-            ctx.addText(t + " " + f.name + " = " + std::to_string(i + 1) + ";");
-            i++;
-        }
-    }
-    ctx.decreaseIndent("}");
-    ctx.emptyLines();
-}
-
 Emitter::Emitter(const Parser &p)
 {
     for (auto &t : p.types)
@@ -379,39 +330,6 @@ void Emitter::emitMethods() const
     write_file("methods.inl.cpp", cpp.getText());
 }
 
-String Emitter::emitProtobuf() const
-{
-    primitives::CppEmitter ctx;
-    ctx.addLine("syntax = \"proto3\";");
-    ctx.addLine();
-    ctx.addLine("package TgBot.api;");
-    ctx.addLine();
-
-    // add builtin types
-    ctx.addLine(R"(message Integer {
-    int32 integer = 1;
-}
-
-message Float {
-    float float = 1;
-}
-
-message Boolean {
-    bool boolean = 1;
-}
-
-message String {
-    string string = 1;
-}
-)");
-
-    for (auto &[n, t] : types)
-        t.emitProtobuf(ctx);
-    for (auto &[n, t] : methods)
-        t.emitProtobuf(ctx);
-    return ctx.getText();
-}
-
 int main(int argc, char **argv)
 {
     cl::opt<String> target(cl::Positional, cl::Required, cl::desc("Html file or url to parse"));
@@ -448,9 +366,6 @@ int main(int argc, char **argv)
 
     write_file("types.inl.h", e.emitTypes());
     e.emitMethods();
-
-    // pb impl won't work because of vector<vector<>> types :(
-    write_file("tgapi.proto", e.emitProtobuf());
 
     return 0;
 }
