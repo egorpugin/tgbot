@@ -51,7 +51,7 @@ void CurlHttpClient::setTimeout(long t)
 {
     if (t < connect_timeout)
         return;
-    this->read_timeout = connect_timeout + t + 2;
+    read_timeout = connect_timeout + t + 2;
 }
 
 std::string CurlHttpClient::makeRequest(const std::string &url, const std::string &json) const
