@@ -14,7 +14,7 @@ To learn how to create…">
 
     <link href="/css/bootstrap.min.css?3" rel="stylesheet">
     
-    <link href="/css/telegram.css?180" rel="stylesheet" media="screen">
+    <link href="/css/telegram.css?186" rel="stylesheet" media="screen">
     <style>
     </style>
   </head>
@@ -50,10 +50,20 @@ To learn how to create…">
 <blockquote>
 <p>Subscribe to <a href="https://t.me/botnews">@BotNews</a> to be the first to know about the latest updates and join the discussion in <a href="https://t.me/bottalk">@BotTalk</a></p>
 </blockquote>
+<h4><a class="anchor" name="april-24-2020" href="#april-24-2020"><i class="anchor-icon"></i></a>April 24, 2020</h4>
+<p><strong>Bot API 4.8</strong></p>
+<ul>
+<li>Supported explanations for <a href="https://telegram.org/blog/400-million#better-quizzes">Quizzes 2.0</a>. Add explanations by specifying the parameters <em>explanation</em> and <em>explanation_parse_mode</em> in the method <a href="#sendpoll">sendPoll</a>.</li>
+<li>Added the fields <em>explanation</em> and <em>explanation_entities</em> to the <a href="#poll">Poll</a> object.</li>
+<li>Supported timed polls that automatically close at a certain date and time. Set up by specifying the parameter <em>open_period</em> or <em>close_date</em> in the method <a href="#sendpoll">sendPoll</a>.</li>
+<li>Added the fields <em>open_period</em> and <em>close_date</em> to the <a href="#poll">Poll</a> object.</li>
+<li>Supported the new <a href="https://telegram.org/blog/400-million#bullseye">darts</a> animation for the dice mini-game. Choose between the default dice animation and darts animation by specifying the parameter <em>emoji</em> in the method <a href="#senddice">sendDice</a>.</li>
+<li>Added the field <em>emoji</em> to the <a href="#dice">Dice</a> object.</li>
+</ul>
 <h4><a class="anchor" name="march-30-2020" href="#march-30-2020"><i class="anchor-icon"></i></a>March 30, 2020</h4>
 <p><strong>Bot API 4.7</strong></p>
 <ul>
-<li>Added the method <a href="#senddice">sendDice</a> for sending a dice message, which will have a random value from 1 to 6. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But it&#39;s awkward, and we decided to help it change. One dice at a time!)</li>
+<li>Added the method <a href="#senddice">sendDice</a> for sending a dice message, which will have a random value from 1 to 6. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But�it&#39;s awkward, and we decided to help it change. One dice at a time!)</li>
 <li>Added the field <a href="#dice">dice</a> to the <a href="#message">Message</a> object.</li>
 <li>Added the method <a href="#getmycommands">getMyCommands</a> for getting the current list of the bot&#39;s commands.</li>
 <li>Added the method <a href="#setmycommands">setMyCommands</a> for changing the list of the bot&#39;s commands through the Bot API instead of <a href="https://t.me/botfather">@BotFather</a>.</li>
@@ -86,7 +96,7 @@ To learn how to create…">
 <li>Added the new method <a href="#setchatadministratorcustomtitle">setChatAdministratorCustomTitle</a> to manage the custom titles of administrators promoted by the bot.</li>
 <li>Added the field <em>slow_mode_delay</em> to the <a href="#chat">Chat</a> object.</li>
 </ul>
-<p><strong><a href="/bots/api-changelog">See earlier changes »</a></strong></p>
+<p><strong><a href="/bots/api-changelog">See earlier changes �</a></strong></p>
 <h3><a class="anchor" name="authorizing-your-bot" href="#authorizing-your-bot"><i class="anchor-icon"></i></a>Authorizing your bot</h3>
 <p>Each bot is given a unique authentication token <a href="/bots#6-botfather">when it is created</a>. The token looks something like <code>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</code>, but we&#39;ll use simply <strong>&lt;token&gt;</strong> in this document instead. You can learn about obtaining tokens and generating new ones in <a href="https://core.telegram.org/bots#6-botfather">this document</a>.</p>
 <h3><a class="anchor" name="making-requests" href="#making-requests"><i class="anchor-icon"></i></a>Making requests</h3>
@@ -110,7 +120,7 @@ To learn how to create…">
 <p>Please see our <a href="/bots/faq#how-can-i-make-requests-in-response-to-updates">FAQ</a> for examples.</p>
 </blockquote>
 <h3><a class="anchor" name="getting-updates" href="#getting-updates"><i class="anchor-icon"></i></a>Getting updates</h3>
-<p>There are two mutually exclusive ways of receiving updates for your bot — the <a href="#getupdates">getUpdates</a> method on one hand and <a href="#setwebhook">Webhooks</a> on the other. Incoming updates are stored on the server until the bot receives them either way, but they will not be kept longer than 24 hours.</p>
+<p>There are two mutually exclusive ways of receiving updates for your bot � the <a href="#getupdates">getUpdates</a> method on one hand and <a href="#setwebhook">Webhooks</a> on the other. Incoming updates are stored on the server until the bot receives them either way, but they will not be kept longer than 24 hours.</p>
 <p>Regardless of which option you choose, you will receive JSON-serialized <a href="#update">Update</a> objects as a result.</p>
 <h4><a class="anchor" name="update" href="#update"><i class="anchor-icon"></i></a>Update</h4>
 <p>This <a href="#available-types">object</a> represents an incoming update.<br>At most <strong>one</strong> of the optional parameters can be present in any given update.</p>
@@ -131,7 +141,7 @@ To learn how to create…">
 <tr>
 <td>message</td>
 <td><a href="#message">Message</a></td>
-<td><em>Optional</em>. New incoming message of any kind — text, photo, sticker, etc.</td>
+<td><em>Optional</em>. New incoming message of any kind � text, photo, sticker, etc.</td>
 </tr>
 <tr>
 <td>edited_message</td>
@@ -141,7 +151,7 @@ To learn how to create…">
 <tr>
 <td>channel_post</td>
 <td><a href="#message">Message</a></td>
-<td><em>Optional</em>. New incoming channel post of any kind — text, photo, sticker, etc.</td>
+<td><em>Optional</em>. New incoming channel post of any kind � text, photo, sticker, etc.</td>
 </tr>
 <tr>
 <td>edited_channel_post</td>
@@ -207,7 +217,7 @@ To learn how to create…">
 <td>limit</td>
 <td>Integer</td>
 <td>Optional</td>
-<td>Limits the number of updates to be retrieved. Values between 1—100 are accepted. Defaults to 100.</td>
+<td>Limits the number of updates to be retrieved. Values between 1�100 are accepted. Defaults to 100.</td>
 </tr>
 <tr>
 <td>timeout</td>
@@ -582,7 +592,7 @@ To learn how to create…">
 <tr>
 <td>game</td>
 <td><a href="#game">Game</a></td>
-<td><em>Optional</em>. Message is a game, information about the game. <a href="#games">More about games »</a></td>
+<td><em>Optional</em>. Message is a game, information about the game. <a href="#games">More about games �</a></td>
 </tr>
 <tr>
 <td>photo</td>
@@ -697,17 +707,17 @@ To learn how to create…">
 <tr>
 <td>invoice</td>
 <td><a href="#invoice">Invoice</a></td>
-<td><em>Optional</em>. Message is an invoice for a <a href="#payments">payment</a>, information about the invoice. <a href="#payments">More about payments »</a></td>
+<td><em>Optional</em>. Message is an invoice for a <a href="#payments">payment</a>, information about the invoice. <a href="#payments">More about payments �</a></td>
 </tr>
 <tr>
 <td>successful_payment</td>
 <td><a href="#successfulpayment">SuccessfulPayment</a></td>
-<td><em>Optional</em>. Message is a service message about a successful payment, information about the payment. <a href="#payments">More about payments »</a></td>
+<td><em>Optional</em>. Message is a service message about a successful payment, information about the payment. <a href="#payments">More about payments �</a></td>
 </tr>
 <tr>
 <td>connected_website</td>
 <td>String</td>
-<td><em>Optional</em>. The domain name of the website on which the user has logged in. <a href="/widgets/login">More about Telegram Login »</a></td>
+<td><em>Optional</em>. The domain name of the website on which the user has logged in. <a href="/widgets/login">More about Telegram Login �</a></td>
 </tr>
 <tr>
 <td>passport_data</td>
@@ -1296,10 +1306,30 @@ To learn how to create…">
 <td>Integer</td>
 <td><em>Optional</em>. 0-based identifier of the correct answer option. Available only for polls in the quiz mode, which are closed, or was sent (not forwarded) by the bot or to the private chat with the bot.</td>
 </tr>
+<tr>
+<td>explanation</td>
+<td>Integer</td>
+<td><em>Optional</em>. Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters</td>
+</tr>
+<tr>
+<td>explanation_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. Special entities like usernames, URLs, bot commands, etc. that appear in the <em>explanation</em></td>
+</tr>
+<tr>
+<td>open_period</td>
+<td>Integer</td>
+<td><em>Optional</em>. Amount of time in seconds the poll will be active after creation</td>
+</tr>
+<tr>
+<td>close_date</td>
+<td>Integer</td>
+<td><em>Optional</em>. Point in time (Unix timestamp) when the poll will be automatically closed</td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="dice" href="#dice"><i class="anchor-icon"></i></a>Dice</h4>
-<p>This object represents a dice with random value from 1 to 6. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But it&#39;s awkward, and we decided to help it change. One dice at a time!)</p>
+<p>This object represents a dice with a random value from 1 to 6 for currently supported base emoji. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But�it&#39;s awkward, and we decided to help it change. One dice at a time!)</p>
 <table class="table">
 <thead>
 <tr>
@@ -1310,9 +1340,14 @@ To learn how to create…">
 </thead>
 <tbody>
 <tr>
+<td>emoji</td>
+<td>String</td>
+<td>Emoji on which the dice throw animation is based</td>
+</tr>
+<tr>
 <td>value</td>
 <td>Integer</td>
-<td>Value of the dice, 1-6</td>
+<td>Value of the dice, 1-6 for currently supported base emoji</td>
 </tr>
 </tbody>
 </table>
@@ -1399,7 +1434,7 @@ To learn how to create…">
 <tr>
 <td>one_time_keyboard</td>
 <td>Boolean</td>
-<td><em>Optional</em>. Requests clients to hide the keyboard as soon as it&#39;s been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat – the user can press a special button in the input field to see the custom keyboard again. Defaults to <em>false</em>.</td>
+<td><em>Optional</em>. Requests clients to hide the keyboard as soon as it&#39;s been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat ��the user can press a special button in the input field to see the custom keyboard again. Defaults to <em>false</em>.</td>
 </tr>
 <tr>
 <td>selective</td>
@@ -1536,12 +1571,12 @@ To learn how to create…">
 <tr>
 <td>switch_inline_query</td>
 <td>String</td>
-<td><em>Optional</em>. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot‘s username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.<br><br><strong>Note:</strong> This offers an easy way for users to start using your bot in <a href="/bots/inline">inline mode</a> when they are currently in a private chat with it. Especially useful when combined with <a href="#answerinlinequery"><em>switch_pm…</em></a> actions – in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.</td>
+<td><em>Optional</em>. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot‘s username and the specified inline query in the input field. Can be empty, in which case just the bot’s username will be inserted.<br><br><strong>Note:</strong> This offers an easy way for users to start using your bot in <a href="/bots/inline">inline mode</a> when they are currently in a private chat with it. Especially useful when combined with <a href="#answerinlinequery"><em>switch_pm…</em></a> actions ��in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.</td>
 </tr>
 <tr>
 <td>switch_inline_query_current_chat</td>
 <td>String</td>
-<td><em>Optional</em>. If set, pressing the button will insert the bot‘s username and the specified inline query in the current chat&#39;s input field. Can be empty, in which case only the bot’s username will be inserted.<br><br>This offers a quick way for the user to open your bot in inline mode in the same chat – good for selecting something from multiple options.</td>
+<td><em>Optional</em>. If set, pressing the button will insert the bot�s username and the specified inline query in the current chat&#39;s input field. Can be empty, in which case only the bot�s username will be inserted.<br><br>This offers a quick way for the user to open your bot in inline mode in the same chat ��good�for selecting something from multiple options.</td>
 </tr>
 <tr>
 <td>callback_game</td>
@@ -1556,7 +1591,7 @@ To learn how to create…">
 </tbody>
 </table>
 <h4><a class="anchor" name="loginurl" href="#loginurl"><i class="anchor-icon"></i></a>LoginUrl</h4>
-<p>This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the <a href="https://core.telegram.org/widgets/login">Telegram Login Widget</a> when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:</p>
+<p>This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a�great replacement for the <a href="https://core.telegram.org/widgets/login">Telegram Login Widget</a> when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:</p>
 <div class="blog_image_wrap">
   <a href="/file/811140015/1734/8VZFkwWXalM.97872/6127fa62d8a0bf2b3c" target="_blank"><img src="/file/811140909/1631/20k1Z53eiyY.23995/c541e89b74253623d9" title="TITLE" alt="TITLE" srcset="/file/811140015/1734/8VZFkwWXalM.97872/6127fa62d8a0bf2b3c , 2x" /></a>
 </div>
@@ -1676,7 +1711,7 @@ To learn how to create…">
 <li>Explain the user how to send a command with parameters (e.g. /newpoll question answer1 answer2). May be appealing for hardcore users but lacks modern day polish.</li>
 <li>Guide the user through a step-by-step process. ‘Please send me your question’, ‘Cool, now let’s add the first answer option‘, ’Great. Keep adding answer options, then send /done when you‘re ready’.</li>
 </ul>
-<p>The last option is definitely more attractive. And if you use <a href="#forcereply">ForceReply</a> in your bot‘s questions, it will receive the user’s answers even if it only receives replies, commands and mentions — without any extra work for the user.</p>
+<p>The last option is definitely more attractive. And if you use <a href="#forcereply">ForceReply</a> in your bot‘s questions, it will receive the user’s answers even if it only receives replies, commands and mentions ��without any extra work for the user.</p>
 </blockquote>
 <h4><a class="anchor" name="chatphoto" href="#chatphoto"><i class="anchor-icon"></i></a>ChatPhoto</h4>
 <p>This object represents a chat photo.</p>
@@ -1946,7 +1981,7 @@ To learn how to create…">
 <tr>
 <td>media</td>
 <td>String</td>
-<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -1956,7 +1991,7 @@ To learn how to create…">
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 </tbody>
 </table>
@@ -1979,12 +2014,12 @@ To learn how to create…">
 <tr>
 <td>media</td>
 <td>String</td>
-<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
-<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -1994,7 +2029,7 @@ To learn how to create…">
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>width</td>
@@ -2037,12 +2072,12 @@ To learn how to create…">
 <tr>
 <td>media</td>
 <td>String</td>
-<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
-<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2052,7 +2087,7 @@ To learn how to create…">
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the animation caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>width</td>
@@ -2090,12 +2125,12 @@ To learn how to create…">
 <tr>
 <td>media</td>
 <td>String</td>
-<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
-<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2105,7 +2140,7 @@ To learn how to create…">
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2143,12 +2178,12 @@ To learn how to create…">
 <tr>
 <td>media</td>
 <td>String</td>
-<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://&lt;file_attach_name&gt;” to upload a new one using multipart/form-data under &lt;file_attach_name&gt; name. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
-<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><em>Optional</em>. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2158,7 +2193,7 @@ To learn how to create…">
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 </tbody>
 </table>
@@ -2183,7 +2218,7 @@ To learn how to create…">
 <ul>
 <li>When sending by URL the target file must have the correct MIME type (e.g., audio/mpeg for <a href="#sendaudio">sendAudio</a>, etc.).</li>
 <li>In <a href="#senddocument">sendDocument</a>, sending by URL will currently only work for <strong>gif</strong>, <strong>pdf</strong> and <strong>zip</strong> files.</li>
-<li>To use <a href="#sendvoice">sendVoice</a>, the file must have the type audio/ogg and be no more than 1MB in size. 1–20MB voice notes will be sent as files.</li>
+<li>To use <a href="#sendvoice">sendVoice</a>, the file must have the type audio/ogg and be no more than 1MB in size. 1�20MB voice notes will be sent as files.</li>
 <li>Other configurations may work but we can&#39;t guarantee that they will.</li>
 </ul>
 <h4><a class="anchor" name="inline-mode-objects" href="#inline-mode-objects"><i class="anchor-icon"></i></a>Inline mode objects</h4>
@@ -2222,7 +2257,7 @@ To learn how to create…">
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in your bot&#39;s message.</td>
+<td>Mode for parsing entities in the message text. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>disable_web_page_preview</td>
@@ -2384,7 +2419,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>photo</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2396,7 +2431,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -2441,7 +2476,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>audio</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2453,7 +2488,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2477,7 +2512,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -2521,13 +2556,13 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>document</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2539,7 +2574,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -2583,7 +2618,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>video</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2607,7 +2642,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2619,7 +2654,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>supports_streaming</td>
@@ -2669,7 +2704,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>animation</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Animation to send. Pass a file_id as String to send an animation that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet, or upload a new animation using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2693,7 +2728,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2705,7 +2740,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the animation caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -2749,7 +2784,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>voice</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Audio file to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2761,7 +2796,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the voice message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2811,7 +2846,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>video_note</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a>. Sending video notes by a URL is currently unsupported</td>
+<td>Video note to send. Pass a file_id as String to send a video note that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a>. Sending video notes by a URL is currently unsupported</td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2829,7 +2864,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused and can be only uploaded as a new file, so you can pass “attach://&lt;file_attach_name&gt;” if the thumbnail was uploaded using multipart/form-data under &lt;file_attach_name&gt;. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -2873,7 +2908,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>media</td>
 <td>Array of <a href="#inputmediaphoto">InputMediaPhoto</a> and <a href="#inputmediavideo">InputMediaVideo</a></td>
 <td>Yes</td>
-<td>A JSON-serialized array describing photos and videos to be sent, must include 2–10 items</td>
+<td>A JSON-serialized array describing photos and videos to be sent, must include 2�10 items</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -3224,6 +3259,30 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>0-based identifier of the correct answer option, required for polls in quiz mode</td>
 </tr>
 <tr>
+<td>explanation</td>
+<td>String</td>
+<td>Optional</td>
+<td>Text that is shown when a user chooses an incorrect answer or taps on the lamp icon in a quiz-style poll, 0-200 characters with at most 2 line feeds after entities parsing</td>
+</tr>
+<tr>
+<td>explanation_parse_mode</td>
+<td>String</td>
+<td>Optional</td>
+<td>Mode for parsing entities in the explanation. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>open_period</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Amount of time in seconds the poll will be active after creation, 5-600. Can&#39;t be used together with <em>close_date</em>.</td>
+</tr>
+<tr>
+<td>close_date</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Point in time (Unix timestamp) when the poll will be automatically closed. Must be at least 5 and no more than 600 seconds in the future. Can&#39;t be used together with <em>open_period</em>.</td>
+</tr>
+<tr>
 <td>is_closed</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -3250,7 +3309,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="senddice" href="#senddice"><i class="anchor-icon"></i></a>sendDice</h4>
-<p>Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent <a href="#message">Message</a> is returned. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But it&#39;s awkward, and we decided to help it change. One dice at a time!)</p>
+<p>Use this method to send a dice, which will have a random value from 1 to 6. On success, the sent <a href="#message">Message</a> is returned. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But�it&#39;s awkward, and we decided to help it change. One dice at a time!)</p>
 <table class="table">
 <thead>
 <tr>
@@ -3266,6 +3325,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>emoji</td>
+<td>String</td>
+<td>Optional</td>
+<td>Emoji on which the dice throw animation is based. Currently, must be one of “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” or “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”. Defauts to “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -3345,7 +3410,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>limit</td>
 <td>Integer</td>
 <td>Optional</td>
-<td>Limits the number of photos to be retrieved. Values between 1—100 are accepted. Defaults to 100.</td>
+<td>Limits the number of photos to be retrieved. Values between 1�100 are accepted. Defaults to 100.</td>
 </tr>
 </tbody>
 </table>
@@ -3619,7 +3684,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <blockquote>
-<p>Note: Each administrator in a chat generates their own invite links. Bots can&#39;t use invite links generated by other administrators. If you want your bot to work with invite links, it will need to generate its own link using <a href="#exportchatinvitelink">exportChatInviteLink</a> – after this the link will become available to the bot via the <a href="#getchat">getChat</a> method. If your bot needs to generate a new invite link replacing its previous one, use <a href="#exportchatinvitelink">exportChatInviteLink</a> again.</p>
+<p>Note: Each administrator in a chat generates their own invite links. Bots can&#39;t use invite links generated by other administrators. If you want your bot to work with invite links, it will need to generate its own link using <a href="#exportchatinvitelink">exportChatInviteLink</a> � after this the link will become available to the bot via the <a href="#getchat">getChat</a> method. If your bot needs to generate a new invite link replacing its previous one, use <a href="#exportchatinvitelink">exportChatInviteLink</a> again.</p>
 </blockquote>
 <h4><a class="anchor" name="setchatphoto" href="#setchatphoto"><i class="anchor-icon"></i></a>setChatPhoto</h4>
 <p>Use this method to set a new profile photo for the chat. Photos can&#39;t be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns <em>True</em> on success.</p>
@@ -3960,7 +4025,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>url</td>
 <td>String</td>
 <td>Optional</td>
-<td>URL that will be opened by the user&#39;s client. If you have created a <a href="#game">Game</a> and accepted the conditions via <a href="https://t.me/botfather">@Botfather</a>, specify the URL that opens your game – note that this will only work if the query comes from a <a href="#inlinekeyboardbutton"><em>callback_game</em></a> button.<br><br>Otherwise, you may use links like <code>t.me/your_bot?start=XXXX</code> that open your bot with a parameter.</td>
+<td>URL that will be opened by the user&#39;s client. If you have created a <a href="#game">Game</a> and accepted the conditions via <a href="https://t.me/botfather">@Botfather</a>, specify the URL that opens your game � note that this will only work if the query comes from a <a href="#inlinekeyboardbutton"><em>callback_game</em></a> button.<br><br>Otherwise, you may use links like <code>t.me/your_bot?start=XXXX</code> that open your bot with a parameter.</td>
 </tr>
 <tr>
 <td>cache_time</td>
@@ -4037,7 +4102,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in your bot&#39;s message.</td>
+<td>Mode for parsing entities in the message text. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>disable_web_page_preview</td>
@@ -4093,7 +4158,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td>Optional</td>
-<td>Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td>Mode for parsing entities in the message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -4406,7 +4471,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>sticker</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Sticker to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a .WEBP file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -4470,7 +4535,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>png_sticker</td>
 <td><a href="#inputfile">InputFile</a></td>
 <td>Yes</td>
-<td><strong>Png</strong> image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><strong>Png</strong> image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 </tbody>
 </table>
@@ -4508,7 +4573,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>png_sticker</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td><strong>PNG</strong> image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><strong>PNG</strong> image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>tgs_sticker</td>
@@ -4564,7 +4629,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>png_sticker</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td><strong>PNG</strong> image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td><strong>PNG</strong> image with the sticker, must be up to 512 kilobytes in size, dimensions must not exceed 512px, and either width or height must be exactly 512px. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a></td>
 </tr>
 <tr>
 <td>tgs_sticker</td>
@@ -4660,13 +4725,13 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>A <strong>PNG</strong> image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a <strong>TGS</strong> animation with the thumbnail up to 32 kilobytes in size; see <a href="https://core.telegram.org/animated_stickers#technical-requirements"><a href="https://core.telegram.org/animated_stickers#technical-requirements">https://core.telegram.org/animated_stickers#technical-requirements</a></a> for animated sticker technical requirements. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a>. Animated sticker set thumbnail can&#39;t be uploaded via HTTP URL.</td>
+<td>A <strong>PNG</strong> image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a <strong>TGS</strong> animation with the thumbnail up to 32 kilobytes in size; see <a href="https://core.telegram.org/animated_stickers#technical-requirements"><a href="https://core.telegram.org/animated_stickers#technical-requirements">https://core.telegram.org/animated_stickers#technical-requirements</a></a> for animated sticker technical requirements. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More info on Sending Files �</a>. Animated sticker set thumbnail can&#39;t be uploaded via HTTP URL.</td>
 </tr>
 </tbody>
 </table>
 <h3><a class="anchor" name="inline-mode" href="#inline-mode"><i class="anchor-icon"></i></a>Inline mode</h3>
 <p>The following methods and objects allow your bot to work in <a href="/bots/inline">inline mode</a>.<br>Please see our <a href="/bots/inline">Introduction to Inline bots</a> for more details.</p>
-<p>To enable this option, send the <code>/setinline</code> command to <a href="https://t.me/botfather">@BotFather</a> and provide the placeholder text that the user will see in the input field after typing your bot’s name.</p>
+<p>To enable this option, send the <code>/setinline</code> command to <a href="https://t.me/botfather">@BotFather</a> and provide the placeholder text that the user will see in the input field after typing your bot�s name.</p>
 <h4><a class="anchor" name="inlinequery" href="#inlinequery"><i class="anchor-icon"></i></a>InlineQuery</h4>
 <p>This object represents an incoming inline query. When the user sends an empty query, your bot could return some default or trending results.</p>
 <table class="table">
@@ -4912,7 +4977,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -4985,7 +5050,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5058,7 +5123,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5124,7 +5189,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>video_width</td>
@@ -5197,7 +5262,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>performer</td>
@@ -5261,7 +5326,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the voice message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>voice_duration</td>
@@ -5282,7 +5347,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </table>
 <p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultdocument" href="#inlinequeryresultdocument"><i class="anchor-icon"></i></a>InlineQueryResultDocument</h4>
-<p>Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the file. Currently, only <strong>.PDF</strong> and <strong>.ZIP</strong> files can be sent using this method.</p>
+<p>Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use <em>input_message_content</em> to send a message with�the specified content instead of the file. Currently, only <strong>.PDF</strong> and <strong>.ZIP</strong> files can be sent using this method.</p>
 <table class="table">
 <thead>
 <tr>
@@ -5315,7 +5380,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>document_url</td>
@@ -5655,7 +5720,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5708,7 +5773,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5761,7 +5826,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5858,7 +5923,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5917,7 +5982,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5970,7 +6035,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the voice message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -6019,7 +6084,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in the media caption.</td>
+<td><em>Optional</em>. Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -6061,7 +6126,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>parse_mode</td>
 <td>String</td>
-<td><em>Optional</em>. Send <a href="#markdown-style"><em>Markdown</em></a> or <a href="#html-style"><em>HTML</em></a>, if you want Telegram apps to show <a href="#formatting-options">bold, italic, fixed-width text or inline URLs</a> in your bot&#39;s message.</td>
+<td><em>Optional</em>. Mode for parsing entities in the message text. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
 <td>disable_web_page_preview</td>
@@ -6198,7 +6263,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>location</td>
 <td><a href="#location">Location</a></td>
-<td><em>Optional</em>. Sender location, only for bots that require user location</td>
+<td><em>Optional</em>. Sender location, only for bots�that require user location</td>
 </tr>
 <tr>
 <td>inline_message_id</td>
@@ -7450,7 +7515,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <hr>
-<p>And that‘s about all we’ve got for now.<br>If you&#39;ve got any questions, please check out our <a href="/bots/faq"><strong>Bot FAQ »</strong></a></p>
+<p>And that‘s about all we’ve got for now.<br>If you&#39;ve got any questions, please check out our <a href="/bots/faq"><strong>Bot FAQ �</strong></a></p>
 </div>
   
 </div>
@@ -7517,7 +7582,7 @@ pre-formatted fixed-width code block written in the Python programming language
   </div>
 </div>
     </div>
-    <script src="/js/main.js?27"></script>
+    <script src="/js/main.js?28"></script>
     <script src="/js/jquery.min.js?1"></script>
 <script src="/js/bootstrap.min.js"></script>
 
@@ -7533,4 +7598,4 @@ backToTopInit();
 </script>
   </body>
 </html>
-<!-- page generated in 43.12ms -->
+<!-- page generated in 43.29ms -->
