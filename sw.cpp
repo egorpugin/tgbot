@@ -1,12 +1,12 @@
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.0.3");
+    auto &tgbot = s.addLibrary("tgbot", "1.0.4");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto &apitool = tgbot.addExecutable("apitool");
     {
         auto &t = apitool;
-        t += cpp17;
+        t += cpp20;
         t += "tools/.*"_rr;
         t += "pub.egorpugin.primitives.emitter-master"_dep;
         t += "pub.egorpugin.primitives.http-master"_dep;
@@ -18,7 +18,7 @@ void build(Solution &s)
 
     //
     {
-        tgbot += cpp17;
+        tgbot += cpp20;
 
         tgbot.ApiName = "TGBOT_API";
 
