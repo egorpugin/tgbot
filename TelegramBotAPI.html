@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="">
   <head>
     <meta charset="utf-8">
     <title>Telegram Bot API</title>
@@ -10,11 +10,11 @@ To learn how to create…">
     <meta property="og:image" content="30f729d4f304e41659">
     <meta property="og:description" content="The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram.
 To learn how to create…">
-    <link rel="shortcut icon" href="/favicon.ico?3" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico?4" type="image/x-icon" />
 
     <link href="/css/bootstrap.min.css?3" rel="stylesheet">
     
-    <link href="/css/telegram.css?198" rel="stylesheet" media="screen">
+    <link href="/css/telegram.css?205" rel="stylesheet" media="screen">
     <style>
     </style>
   </head>
@@ -50,6 +50,73 @@ To learn how to create…">
 <blockquote>
 <p>Subscribe to <a href="https://t.me/botnews">@BotNews</a> to be the first to know about the latest updates and join the discussion in <a href="https://t.me/bottalk">@BotTalk</a></p>
 </blockquote>
+<h4><a class="anchor" name="november-4-2020" href="#november-4-2020"><i class="anchor-icon"></i></a>November 4, 2020</h4>
+<p>Introducing <strong>Bot API 5.0</strong></p>
+<p><strong>Run Your Own Bot API Server</strong></p>
+<ul>
+<li>Bot API source code is now available at <a href="https://github.com/tdlib/telegram-bot-api">telegram-bot-api</a>. You can now run your <strong>own Bot API server</strong> locally, boosting your bots&#39; performance (<a href="https://core.telegram.org/bots/api#using-a-local-bot-api-server">check this out</a> to see if this will benefit your project).</li>
+<li>Added the method <a href="#logout">logOut</a>, which can be used to log out from the cloud Bot API server before launching your bot locally. You <strong>must</strong> log out the bot before running it locally, otherwise there is no guarantee that the bot will receive all updates.</li>
+<li>Added the method <a href="#close">close</a>, which can be used to close the bot instance before moving it from one local server to another.</li>
+</ul>
+<p><strong>Transfer Bot Ownership</strong></p>
+<ul>
+<li>You can now use <a href="https://t.me/botfather">@BotFather</a> to transfer your existing bots to another Telegram account. </li>
+</ul>
+<p><strong>Webhooks</strong></p>
+<ul>
+<li>Added the parameter <em>ip_address</em> to the method <a href="#setwebhook">setWebhook</a>, allowing to bypass DNS resolving and use the specified fixed IP address to send webhook requests.</li>
+<li>Added the field <em>ip_address</em> to the class <a href="#webhookinfo">WebhookInfo</a>, containing the current IP address used for webhook connections creation.</li>
+<li>Added the ability to drop all pending updates when changing webhook URL using the parameter <em>drop_pending_updates</em> in the methods <a href="#setwebhook">setWebhook</a> and <a href="#deletewebhook">deleteWebhook</a>.</li>
+</ul>
+<p><strong>Working with Groups</strong></p>
+<ul>
+<li>The <a href="#getchat">getChat</a> request now returns the user&#39;s bio for private chats if available.</li>
+<li>The <a href="#getchat">getChat</a> request now returns the identifier of the linked chat for supergroups and channels, i.e. the discussion group identifier for a channel and vice versa.</li>
+<li>The <a href="#getchat">getChat</a> request now returns the location to which the supergroup is connected (see <a href="https://telegram.org/blog/contacts-local-groups">Local Groups</a>). Added the class <a href="#chatlocation">ChatLocation</a> to represent the location.</li>
+<li>Added the parameter <em>only_if_banned</em> to the method <a href="#unbanchatmember">unbanChatMember</a> to allow safe unban.</li>
+</ul>
+<p><strong>Working with Files</strong></p>
+<ul>
+<li>Added the field <em>file_name</em> to the classes <a href="#audio">Audio</a> and <a href="#video">Video</a>, containing the name of the original file.</li>
+<li>Added the ability to disable server-side file content type detection using the parameter <em>disable_content_type_detection</em> in the method <a href="#senddocument">sendDocument</a> and the class <a href="#inputmediadocument">inputMediaDocument</a>.</li>
+</ul>
+<p><strong>Multiple Pinned Messages</strong></p>
+<ul>
+<li>Added the ability to <strong>pin messages in private chats</strong>.</li>
+<li>Added the parameter <em>message_id</em> to the method <a href="#unpinchatmessage">unpinChatMessage</a> to allow unpinning of the specific pinned message.</li>
+<li>Added the method <a href="#unpinallchatmessages">unpinAllChatMessages</a>, which can be used to unpin all pinned messages in a chat.</li>
+</ul>
+<p><strong>File Albums</strong></p>
+<ul>
+<li>Added support for sending and receiving audio and document albums in the method <a href="#sendmediagroup">sendMediaGroup</a>.</li>
+</ul>
+<p><strong>Live Locations</strong></p>
+<ul>
+<li>Added the field <em>live_period</em> to the class <a href="#location">Location</a>, representing a maximum period for which the live location can be updated.</li>
+<li>Added support for live location <a href="https://en.wikipedia.org/wiki/Heading_(navigation&#41;">heading</a>: added the field <em>heading</em> to the classes <a href="#location">Location</a>, <a href="#inlinequeryresultlocation">InlineQueryResultLocation</a>, <a href="#inputlocationmessagecontent">InputLocationMessageContent</a> and the parameter <em>heading</em> to the methods <a href="#sendlocation">sendLocation</a> and <a href="#editmessagelivelocation">editMessageLiveLocation</a>.</li>
+<li>Added support for proximity alerts in live locations: added the field <em>proximity_alert_radius</em> to the classes <a href="#location">Location</a>, <a href="#inlinequeryresultlocation">InlineQueryResultLocation</a>, <a href="#inputlocationmessagecontent">InputLocationMessageContent</a> and the parameter <em>proximity_alert_radius</em> to the methods <a href="#sendlocation">sendLocation</a> and <a href="#editmessagelivelocation">editMessageLiveLocation</a>.</li>
+<li>Added the type <a href="#proximityalerttriggered">ProximityAlertTriggered</a> and the field <em>proximity_alert_triggered</em> to the class <a href="#message">Message</a>.</li>
+<li>Added possibility to specify the horizontal accuracy of a location. Added the field <em>horizontal_accuracy</em> to the classes <a href="#location">Location</a>, <a href="#inlinequeryresultlocation">InlineQueryResultLocation</a>, <a href="#inputlocationmessagecontent">InputLocationMessageContent</a> and the parameter <em>horizontal_accuracy</em> to the methods <a href="#sendlocation">sendLocation</a> and <a href="#editmessagelivelocation">editMessageLiveLocation</a>.</li>
+</ul>
+<p><strong>Anonymous Admins</strong></p>
+<ul>
+<li>Added the field <em>sender_chat</em> to the class <a href="#message">Message</a>, containing the sender of a message which is a chat (group or channel). For backward compatibility in non-channel chats, the field <em>from</em> in such messages will contain the user 777000 for messages automatically forwarded to the discussion group and the user 1087968824 (<a href="https://t.me/GroupAnonymousBot">@GroupAnonymousBot</a>) for messages from anonymous group administrators.</li>
+<li>Added the field <em>is_anonymous</em> to the class <a href="#chatmember">chatMember</a>, which can be used to distinguish anonymous chat administrators.</li>
+<li>Added the parameter <em>is_anonymous</em> to the method <a href="#promotechatmember">promoteChatMember</a>, which allows to promote anonymous chat administrators. The bot itself should have the <em>is_anonymous</em> right to do this. Despite the fact that bots can have the <em>is_anonymous</em> right, they will never appear as anonymous in the chat. Bots can use the right only for passing to other administrators.</li>
+<li>Added the custom title of an anonymous message sender to the class <a href="#message">Message</a> as <em>author_signature</em>.</li>
+</ul>
+<p><strong>And More</strong></p>
+<ul>
+<li>Added the method <a href="#copymessage">copyMessage</a>, which sends a copy of any message.</li>
+<li>Maximum poll question length increased to 300.</li>
+<li>Added the ability to manually specify text entities instead of specifying the <em>parse_mode</em> in the classes <a href="#inputmediaphoto">InputMediaPhoto</a>, <a href="#inputmediavideo">InputMediaVideo</a>, <a href="#inputmediaanimation">InputMediaAnimation</a>, <a href="#inputmediaaudio">InputMediaAudio</a>, <a href="#inputmediadocument">InputMediaDocument</a>, <a href="#inlinequeryresultphoto">InlineQueryResultPhoto</a>, <a href="#inlinequeryresultgif">InlineQueryResultGif</a>, <a href="#inlinequeryresultmpeg4gif">InlineQueryResultMpeg4Gif</a>, <a href="#inlinequeryresultvideo">InlineQueryResultVideo</a>, <a href="#inlinequeryresultaudio">InlineQueryResultAudio</a>, <a href="#inlinequeryresultvoice">InlineQueryResultVoice</a>, <a href="#inlinequeryresultdocument">InlineQueryResultDocument</a>, <a href="#inlinequeryresultcachedphoto">InlineQueryResultCachedPhoto</a>, <a href="#inlinequeryresultcachedgif">InlineQueryResultCachedGif</a>, <a href="#inlinequeryresultcachedmpeg4gif">InlineQueryResultCachedMpeg4Gif</a>, <a href="#inlinequeryresultcachedvideo">InlineQueryResultCachedVideo</a>, <a href="#inlinequeryresultcachedaudio">InlineQueryResultCachedAudio</a>, <a href="#inlinequeryresultcachedvoice">InlineQueryResultCachedVoice</a>, <a href="#inlinequeryresultcacheddocument">InlineQueryResultCachedDocument</a>, <a href="#inputtextmessagecontent">InputTextMessageContent</a> and the methods <a href="#sendmessage">sendMessage</a>, <a href="#sendphoto">sendPhoto</a>, <a href="#sendvideo">sendVideo</a>, <a href="#sendanimation">sendAnimation</a>, <a href="#sendaudio">sendAudio</a>, <a href="#senddocument">sendDocument</a>, <a href="#sendvoice">sendVoice</a>, <a href="#sendpoll">sendPoll</a>, <a href="#editmessagetext">editMessageText</a>, <a href="#editmessagecaption">editMessageCaption</a>.</li>
+<li>Added the fields <em>google_place_id</em> and <em>google_place_type</em> to the classes <a href="#venue">Venue</a>, <a href="#inlinequeryresultvenue">InlineQueryResultVenue</a>, <a href="#inputvenuemessagecontent">InputVenueMessageContent</a> and the optional parameters <em>google_place_id</em> and <em>google_place_type</em> to the method <a href="#sendvenue">sendVenue</a> to support Google Places as a venue API provider.</li>
+<li>Added the field <em>allow_sending_without_reply</em> to the methods <a href="#sendmessage">sendMessage</a>, <a href="#sendphoto">sendPhoto</a>, <a href="#sendvideo">sendVideo</a>, <a href="#sendanimation">sendAnimation</a>, <a href="#sendaudio">sendAudio</a>, <a href="#senddocument">sendDocument</a>, <a href="#sendsticker">sendSticker</a>, <a href="#sendvideonote">sendVideoNote</a>, <a href="#sendvoice">sendVoice</a>, <a href="#sendlocation">sendLocation</a>, <a href="#sendvenue">sendVenue</a>, <a href="#sendcontact">sendContact</a>, <a href="#sendpoll">sendPoll</a>, <a href="#senddice">sendDice</a>, <a href="#sendinvoice">sendInvoice</a>, <a href="#sendgame">sendGame</a>, <a href="#sendmediagroup">sendMediaGroup</a> to allow sending messages not a as reply if the replied-to message has already been deleted.</li>
+</ul>
+<p><strong>And Last but bot Least</strong></p>
+<ul>
+<li>Supported the new <strong>football</strong> and <strong>slot machine</strong> animations for the random <a href="#dice">dice</a>. Choose between different animations (dice, darts, basketball, football, slot machine) by specifying the <em>emoji</em> parameter in the method <a href="#senddice">sendDice</a>.</li>
+</ul>
 <h4><a class="anchor" name="june-4-2020" href="#june-4-2020"><i class="anchor-icon"></i></a>June 4, 2020</h4>
 <p><strong>Bot API 4.9</strong></p>
 <ul>
@@ -102,6 +169,20 @@ To learn how to create…">
 <blockquote>
 <p>Please see our <a href="/bots/faq#how-can-i-make-requests-in-response-to-updates">FAQ</a> for examples.</p>
 </blockquote>
+<h3><a class="anchor" name="using-a-local-bot-api-server" href="#using-a-local-bot-api-server"><i class="anchor-icon"></i></a>Using a Local Bot API Server</h3>
+<p>The Bot API server source code is available at <a href="https://github.com/tdlib/telegram-bot-api">telegram-bot-api</a>. You can run it locally and send the requests to your own server instead of <code>https://api.telegram.org</code>. If you switch to a local Bot API server, your bot will be able to:</p>
+<ul>
+<li>Download files without a size limit.</li>
+<li>Upload files up to 2000 MB.</li>
+<li>Upload files using their local path and <a href="https://en.wikipedia.org/wiki/File_URI_scheme">the file URI scheme</a>.</li>
+<li>Use an HTTP URL for the webhook.</li>
+<li>Use any local IP address for the webhook.</li>
+<li>Use any port for the webhook.</li>
+<li>Set <em>max_webhook_connections</em> up to 100000.</li>
+<li>Receive the absolute local path as a value of the <em>file_path</em> field without the need to download the file after a <a href="#getfile">getFile</a> request.</li>
+</ul>
+<h4><a class="anchor" name="do-i-need-a-local-bot-api-server" href="#do-i-need-a-local-bot-api-server"><i class="anchor-icon"></i></a>Do I need a Local Bot API Server</h4>
+<p>The majority of bots will be OK with the default configuration, running on our servers. But if you feel that you need one of <a href="#using-a-local-bot-api-server">these features</a>, you&#39;re welcome to switch to your own at any time.</p>
 <h3><a class="anchor" name="getting-updates" href="#getting-updates"><i class="anchor-icon"></i></a>Getting updates</h3>
 <p>There are two mutually exclusive ways of receiving updates for your bot — the <a href="#getupdates">getUpdates</a> method on one hand and <a href="#setwebhook">Webhooks</a> on the other. Incoming updates are stored on the server until the bot receives them either way, but they will not be kept longer than 24 hours.</p>
 <p>Regardless of which option you choose, you will receive JSON-serialized <a href="#update">Update</a> objects as a result.</p>
@@ -173,7 +254,7 @@ To learn how to create…">
 </tr>
 <tr>
 <td>poll_answer</td>
-<td><a href="#poll_answer">PollAnswer</a></td>
+<td><a href="#pollanswer">PollAnswer</a></td>
 <td><em>Optional</em>. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.</td>
 </tr>
 </tbody>
@@ -245,6 +326,12 @@ To learn how to create…">
 <td>Upload your public key certificate so that the root certificate in use can be checked. See our <a href="/bots/self-signed">self-signed guide</a> for details.</td>
 </tr>
 <tr>
+<td>ip_address</td>
+<td>String</td>
+<td>Optional</td>
+<td>The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS</td>
+</tr>
+<tr>
 <td>max_connections</td>
 <td>Integer</td>
 <td>Optional</td>
@@ -254,7 +341,13 @@ To learn how to create…">
 <td>allowed_updates</td>
 <td>Array of String</td>
 <td>Optional</td>
-<td>A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See <a href="#update">Update</a> for a complete list of available update types. Specify an empty list to receive all updates regardless of type (default). If not specified, the previous setting will be used.<br><br>Please note that this parameter doesn&#39;t affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.</td>
+<td>A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See <a href="#update">Update</a> for a complete list of available update types. Specify an empty list to receive all updates regardless of type (default). If not specified, the previous setting will be used.<br>Please note that this parameter doesn&#39;t affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.</td>
+</tr>
+<tr>
+<td>drop_pending_updates</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> to drop all pending updates</td>
 </tr>
 </tbody>
 </table>
@@ -263,7 +356,25 @@ To learn how to create…">
 <p><strong>NEW!</strong> If you&#39;re having any trouble setting up webhooks, please check out this <a href="/bots/webhooks">amazing guide to Webhooks</a>.</p>
 </blockquote>
 <h4><a class="anchor" name="deletewebhook" href="#deletewebhook"><i class="anchor-icon"></i></a>deleteWebhook</h4>
-<p>Use this method to remove webhook integration if you decide to switch back to <a href="#getupdates">getUpdates</a>. Returns <em>True</em> on success. Requires no parameters.</p>
+<p>Use this method to remove webhook integration if you decide to switch back to <a href="#getupdates">getUpdates</a>. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>drop_pending_updates</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> to drop all pending updates</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="getwebhookinfo" href="#getwebhookinfo"><i class="anchor-icon"></i></a>getWebhookInfo</h4>
 <p>Use this method to get current webhook status. Requires no parameters. On success, returns a <a href="#webhookinfo">WebhookInfo</a> object. If the bot is using <a href="#getupdates">getUpdates</a>, will return an object with the <em>url</em> field empty.</p>
 <h4><a class="anchor" name="webhookinfo" href="#webhookinfo"><i class="anchor-icon"></i></a>WebhookInfo</h4>
@@ -291,6 +402,11 @@ To learn how to create…">
 <td>pending_update_count</td>
 <td>Integer</td>
 <td>Number of updates awaiting delivery</td>
+</tr>
+<tr>
+<td>ip_address</td>
+<td>String</td>
+<td><em>Optional</em>. Currently used webhook IP address</td>
 </tr>
 <tr>
 <td>last_error_date</td>
@@ -425,6 +541,11 @@ To learn how to create…">
 <td><em>Optional</em>. Chat photo. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
+<td>bio</td>
+<td>String</td>
+<td><em>Optional</em>. Bio of the other party in a private chat. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
 <td>description</td>
 <td>String</td>
 <td><em>Optional</em>. Description, for groups, supergroups and channel chats. Returned only in <a href="#getchat">getChat</a>.</td>
@@ -437,7 +558,7 @@ To learn how to create…">
 <tr>
 <td>pinned_message</td>
 <td><a href="#message">Message</a></td>
-<td><em>Optional</em>. Pinned message, for groups, supergroups and channels. Returned only in <a href="#getchat">getChat</a>.</td>
+<td><em>Optional</em>. The most recent pinned message (by sending date). Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
 <td>permissions</td>
@@ -458,6 +579,16 @@ To learn how to create…">
 <td>can_set_sticker_set</td>
 <td>Boolean</td>
 <td><em>Optional</em>. True, if the bot can change the group sticker set. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>linked_chat_id</td>
+<td>Integer</td>
+<td><em>Optional</em>. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>location</td>
+<td><a href="#chatlocation">ChatLocation</a></td>
+<td><em>Optional</em>. For supergroups, the location to which the supergroup is connected. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -483,6 +614,11 @@ To learn how to create…">
 <td><em>Optional</em>. Sender, empty for messages sent to channels</td>
 </tr>
 <tr>
+<td>sender_chat</td>
+<td><a href="#chat">Chat</a></td>
+<td><em>Optional</em>. Sender of the message, sent on behalf of a chat. The channel itself for channel messages. The supergroup itself for messages from anonymous group administrators. The linked channel for messages automatically forwarded to the discussion group</td>
+</tr>
+<tr>
 <td>date</td>
 <td>Integer</td>
 <td>Date the message was sent in Unix time</td>
@@ -500,7 +636,7 @@ To learn how to create…">
 <tr>
 <td>forward_from_chat</td>
 <td><a href="#chat">Chat</a></td>
-<td><em>Optional</em>. For messages forwarded from channels, information about the original channel</td>
+<td><em>Optional</em>. For messages forwarded from channels or from anonymous administrators, information about the original sender chat</td>
 </tr>
 <tr>
 <td>forward_from_message_id</td>
@@ -545,7 +681,7 @@ To learn how to create…">
 <tr>
 <td>author_signature</td>
 <td>String</td>
-<td><em>Optional</em>. Signature of the post author for messages in channels</td>
+<td><em>Optional</em>. Signature of the post author for messages in channels, or the custom title of an anonymous group administrator</td>
 </tr>
 <tr>
 <td>text</td>
@@ -713,9 +849,32 @@ To learn how to create…">
 <td><em>Optional</em>. Telegram Passport data</td>
 </tr>
 <tr>
+<td>proximity_alert_triggered</td>
+<td><a href="#proximityalerttriggered">ProximityAlertTriggered</a></td>
+<td><em>Optional</em>. Service message. A user in the chat triggered another user&#39;s proximity alert while sharing Live Location.</td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. Inline keyboard attached to the message. <code>login_url</code> buttons are represented as ordinary <code>url</code> buttons.</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="messageid" href="#messageid"><i class="anchor-icon"></i></a>MessageId</h4>
+<p>This object represents a unique message identifier.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>message_id</td>
+<td>Integer</td>
+<td>Unique message identifier</td>
 </tr>
 </tbody>
 </table>
@@ -895,6 +1054,11 @@ To learn how to create…">
 <td><em>Optional</em>. Title of the audio as defined by sender or by audio tags</td>
 </tr>
 <tr>
+<td>file_name</td>
+<td>String</td>
+<td><em>Optional</em>. Original filename as defined by sender</td>
+</tr>
+<tr>
 <td>mime_type</td>
 <td>String</td>
 <td><em>Optional</em>. MIME type of the file as defined by sender</td>
@@ -994,6 +1158,11 @@ To learn how to create…">
 <td>thumb</td>
 <td><a href="#photosize">PhotoSize</a></td>
 <td><em>Optional</em>. Video thumbnail</td>
+</tr>
+<tr>
+<td>file_name</td>
+<td>String</td>
+<td><em>Optional</em>. Original filename as defined by sender</td>
 </tr>
 <tr>
 <td>mime_type</td>
@@ -1145,7 +1314,7 @@ To learn how to create…">
 <tr>
 <td>value</td>
 <td>Integer</td>
-<td>Value of the dice, 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />” base emoji, 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” base emoji</td>
+<td>Value of the dice, 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />” base emoji, 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />” base emoji, 1-64 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />” base emoji</td>
 </tr>
 </tbody>
 </table>
@@ -1299,6 +1468,26 @@ To learn how to create…">
 <td>Float</td>
 <td>Latitude as defined by sender</td>
 </tr>
+<tr>
+<td>horizontal_accuracy</td>
+<td>Float number</td>
+<td><em>Optional</em>. The radius of uncertainty for the location, measured in meters; 0-1500</td>
+</tr>
+<tr>
+<td>live_period</td>
+<td>Integer</td>
+<td><em>Optional</em>. Time relative to the message sending date, during which the location can be updated, in seconds. For active live locations only.</td>
+</tr>
+<tr>
+<td>heading</td>
+<td>Integer</td>
+<td><em>Optional</em>. The direction in which user is moving, in degrees; 1-360. For active live locations only.</td>
+</tr>
+<tr>
+<td>proximity_alert_radius</td>
+<td>Integer</td>
+<td><em>Optional</em>. Maximum distance for proximity alerts about approaching another chat member, in meters. For sent live locations only.</td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="venue" href="#venue"><i class="anchor-icon"></i></a>Venue</h4>
@@ -1315,7 +1504,7 @@ To learn how to create…">
 <tr>
 <td>location</td>
 <td><a href="#location">Location</a></td>
-<td>Venue location</td>
+<td>Venue location. Can&#39;t be a live location</td>
 </tr>
 <tr>
 <td>title</td>
@@ -1336,6 +1525,44 @@ To learn how to create…">
 <td>foursquare_type</td>
 <td>String</td>
 <td><em>Optional</em>. Foursquare type of the venue. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)</td>
+</tr>
+<tr>
+<td>google_place_id</td>
+<td>String</td>
+<td><em>Optional</em>. Google Places identifier of the venue</td>
+</tr>
+<tr>
+<td>google_place_type</td>
+<td>String</td>
+<td><em>Optional</em>. Google Places type of the venue. (See <a href="https://developers.google.com/places/web-service/supported_types">supported types</a>.)</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="proximityalerttriggered" href="#proximityalerttriggered"><i class="anchor-icon"></i></a>ProximityAlertTriggered</h4>
+<p>This object represents the content of a service message, sent whenever a user in the chat triggers a proximity alert set by another user.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>traveler</td>
+<td><a href="#user">User</a></td>
+<td>User that triggered the alert</td>
+</tr>
+<tr>
+<td>watcher</td>
+<td><a href="#user">User</a></td>
+<td>User that set the alert</td>
+</tr>
+<tr>
+<td>distance</td>
+<td>Integer</td>
+<td>The distance between the users</td>
 </tr>
 </tbody>
 </table>
@@ -1761,9 +1988,9 @@ To learn how to create…">
 <td><em>Optional</em>. Owner and administrators only. Custom title for this user</td>
 </tr>
 <tr>
-<td>until_date</td>
-<td>Integer</td>
-<td><em>Optional</em>. Restricted and kicked only. Date when restrictions will be lifted for this user; unix time</td>
+<td>is_anonymous</td>
+<td>Boolean</td>
+<td><em>Optional</em>. Owner and administrators only. True, if the user&#39;s presence in the chat is hidden</td>
 </tr>
 <tr>
 <td>can_be_edited</td>
@@ -1840,6 +2067,11 @@ To learn how to create…">
 <td>Boolean</td>
 <td><em>Optional</em>. Restricted only. True, if the user is allowed to add web page previews to their messages</td>
 </tr>
+<tr>
+<td>until_date</td>
+<td>Integer</td>
+<td><em>Optional</em>. Restricted and kicked only. Date when restrictions will be lifted for this user; unix time</td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="chatpermissions" href="#chatpermissions"><i class="anchor-icon"></i></a>ChatPermissions</h4>
@@ -1892,6 +2124,29 @@ To learn how to create…">
 <td>can_pin_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. True, if the user is allowed to pin messages. Ignored in public supergroups</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="chatlocation" href="#chatlocation"><i class="anchor-icon"></i></a>ChatLocation</h4>
+<p>Represents a location to which a chat is connected.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>location</td>
+<td><a href="#location">Location</a></td>
+<td>The location to which the supergroup is connected. Can&#39;t be a live location.</td>
+</tr>
+<tr>
+<td>address</td>
+<td>String</td>
+<td>Location address; 1-64 characters, as defined by the chat owner</td>
 </tr>
 </tbody>
 </table>
@@ -1981,6 +2236,11 @@ To learn how to create…">
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="inputmediavideo" href="#inputmediavideo"><i class="anchor-icon"></i></a>InputMediaVideo</h4>
@@ -2018,6 +2278,11 @@ To learn how to create…">
 <td>parse_mode</td>
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
 </tr>
 <tr>
 <td>width</td>
@@ -2078,6 +2343,11 @@ To learn how to create…">
 <td><em>Optional</em>. Mode for parsing entities in the animation caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>width</td>
 <td>Integer</td>
 <td><em>Optional</em>. Animation width</td>
@@ -2129,6 +2399,11 @@ To learn how to create…">
 <td>parse_mode</td>
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
 </tr>
 <tr>
 <td>duration</td>
@@ -2183,6 +2458,16 @@ To learn how to create…">
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
+<td>disable_content_type_detection</td>
+<td>Boolean</td>
+<td><em>Optional</em>. Disables automatic server-side content type detection for files uploaded using multipart/form-data. Always true, if the document is sent as part of an album.</td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="inputfile" href="#inputfile"><i class="anchor-icon"></i></a>InputFile</h4>
@@ -2217,6 +2502,10 @@ To learn how to create…">
 </blockquote>
 <h4><a class="anchor" name="getme" href="#getme"><i class="anchor-icon"></i></a>getMe</h4>
 <p>A simple method for testing your bot&#39;s auth token. Requires no parameters. Returns basic information about the bot in form of a <a href="#user">User</a> object.</p>
+<h4><a class="anchor" name="logout" href="#logout"><i class="anchor-icon"></i></a>logOut</h4>
+<p>Use this method to log out from the cloud Bot API server before launching the bot locally. You <strong>must</strong> log out the bot before running it locally, otherwise there is no guarantee that the bot will receive updates. After a successful call, you can immediately log in on a local server, but will not be able to log in back to the cloud Bot API server for 10 minutes. Returns <em>True</em> on success. Requires no parameters.</p>
+<h4><a class="anchor" name="close" href="#close"><i class="anchor-icon"></i></a>close</h4>
+<p>Use this method to close the bot instance before moving it from one local server to another. You need to delete the webhook before calling this method to ensure that the bot isn&#39;t launched again after server restart. The method will return error 429 in the first 10 minutes after the bot is launched. Returns <em>True</em> on success. Requires no parameters.</p>
 <h4><a class="anchor" name="sendmessage" href="#sendmessage"><i class="anchor-icon"></i></a>sendMessage</h4>
 <p>Use this method to send text messages. On success, the sent <a href="#message">Message</a> is returned.</p>
 <table class="table">
@@ -2248,6 +2537,12 @@ To learn how to create…">
 <td>Mode for parsing entities in the message text. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in message text, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>disable_web_page_preview</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -2264,6 +2559,12 @@ To learn how to create…">
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2385,6 +2686,80 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
+<h4><a class="anchor" name="copymessage" href="#copymessage"><i class="anchor-icon"></i></a>copyMessage</h4>
+<p>Use this method to copy messages of any kind. The method is analogous to the method <a href="#forwardmessages">forwardMessages</a>, but the copied message doesn&#39;t have a link to the original message. Returns the <a href="#messageid">MessageId</a> of the sent message on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>from_chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the chat where the original message was sent (or channel username in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_id</td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Message identifier in the chat specified in <em>from_chat_id</em></td>
+</tr>
+<tr>
+<td>caption</td>
+<td>String</td>
+<td>Optional</td>
+<td>New caption for media, 0-1024 characters after entities parsing. If not specified, the original caption is kept</td>
+</tr>
+<tr>
+<td>parse_mode</td>
+<td>String</td>
+<td>Optional</td>
+<td>Mode for parsing entities in the new caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the new caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
+<td>disable_notification</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Sends the message <a href="https://telegram.org/blog/channels-2-0#silent-messages">silently</a>. Users will receive a notification with no sound.</td>
+</tr>
+<tr>
+<td>reply_to_message_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
+</tr>
+<tr>
+<td>reply_markup</td>
+<td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
+<td>Optional</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="sendphoto" href="#sendphoto"><i class="anchor-icon"></i></a>sendPhoto</h4>
 <p>Use this method to send photos. On success, the sent <a href="#message">Message</a> is returned.</p>
 <table class="table">
@@ -2407,7 +2782,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>photo</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
-<td>Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. <a href="#sending-files">More info on Sending Files »</a></td>
+<td>Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using multipart/form-data. The photo must be at most 10 MB in size. The photo&#39;s width and height must not exceed 10000 in total. Width and height ratio must be at most 20. <a href="#sending-files">More info on Sending Files »</a></td>
 </tr>
 <tr>
 <td>caption</td>
@@ -2422,6 +2797,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>disable_notification</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -2432,6 +2813,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2479,6 +2866,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>duration</td>
 <td>Integer</td>
 <td>Optional</td>
@@ -2513,6 +2906,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2565,6 +2964,18 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
+<td>disable_content_type_detection</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Disables automatic server-side content type detection for files uploaded using multipart/form-data</td>
+</tr>
+<tr>
 <td>disable_notification</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -2575,6 +2986,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2645,6 +3062,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>supports_streaming</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -2661,6 +3084,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2731,6 +3160,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the animation caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>disable_notification</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -2741,6 +3176,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2787,6 +3228,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the voice message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>duration</td>
 <td>Integer</td>
 <td>Optional</td>
@@ -2803,6 +3250,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -2867,6 +3320,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>If the message is a reply, ID of the original message</td>
 </tr>
 <tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
@@ -2875,7 +3334,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="sendmediagroup" href="#sendmediagroup"><i class="anchor-icon"></i></a>sendMediaGroup</h4>
-<p>Use this method to send a group of photos or videos as an album. On success, an array of the sent <a href="#message">Messages</a> is returned.</p>
+<p>Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of <a href="#message">Messages</a> that were sent is returned.</p>
 <table class="table">
 <thead>
 <tr>
@@ -2894,21 +3353,27 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>media</td>
-<td>Array of <a href="#inputmediaphoto">InputMediaPhoto</a> and <a href="#inputmediavideo">InputMediaVideo</a></td>
+<td>Array of <a href="#inputmediaaudio">InputMediaAudio</a>, <a href="#inputmediadocument">InputMediaDocument</a>, <a href="#inputmediaphoto">InputMediaPhoto</a> and <a href="#inputmediavideo">InputMediaVideo</a></td>
 <td>Yes</td>
-<td>A JSON-serialized array describing photos and videos to be sent, must include 2-10 items</td>
+<td>A JSON-serialized array describing messages to be sent, must include 2-10 items</td>
 </tr>
 <tr>
 <td>disable_notification</td>
 <td>Boolean</td>
 <td>Optional</td>
-<td>Sends the messages <a href="https://telegram.org/blog/channels-2-0#silent-messages">silently</a>. Users will receive a notification with no sound.</td>
+<td>Sends messages <a href="https://telegram.org/blog/channels-2-0#silent-messages">silently</a>. Users will receive a notification with no sound.</td>
 </tr>
 <tr>
 <td>reply_to_message_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>If the messages are a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 </tbody>
 </table>
@@ -2943,10 +3408,28 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Longitude of the location</td>
 </tr>
 <tr>
+<td>horizontal_accuracy</td>
+<td>Float number</td>
+<td>Optional</td>
+<td>The radius of uncertainty for the location, measured in meters; 0-1500</td>
+</tr>
+<tr>
 <td>live_period</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Period in seconds for which the location will be updated (see <a href="https://telegram.org/blog/live-locations">Live Locations</a>, should be between 60 and 86400.</td>
+</tr>
+<tr>
+<td>heading</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.</td>
+</tr>
+<tr>
+<td>proximity_alert_radius</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -2961,6 +3444,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>If the message is a reply, ID of the original message</td>
 </tr>
 <tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
@@ -2969,7 +3458,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="editmessagelivelocation" href="#editmessagelivelocation"><i class="anchor-icon"></i></a>editMessageLiveLocation</h4>
-<p>Use this method to edit live location messages. A location can be edited until its <em>live_period</em> expires or editing is explicitly disabled by a call to <a href="#stopmessagelivelocation">stopMessageLiveLocation</a>. On success, if the edited message was sent by the bot, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
+<p>Use this method to edit live location messages. A location can be edited until its <em>live_period</em> expires or editing is explicitly disabled by a call to <a href="#stopmessagelivelocation">stopMessageLiveLocation</a>. On success, if the edited message is not an inline message, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
 <table class="table">
 <thead>
 <tr>
@@ -3009,6 +3498,24 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Float number</td>
 <td>Yes</td>
 <td>Longitude of new location</td>
+</tr>
+<tr>
+<td>horizontal_accuracy</td>
+<td>Float number</td>
+<td>Optional</td>
+<td>The radius of uncertainty for the location, measured in meters; 0-1500</td>
+</tr>
+<tr>
+<td>heading</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.</td>
+</tr>
+<tr>
+<td>proximity_alert_radius</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -3111,6 +3618,18 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)</td>
 </tr>
 <tr>
+<td>google_place_id</td>
+<td>String</td>
+<td>Optional</td>
+<td>Google Places identifier of the venue</td>
+</tr>
+<tr>
+<td>google_place_type</td>
+<td>String</td>
+<td>Optional</td>
+<td>Google Places type of the venue. (See <a href="https://developers.google.com/places/web-service/supported_types">supported types</a>.)</td>
+</tr>
+<tr>
 <td>disable_notification</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -3121,6 +3640,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -3185,6 +3710,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>If the message is a reply, ID of the original message</td>
 </tr>
 <tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
@@ -3214,7 +3745,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>question</td>
 <td>String</td>
 <td>Yes</td>
-<td>Poll question, 1-255 characters</td>
+<td>Poll question, 1-300 characters</td>
 </tr>
 <tr>
 <td>options</td>
@@ -3259,6 +3790,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the explanation. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>explanation_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the poll explanation, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>open_period</td>
 <td>Integer</td>
 <td>Optional</td>
@@ -3287,6 +3824,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -3318,7 +3861,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>emoji</td>
 <td>String</td>
 <td>Optional</td>
-<td>Emoji on which the dice throw animation is based. Currently, must be one of “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, or “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />”. Dice can have values 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, and values 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />”. Defauts to “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”</td>
+<td>Emoji on which the dice throw animation is based. Currently, must be one of “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />”, or “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />”. Dice can have values 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, values 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />”, and values 1-64 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />”. Defaults to “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -3331,6 +3874,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -3366,7 +3915,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>action</td>
 <td>String</td>
 <td>Yes</td>
-<td>Type of action to broadcast. Choose one, depending on what the user is about to receive: <em>typing</em> for <a href="#sendmessage">text messages</a>, <em>upload_photo</em> for <a href="#sendphoto">photos</a>, <em>record_video</em> or <em>upload_video</em> for <a href="#sendvideo">videos</a>, <em>record_audio</em> or <em>upload_audio</em> for <a href="#sendaudio">audio files</a>, <em>upload_document</em> for <a href="#senddocument">general files</a>, <em>find_location</em> for <a href="#sendlocation">location data</a>, <em>record_video_note</em> or <em>upload_video_note</em> for <a href="#sendvideonote">video notes</a>.</td>
+<td>Type of action to broadcast. Choose one, depending on what the user is about to receive: <em>typing</em> for <a href="#sendmessage">text messages</a>, <em>upload_photo</em> for <a href="#sendphoto">photos</a>, <em>record_video</em> or <em>upload_video</em> for <a href="#sendvideo">videos</a>, <em>record_voice</em> or <em>upload_voice</em> for <a href="#sendvoice">voice notes</a>, <em>upload_document</em> for <a href="#senddocument">general files</a>, <em>find_location</em> for <a href="#sendlocation">location data</a>, <em>record_video_note</em> or <em>upload_video_note</em> for <a href="#sendvideonote">video notes</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -3456,7 +4005,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="unbanchatmember" href="#unbanchatmember"><i class="anchor-icon"></i></a>unbanChatMember</h4>
-<p>Use this method to unban a previously kicked user in a supergroup or channel. The user will <strong>not</strong> return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. Returns <em>True</em> on success.</p>
+<p>Use this method to unban a previously kicked user in a supergroup or channel. The user will <strong>not</strong> return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be <strong>removed</strong> from the chat. If you don&#39;t want this, use the parameter <em>only_if_banned</em>. Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -3478,6 +4027,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Yes</td>
 <td>Unique identifier of the target user</td>
+</tr>
+<tr>
+<td>only_if_banned</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Do nothing if the user is not banned</td>
 </tr>
 </tbody>
 </table>
@@ -3509,7 +4064,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>permissions</td>
 <td><a href="#chatpermissions">ChatPermissions</a></td>
 <td>Yes</td>
-<td>New user permissions</td>
+<td>A JSON-serialized object for new user permissions</td>
 </tr>
 <tr>
 <td>until_date</td>
@@ -3542,6 +4097,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Yes</td>
 <td>Unique identifier of the target user</td>
+</tr>
+<tr>
+<td>is_anonymous</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the administrator&#39;s presence in the chat is hidden</td>
 </tr>
 <tr>
 <td>can_change_info</td>
@@ -3773,7 +4334,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="pinchatmessage" href="#pinchatmessage"><i class="anchor-icon"></i></a>pinChatMessage</h4>
-<p>Use this method to pin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the &#39;can_pin_messages&#39; admin right in the supergroup or &#39;can_edit_messages&#39; admin right in the channel. Returns <em>True</em> on success.</p>
+<p>Use this method to add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the &#39;can_pin_messages&#39; admin right in a supergroup or &#39;can_edit_messages&#39; admin right in a channel. Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -3800,12 +4361,38 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>disable_notification</td>
 <td>Boolean</td>
 <td>Optional</td>
-<td>Pass <em>True</em>, if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels.</td>
+<td>Pass <em>True</em>, if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels and private chats.</td>
 </tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="unpinchatmessage" href="#unpinchatmessage"><i class="anchor-icon"></i></a>unpinChatMessage</h4>
-<p>Use this method to unpin a message in a group, a supergroup, or a channel. The bot must be an administrator in the chat for this to work and must have the &#39;can_pin_messages&#39; admin right in the supergroup or &#39;can_edit_messages&#39; admin right in the channel. Returns <em>True</em> on success.</p>
+<p>Use this method to remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the &#39;can_pin_messages&#39; admin right in a supergroup or &#39;can_edit_messages&#39; admin right in a channel. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Identifier of a message to unpin. If not specified, the most recent pinned message (by sending date) will be unpinned.</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="unpinallchatmessages" href="#unpinallchatmessages"><i class="anchor-icon"></i></a>unpinAllChatMessages</h4>
+<p>Use this method to clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the &#39;can_pin_messages&#39; admin right in a supergroup or &#39;can_edit_messages&#39; admin right in a channel. Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4051,7 +4638,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <p>The following methods allow you to change an existing message in the message history instead of sending a new one with a result of an action. This is most useful for messages with <a href="/bots#inline-keyboards-and-on-the-fly-updating">inline keyboards</a> using callback queries, but can also help reduce clutter in conversations with regular chat bots.</p>
 <p>Please note, that it is currently only possible to edit messages without <em>reply_markup</em> or with <a href="/bots#inline-keyboards-and-on-the-fly-updating">inline keyboards</a>.</p>
 <h4><a class="anchor" name="editmessagetext" href="#editmessagetext"><i class="anchor-icon"></i></a>editMessageText</h4>
-<p>Use this method to edit text and <a href="#games">game</a> messages. On success, if edited message is sent by the bot, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
+<p>Use this method to edit text and <a href="#games">game</a> messages. On success, if the edited message is not an inline message, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4093,6 +4680,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the message text. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in message text, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>disable_web_page_preview</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -4107,7 +4700,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="editmessagecaption" href="#editmessagecaption"><i class="anchor-icon"></i></a>editMessageCaption</h4>
-<p>Use this method to edit captions of messages. On success, if edited message is sent by the bot, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
+<p>Use this method to edit captions of messages. On success, if the edited message is not an inline message, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4149,6 +4742,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Mode for parsing entities in the message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td>Optional</td>
+<td>List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
@@ -4157,7 +4756,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="editmessagemedia" href="#editmessagemedia"><i class="anchor-icon"></i></a>editMessageMedia</h4>
-<p>Use this method to edit animation, audio, document, photo, or video messages. If a message is a part of a message album, then it can be edited only to a photo or a video. Otherwise, message type can be changed arbitrarily. When inline message is edited, new file can&#39;t be uploaded. Use previously uploaded file via its file_id or specify a URL. On success, if the edited message was sent by the bot, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
+<p>Use this method to edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can&#39;t be uploaded. Use a previously uploaded file via its file_id or specify a URL. On success, if the edited message was sent by the bot, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4201,7 +4800,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="editmessagereplymarkup" href="#editmessagereplymarkup"><i class="anchor-icon"></i></a>editMessageReplyMarkup</h4>
-<p>Use this method to edit only the reply markup of messages. On success, if edited message is sent by the bot, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
+<p>Use this method to edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4472,6 +5071,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -4968,6 +5573,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -5044,6 +5654,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5124,6 +5739,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -5188,6 +5808,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
 </tr>
 <tr>
 <td>video_width</td>
@@ -5263,6 +5888,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>performer</td>
 <td>String</td>
 <td><em>Optional</em>. Performer</td>
@@ -5327,6 +5957,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the voice message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>voice_duration</td>
 <td>Integer</td>
 <td><em>Optional</em>. Recording duration in seconds</td>
@@ -5379,6 +6014,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
 </tr>
 <tr>
 <td>document_url</td>
@@ -5460,9 +6100,24 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Location title</td>
 </tr>
 <tr>
+<td>horizontal_accuracy</td>
+<td>Float number</td>
+<td><em>Optional</em>. The radius of uncertainty for the location, measured in meters; 0-1500</td>
+</tr>
+<tr>
 <td>live_period</td>
 <td>Integer</td>
 <td><em>Optional</em>. Period in seconds for which the location can be updated, should be between 60 and 86400.</td>
+</tr>
+<tr>
+<td>heading</td>
+<td>Integer</td>
+<td><em>Optional</em>. For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.</td>
+</tr>
+<tr>
+<td>proximity_alert_radius</td>
+<td>Integer</td>
+<td><em>Optional</em>. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5542,6 +6197,16 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>foursquare_type</td>
 <td>String</td>
 <td><em>Optional</em>. Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)</td>
+</tr>
+<tr>
+<td>google_place_id</td>
+<td>String</td>
+<td><em>Optional</em>. Google Places identifier of the venue</td>
+</tr>
+<tr>
+<td>google_place_type</td>
+<td>String</td>
+<td><em>Optional</em>. Google Places type of the venue. (See <a href="https://developers.google.com/places/web-service/supported_types">supported types</a>.)</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5721,6 +6386,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the photo caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -5774,6 +6444,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -5825,6 +6500,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>parse_mode</td>
 <td>String</td>
 <td><em>Optional</em>. Mode for parsing entities in the caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
+</tr>
+<tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -5924,6 +6604,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the document caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -5983,6 +6668,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the video caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -6036,6 +6726,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the voice message caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -6085,6 +6780,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the audio caption. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>caption_entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in the caption, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
@@ -6127,6 +6827,11 @@ pre-formatted fixed-width code block written in the Python programming language
 <td><em>Optional</em>. Mode for parsing entities in the message text. See <a href="#formatting-options">formatting options</a> for more details.</td>
 </tr>
 <tr>
+<td>entities</td>
+<td>Array of <a href="#messageentity">MessageEntity</a></td>
+<td><em>Optional</em>. List of special entities that appear in message text, which can be specified instead of <em>parse_mode</em></td>
+</tr>
+<tr>
 <td>disable_web_page_preview</td>
 <td>Boolean</td>
 <td><em>Optional</em>. Disables link previews for links in the sent message</td>
@@ -6155,9 +6860,24 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Longitude of the location in degrees</td>
 </tr>
 <tr>
+<td>horizontal_accuracy</td>
+<td>Float number</td>
+<td><em>Optional</em>. The radius of uncertainty for the location, measured in meters; 0-1500</td>
+</tr>
+<tr>
 <td>live_period</td>
 <td>Integer</td>
 <td><em>Optional</em>. Period in seconds for which the location can be updated, should be between 60 and 86400.</td>
+</tr>
+<tr>
+<td>heading</td>
+<td>Integer</td>
+<td><em>Optional</em>. For live locations, a direction in which the user is moving, in degrees. Must be between 1 and 360 if specified.</td>
+</tr>
+<tr>
+<td>proximity_alert_radius</td>
+<td>Integer</td>
+<td><em>Optional</em>. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. Must be between 1 and 100000 if specified.</td>
 </tr>
 </tbody>
 </table>
@@ -6201,6 +6921,16 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>foursquare_type</td>
 <td>String</td>
 <td><em>Optional</em>. Foursquare type of the venue, if known. (For example, “arts_entertainment/default”, “arts_entertainment/aquarium” or “food/icecream”.)</td>
+</tr>
+<tr>
+<td>google_place_id</td>
+<td>String</td>
+<td><em>Optional</em>. Google Places identifier of the venue</td>
+</tr>
+<tr>
+<td>google_place_type</td>
+<td>String</td>
+<td><em>Optional</em>. Google Places type of the venue. (See <a href="https://developers.google.com/places/web-service/supported_types">supported types</a>.)</td>
 </tr>
 </tbody>
 </table>
@@ -6342,7 +7072,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>provider_data</td>
 <td>String</td>
 <td>Optional</td>
-<td>JSON-encoded data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.</td>
+<td>A JSON-serialized data about the invoice, which will be shared with the payment provider. A detailed description of required fields should be provided by the payment provider.</td>
 </tr>
 <tr>
 <td>photo_url</td>
@@ -6421,6 +7151,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer</td>
 <td>Optional</td>
 <td>If the message is a reply, ID of the original message</td>
+</tr>
+<tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -7335,6 +8071,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>If the message is a reply, ID of the original message</td>
 </tr>
 <tr>
+<td>allow_sending_without_reply</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em>, if the message should be sent even if the specified replied-to message is not found</td>
+</tr>
+<tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
@@ -7580,7 +8322,7 @@ pre-formatted fixed-width code block written in the Python programming language
   </div>
 </div>
     </div>
-    <script src="/js/main.js?33"></script>
+    <script src="/js/main.js?41"></script>
     <script src="/js/jquery.min.js?1"></script>
 <script src="/js/bootstrap.min.js"></script>
 
@@ -7591,10 +8333,10 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-45099287-4', 'auto');
 ga('set', 'anonymizeIp', true);
-ga('send', 'pageview');initDevPageNav();
+ga('send', 'pageview');window.initDevPageNav&&initDevPageNav();
 backToTopInit("Go up");
 removePreloadInit();
 </script>
   </body>
 </html>
-<!-- page generated in 57.15ms -->
+<!-- page generated in 30.54ms -->

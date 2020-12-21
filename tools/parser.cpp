@@ -8,17 +8,59 @@
 
 // https://core.telegram.org/bots/api
 
-static String prepare_type(String t)
+static String prepare_type(const String &t)
 {
     if (t == "True" || t == "False")
-        t = "Boolean";
+        return "Boolean";
     if (t == "Float number")
-        t = "Float";
+        return "Float";
     if (t == "Int")
-        t = "Integer";
+        return "Integer";
     if (t == "Messages")
-        t = "Message";
+        return "Message";
     return t;
+}
+
+static String extract_return_type_sentence(const String &desc)
+{
+    static std::vector<std::regex> rs{
+        std::regex{"An (.*?) is returned\\."},
+        std::regex{"Returns (.*?)\\."},
+        std::regex{"On success, (.*?)\\."}
+    };
+
+    for (auto &&r : rs)
+    {
+        std::smatch m;
+        if (std::regex_search(desc, m, r))
+            return m[1].str();
+    }
+    throw SW_RUNTIME_ERROR("Return type sentence not found: " + desc);
+}
+
+static Field extract_return_type(const String &desc)
+{
+    auto sent = extract_return_type_sentence(desc);
+
+    // find words starting with capitals
+    Field f;
+    std::vector<String> capital_words;
+    for (auto &&w : split_string(sent, " "))
+    {
+        if (!isupper(w[0]))
+            continue;
+        if (w == "Array")
+            f.array++;
+        else
+            capital_words.push_back(w);
+    }
+
+    if (capital_words.empty())
+        throw SW_LOGIC_ERROR("check capitals logic for: " + sent);
+
+    f.types.push_back(*capital_words.begin());
+    f.types[0] = prepare_type(f.types[0]);
+    return f;
 }
 
 Parser::Parser(const String &s)
@@ -86,34 +128,7 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name)
 
                 // return type
                 if (!t.is_type())
-                {
-                    static std::regex r1("On success.*?(\\w+) object is returned");
-                    static std::regex r2("On success.*?(\\w+) is returned");
-                    static std::regex r3("[Rr]eturns.*?(\\w+) object");
-                    static std::regex r4("[Rr]eturns.*?(\\w+) on success");
-                    static std::regex r5(".*?Array of (\\w+) objects");
-                    static std::regex r6("[Rr]eturns.*?of a (\\w+) object");
-                    static std::regex r7("On success.*?returns the edited (\\w+)");
-                    static std::regex r8("On success, the stopped (\\w+)");
-                    std::smatch m;
-                    if (0
-                        || std::regex_search(t.description, m, r8)
-                        || std::regex_search(t.description, m, r1)
-                        || std::regex_search(t.description, m, r2)
-                        || std::regex_search(t.description, m, r3)
-                        || std::regex_search(t.description, m, r4)
-                        || std::regex_search(t.description, m, r5)
-                        || std::regex_search(t.description, m, r6)
-                        || std::regex_search(t.description, m, r7)
-                        )
-                    {
-                        t.return_type.types.push_back(m[1].str());
-                        t.return_type.types[0] = prepare_type(t.return_type.types[0]);
-                        std::smatch m2;
-                        if (std::regex_search(t.description, m2, r5))
-                            t.return_type.array++;
-                    }
-                }
+                    t.return_type = extract_return_type(t.description);
 
                 if (t.fields.empty() && t.name == "InputFile")
                 {

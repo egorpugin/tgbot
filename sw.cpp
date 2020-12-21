@@ -1,6 +1,6 @@
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.0.4");
+    auto &tgbot = s.addLibrary("tgbot", "1.0.5");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto &apitool = tgbot.addExecutable("apitool");
@@ -8,10 +8,10 @@ void build(Solution &s)
         auto &t = apitool;
         t += cpp20;
         t += "tools/.*"_rr;
-        t += "pub.egorpugin.primitives.emitter-master"_dep;
-        t += "pub.egorpugin.primitives.http-master"_dep;
-        t += "pub.egorpugin.primitives.xml-master"_dep;
-        t += "pub.egorpugin.primitives.sw.main-master"_dep;
+        t += "pub.egorpugin.primitives.emitter"_dep;
+        t += "pub.egorpugin.primitives.http"_dep;
+        t += "pub.egorpugin.primitives.xml"_dep;
+        t += "pub.egorpugin.primitives.sw.main"_dep;
         t += "org.sw.demo.nlohmann.json"_dep;
         t += "org.sw.demo.imageworks.pystring"_dep;
     }
