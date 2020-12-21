@@ -2,7 +2,7 @@
 
 C++20 library for Telegram bot API with generated API types and methods.
 
-* Current Bot API v4.9
+* Current Bot API v5.0
 
 Fork of https://github.com/reo7sp/tgbot-cpp
 
