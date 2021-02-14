@@ -33,7 +33,7 @@ private:
     mutable int net_delay_on_error = 1;
     long connect_timeout = 5;
     long read_timeout = 5;
-    bool use_connection_pool = true;
+    bool use_connection_pool = false; // we see crashes when connection pool is enabled
 
     std::string execute(CURL *curl) const;
     CURL *setupConnection(CURL *in, const std::string &url) const;
