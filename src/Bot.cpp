@@ -36,7 +36,14 @@ Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, cons
     {
         //if (item->update_id >= offset) // unconditionally!
             offset = item->update_id + 1;
-        eventHandler.handleUpdate(*item);
+        try
+        {
+            eventHandler.handleUpdate(*item);
+        }
+        catch (std::exception &e)
+        {
+            printf("error: %s\n", e.what());
+        }
     }
     return offset;
 }
