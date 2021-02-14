@@ -48,4 +48,9 @@ void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed
         offset = processUpdates(offset, limit, timeout, allowed_updates);
 }
 
+std::string Bot::makeFileUrl(const std::string &file_path) const
+{
+    return base_file_url + token + "/" + file_path;
+}
+
 }

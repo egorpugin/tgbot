@@ -46,6 +46,8 @@ public:
 
     int getDefaultTimeout() const { return 10; }
 
+    std::string makeFileUrl(const std::string &file_path) const;
+
 private:
     std::string token;
     std::unique_ptr<CurlHttpClient> httpClient;
