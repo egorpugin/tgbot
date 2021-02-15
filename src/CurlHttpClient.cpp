@@ -107,6 +107,7 @@ CURL *CurlHttpClient::setupConnection(CURL *in, const std::string &url) const
     auto curl = use_connection_pool ? in : curl_easy_duphandle(in);
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, read_timeout);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, nullptr); // we must reset http headers, since we free them after use
     return curl;
 }
 
