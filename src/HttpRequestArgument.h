@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace TgBot
+namespace tgbot
 {
 
 class HttpRequestArgument

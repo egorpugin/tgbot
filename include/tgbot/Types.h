@@ -7,7 +7,7 @@
 #include <variant>
 #include <vector>
 
-namespace TgBot
+namespace tgbot
 {
 
 using Boolean = bool;
@@ -24,7 +24,7 @@ using Variant = std::variant<Args...>;
 template <class T>
 using Vector = std::vector<T>;
 
-namespace this_namespace = ::TgBot;
+namespace this_namespace = ::tgbot;
 
 template <class T>
 auto createPtr()

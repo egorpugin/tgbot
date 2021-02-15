@@ -6,7 +6,7 @@
 #include <initializer_list>
 #include <unordered_map>
 
-namespace TgBot
+namespace tgbot
 {
 
 class EventHandler;

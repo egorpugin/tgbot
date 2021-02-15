@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-namespace TgBot
+namespace tgbot
 {
 
 void EventHandler::handleUpdate(const Update &update) const

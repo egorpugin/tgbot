@@ -22,7 +22,7 @@ static std::size_t curlWriteString(char *ptr, std::size_t size, std::size_t nmem
     return size * nmemb;
 }
 
-namespace TgBot
+namespace tgbot
 {
 
 CurlHttpClient::CurlHttpClient()

@@ -2,7 +2,7 @@
 
 #include "tgbot/Types.h"
 
-namespace TgBot
+namespace tgbot
 {
 
 class Bot;

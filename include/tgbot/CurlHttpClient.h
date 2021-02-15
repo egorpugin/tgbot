@@ -6,7 +6,7 @@
 // fwd decl
 typedef void CURL;
 
-namespace TgBot
+namespace tgbot
 {
 
 class HttpRequestArgument;

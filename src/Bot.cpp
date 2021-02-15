@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-namespace TgBot
+namespace tgbot
 {
 
 Bot::Bot(const std::string &token)
@@ -57,7 +57,7 @@ void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed
 
 std::string Bot::makeFileUrl(const std::string &file_path) const
 {
-    return base_file_url + token + "/" + file_path;
+    return base_file_url + getToken() + "/" + file_path;
 }
 
 }

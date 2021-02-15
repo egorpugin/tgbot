@@ -11,8 +11,11 @@
 #define TO_REQUEST_ARG(name) if (auto v = toRequestArgument(#name, name); v) args.push_back(std::move(*v))
 #define SEND_REQUEST(api, var) sendRequest(bot, #api, var)
 
+namespace tgbot
+{
+
 template <class T>
-static nlohmann::json sendRequest(const TgBot::Bot &bot, const std::string &method, const T &args)
+static nlohmann::json sendRequest(const Bot &bot, const std::string &method, const T &args)
 {
     auto url = bot.getBaseUrl();
     url += bot.getToken();
@@ -32,9 +35,6 @@ static nlohmann::json sendRequest(const TgBot::Bot &bot, const std::string &meth
     else
         throw std::runtime_error(result["description"].get<std::string>());
 }
-
-namespace TgBot
-{
 
 #include "ApiTemplates.h"
 #include <methods.inl.cpp>

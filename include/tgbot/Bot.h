@@ -3,7 +3,7 @@
 #include "tgbot/Api.h"
 #include "tgbot/EventHandler.h"
 
-namespace TgBot
+namespace tgbot
 {
 
 class EventBroadcaster;
