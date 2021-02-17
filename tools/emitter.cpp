@@ -206,7 +206,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     cpp.beginBlock();
     if (has_input_file)
     {
-        cpp.addLine("HttpRequestArguments args;");
+        cpp.addLine("http_request_arguments args;");
         cpp.addLine("args.reserve(" + std::to_string(fields.size()) + ");");
         for (auto &f : fields)
             cpp.addLine("TO_REQUEST_ARG(" + f.name + ");");

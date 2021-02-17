@@ -58,11 +58,11 @@ static void to_json(nlohmann::json &j, const char *k, const T &r) {
 //
 
 template <typename T>
-static Optional<HttpRequestArgument> to_request_argument(const char *n, const T &r) {
+static Optional<http_request_argument> to_request_argument(const char *n, const T &r) {
     if constexpr (is_instance<T, std::vector>::value) {
         if (r.empty())
             return {};
-        HttpRequestArgument a;
+        http_request_argument a;
         a.name = n;
         a.value = to_json(r).dump();
         return a;
@@ -73,16 +73,15 @@ static Optional<HttpRequestArgument> to_request_argument(const char *n, const T 
     } else if constexpr (is_instance<T, std::variant>::value) {
         return std::visit([&n](auto &&r) { return to_request_argument(n, r); }, r);
     } else {
-        HttpRequestArgument a;
+        http_request_argument a;
         a.name = n;
         if constexpr (std::is_same_v<T, Boolean> || std::is_same_v<T, Integer> || std::is_same_v<T, Float>) {
             a.value = std::to_string(r);
         } else if constexpr (std::is_same_v<T, String>) {
             a.value = r;
         } else if constexpr (std::is_same_v<T, InputFile>) {
-            a.isFile = true;
-            a.fileName = r.file_name;
-            a.mimeType = r.mime_type;
+            a.filename = r.file_name;
+            a.mimetype = r.mime_type;
         } else {
             a.value = to_json(r).dump();
         }

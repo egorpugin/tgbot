@@ -70,7 +70,7 @@ std::string CurlHttpClient::makeRequest(const std::string &url, const std::strin
     return execute(curl);
 }
 
-std::string CurlHttpClient::makeRequest(const std::string &url, const HttpRequestArguments &args) const
+std::string CurlHttpClient::makeRequest(const std::string &url, const http_request_arguments &args) const
 {
     auto curl = setupConnection(getCurl(), url);
 
@@ -82,13 +82,13 @@ std::string CurlHttpClient::makeRequest(const std::string &url, const HttpReques
         {
             auto part = curl_mime_addpart(mime);
             curl_mime_name(part, a.name.c_str());
-            if (a.isFile)
+            if (a.is_file())
             {
-                auto fn = a.fileName;
+                auto fn = a.filename;
                 fn = fn.substr(fn.find_last_of("/\\") + 1);
                 curl_mime_filename(part, fn.c_str());
-                curl_mime_filedata(part, a.fileName.c_str());
-                curl_mime_type(part, a.mimeType.c_str());
+                curl_mime_filedata(part, a.filename.c_str());
+                curl_mime_type(part, a.mimetype.c_str());
             }
             else
             {

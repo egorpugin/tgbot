@@ -2,18 +2,15 @@
 
 #include <string>
 
-namespace tgbot
-{
+namespace tgbot {
 
-class HttpRequestArgument
-{
-public:
+struct http_request_argument {
     std::string name;
     std::string value;
+    std::string filename;
+    std::string mimetype;
 
-    bool isFile = false;
-    std::string fileName;
-    std::string mimeType;
+    bool is_file() const { return filename.empty(); }
 };
 
 }

@@ -9,8 +9,8 @@ typedef void CURL;
 namespace tgbot
 {
 
-class HttpRequestArgument;
-using HttpRequestArguments = std::vector<HttpRequestArgument>;
+struct http_request_argument;
+using http_request_arguments = std::vector<http_request_argument>;
 
 /// This class makes http requests via libcurl.
 /// not mt safe
@@ -20,7 +20,7 @@ public:
     CurlHttpClient();
     ~CurlHttpClient();
 
-    std::string makeRequest(const std::string &url, const HttpRequestArguments &args) const;
+    std::string makeRequest(const std::string &url, const http_request_arguments &args) const;
     std::string makeRequest(const std::string &url, const std::string &json) const;
 
     /// Get curl settings storage for fine tuning.

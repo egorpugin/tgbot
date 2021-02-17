@@ -10,7 +10,7 @@
 #define TO_JSON(name) to_json(j, #name, r.name)
 #define TO_JSON2(name) to_json(j, #name, name)
 #define TO_REQUEST_ARG(name) to_request_argument(args, #name, name)
-#define SEND_REQUEST(api, var) send_request(bot, #api, var)
+#define SEND_REQUEST(method, var) send_request(bot, #method, var)
 
 namespace tgbot
 {
