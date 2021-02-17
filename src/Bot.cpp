@@ -1,6 +1,5 @@
 #include "tgbot/Bot.h"
 
-#include "tgbot/EventBroadcaster.h"
 #include "tgbot/CurlHttpClient.h"
 
 #include <memory>
@@ -12,8 +11,6 @@ Bot::Bot(const std::string &token)
     : token(token)
     , httpClient(std::make_unique<CurlHttpClient>())
     , api(*this)
-    , eventBroadcaster(std::make_unique<EventBroadcaster>())
-    , eventHandler(getEvents())
 {
     base_url = "https://api.telegram.org/bot";
     base_file_url = "https://api.telegram.org/file/bot";
@@ -24,8 +21,7 @@ Bot::Bot(const std::string &token)
 Bot::~Bot() {
 }
 
-Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) const
-{
+Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
     // update timeout here for getUpdates()
     httpClient->setTimeout(timeout);
 
@@ -35,7 +31,7 @@ Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, cons
         if (item->update_id >= offset)
             offset = item->update_id + 1;
         try {
-            eventHandler.handleUpdate(*item);
+            handleUpdate(*item);
         } catch (std::exception &e) {
             printf("error: %s\n", e.what());
         }
@@ -43,7 +39,7 @@ Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, cons
     return offset;
 }
 
-void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) const {
+void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
     Integer offset = 0;
     while (1)
         offset = processUpdates(offset, limit, timeout, allowed_updates);
