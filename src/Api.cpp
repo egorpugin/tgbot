@@ -10,25 +10,25 @@
 #define TO_JSON(name) to_json(j, #name, r.name)
 #define TO_JSON2(name) to_json(j, #name, name)
 #define TO_REQUEST_ARG(name) to_request_argument(args, #name, name)
-#define SEND_REQUEST(method, var) send_request(bot, #method, var)
+#define SEND_REQUEST(method, var) send_request(b, #method, var)
 
 namespace tgbot
 {
 
 template <class T>
-static nlohmann::json send_request(const Bot &bot, const std::string &method, const T &args)
+static nlohmann::json send_request(const bot &bot, const std::string &method, const T &args)
 {
-    auto url = bot.getBaseUrl();
-    url += bot.getToken();
+    auto url = bot.get_base_url();
+    url += bot.get_token();
     url += "/";
     url += method;
 
-    std::string serverResponse = bot.getHttpClient().makeRequest(url, args);
+    std::string serverResponse = bot.get_http_client().make_request(url, args);
     if (!serverResponse.compare(0, 6, "<html>"))
         throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
 
     // reset timeout after call
-    bot.getHttpClient().setTimeout(bot.getDefaultTimeout());
+    bot.get_http_client().set_timeout(bot.get_default_timeout());
 
     auto result = nlohmann::json::parse(serverResponse);
     if (result["ok"] == true)
@@ -40,8 +40,8 @@ static nlohmann::json send_request(const Bot &bot, const std::string &method, co
 #include "ApiTemplates.h"
 #include <methods.inl.cpp>
 
-Api::Api(const Bot &bot)
-    : bot(bot)
+api::api(const bot &b)
+    : b(b)
 {
 }
 

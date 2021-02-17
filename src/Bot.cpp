@@ -1,4 +1,4 @@
-#include "tgbot/Bot.h"
+#include "tgbot/bot.h"
 
 #include "tgbot/CurlHttpClient.h"
 
@@ -7,23 +7,23 @@
 
 namespace tgbot {
 
-Bot::Bot(const std::string &token)
+bot::bot(const std::string &token)
     : token(token)
-    , httpClient(std::make_unique<CurlHttpClient>())
+    , httpClient(std::make_unique<curl_http_client>())
     , api(*this)
 {
     base_url = "https://api.telegram.org/bot";
     base_file_url = "https://api.telegram.org/file/bot";
 
-    httpClient->setTimeout(getDefaultTimeout()); // default timeout for apis
+    httpClient->set_timeout(get_default_timeout()); // default timeout for apis
 }
 
-Bot::~Bot() {
+bot::~bot() {
 }
 
-Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
+Integer bot::process_updates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
     // update timeout here for getUpdates()
-    httpClient->setTimeout(timeout);
+    httpClient->set_timeout(timeout);
 
     auto updates = api.getUpdates(offset, limit, timeout, allowed_updates);
     for (const auto &item : updates) {
@@ -31,7 +31,7 @@ Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, cons
         if (item->update_id >= offset)
             offset = item->update_id + 1;
         try {
-            handleUpdate(*item);
+            handle_update(*item);
         } catch (std::exception &e) {
             printf("error: %s\n", e.what());
         }
@@ -39,14 +39,14 @@ Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, cons
     return offset;
 }
 
-void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
+void bot::long_poll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
     Integer offset = 0;
     while (1)
-        offset = processUpdates(offset, limit, timeout, allowed_updates);
+        offset = process_updates(offset, limit, timeout, allowed_updates);
 }
 
-std::string Bot::makeFileUrl(const std::string &file_path) const {
-    return base_file_url + getToken() + "/" + file_path;
+std::string bot::make_file_url(const std::string &file_path) const {
+    return base_file_url + get_token() + "/" + file_path;
 }
 
 }

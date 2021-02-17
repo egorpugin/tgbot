@@ -172,7 +172,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     // before h.
     cpp.addLine();
     return_type.emitFieldType(cpp);
-    cpp.addText(" Api::" + name + "(");
+    cpp.addText(" api::" + name + "(");
     cpp.increaseIndent();
     auto lno = get_parameters(cpp, false);
     cpp.decreaseIndent();
@@ -231,7 +231,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     {
         cpp.addLine();
         return_type.emitFieldType(cpp);
-        cpp.addText(" Api::" + name + "(const " + name + "Request &r) const");
+        cpp.addText(" api::" + name + "(const " + name + "Request &r) const");
         cpp.beginBlock();
         cpp.addLine("return " + name + "(");
         cpp.increaseIndent();

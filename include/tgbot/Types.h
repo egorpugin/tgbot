@@ -7,8 +7,7 @@
 #include <variant>
 #include <vector>
 
-namespace tgbot
-{
+namespace tgbot {
 
 namespace this_namespace = ::tgbot;
 
@@ -27,8 +26,7 @@ template <class ... Args>
 using Vector = std::vector<Args...>;
 
 template <class ... PtrArgs, class ... Args>
-auto createPtr(Args && ... args)
-{
+auto createPtr(Args && ... args) {
     return std::make_unique<PtrArgs...>(args...);
 }
 

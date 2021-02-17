@@ -2,22 +2,19 @@
 
 #include "tgbot/Types.h"
 
-namespace tgbot
-{
+namespace tgbot {
 
-class Bot;
+class bot;
 
 /// This class executes telegram api methods.
 /// Telegram docs: <https://core.telegram.org/bots/api#available-methods>
-class TGBOT_API Api
-{
-public:
-    Api(const Bot &);
+struct TGBOT_API api {
+    api(const bot &);
 
 #include <methods.inl.h>
 
 private:
-    const Bot &bot;
+    const bot &b;
 };
 
 }
