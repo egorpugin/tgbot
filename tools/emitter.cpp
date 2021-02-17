@@ -127,9 +127,11 @@ void Type::emitCreateType(primitives::CppEmitter &ctx) const
 {
     // from json
     ctx.addLine("template <>");
-    ctx.beginFunction("void fromJson(const nlohmann::json &j, " + name + " &v)");
+    ctx.beginFunction(name + " fromJson(const nlohmann::json &j)");
+    ctx.addLine(name + " v;");
     for (auto &f : fields)
-        ctx.addLine("FROM_JSON(" + f.name + ", v." + f.name + ");");
+        ctx.addLine("FROM_JSON(" + f.name + ");");
+    ctx.addLine("return v;");
     ctx.endFunction();
     ctx.emptyLines();
 
@@ -218,10 +220,9 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
         cpp.addLine("j = SEND_REQUEST(" + name + ", j.dump());");
     }
     cpp.addLine();
+    cpp.addText("return fromJson<");
     return_type.emitFieldType(cpp);
-    cpp.addText(" r;");
-    cpp.addLine("fromJson(j, r);");
-    cpp.addLine("return r;");
+    cpp.addLine(">(j);");
     cpp.endBlock();
     cpp.emptyLines();
 
@@ -294,7 +295,7 @@ void Emitter::emitMethods() const
     for (auto &[n, t] : types)
     {
         cpp.addLine("template <>");
-        cpp.addLine("void fromJson<" + t.name + ">(const nlohmann::json &, " + t.name + " &);");
+        cpp.addLine(t.name + " fromJson<" + t.name + ">(const nlohmann::json &);");
         cpp.addLine("template <>");
         cpp.addLine("nlohmann::json toJson(const " + t.name + " &);");
         cpp.emptyLines();

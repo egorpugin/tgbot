@@ -10,6 +10,8 @@
 namespace tgbot
 {
 
+namespace this_namespace = ::tgbot;
+
 using Boolean = bool;
 using Integer = std::int64_t;
 using Float = double;
@@ -17,19 +19,17 @@ using String = std::string;
 
 template <class T>
 using Optional = std::optional<T>;
-template <class T>
-using Ptr = std::unique_ptr<T>;
+template <class ... Args>
+using Ptr = std::unique_ptr<Args...>;
 template <class ... Args>
 using Variant = std::variant<Args...>;
-template <class T>
-using Vector = std::vector<T>;
+template <class ... Args>
+using Vector = std::vector<Args...>;
 
-namespace this_namespace = ::tgbot;
-
-template <class T>
+template <class ... Args>
 auto createPtr()
 {
-    return std::make_unique<T>();
+    return std::make_unique<Args...>();
 }
 
 #include <types.inl.h>
