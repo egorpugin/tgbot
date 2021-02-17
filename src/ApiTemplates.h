@@ -8,16 +8,16 @@ struct is_instance<C<Args...>, C> : std::true_type {};
 template <typename T>
 static T from_json(const nlohmann::json &j) {
     if constexpr (is_instance<T, std::vector>::value) {
-        Vector<T::value_type> v;
+        Vector<typename T::value_type> v;
         for (auto &i : j)
-            v.emplace_back(from_json<T::value_type>(i));
+            v.emplace_back(from_json<typename T::value_type>(i));
         return v;
     } else if constexpr (is_instance<T, std::unique_ptr>::value) {
-        auto p = createPtr<T::element_type>();
-        *p = from_json<T::element_type>(j);
+        auto p = createPtr<typename T::element_type>();
+        *p = from_json<typename T::element_type>(j);
         return p;
     } else if constexpr (is_instance<T, std::optional>::value) {
-        return from_json<T::value_type>(j);
+        return from_json<typename T::value_type>(j);
     } else {
         return j;
     }
