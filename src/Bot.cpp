@@ -6,8 +6,7 @@
 #include <memory>
 #include <string>
 
-namespace tgbot
-{
+namespace tgbot {
 
 Bot::Bot(const std::string &token)
     : token(token)
@@ -22,8 +21,7 @@ Bot::Bot(const std::string &token)
     httpClient->setTimeout(getDefaultTimeout()); // default timeout for apis
 }
 
-Bot::~Bot()
-{
+Bot::~Bot() {
 }
 
 Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) const
@@ -32,31 +30,26 @@ Integer Bot::processUpdates(Integer offset, Integer limit, Integer timeout, cons
     httpClient->setTimeout(timeout);
 
     auto updates = api.getUpdates(offset, limit, timeout, allowed_updates);
-    for (const auto &item : updates)
-    {
-        //if (item->update_id >= offset) // unconditionally!
+    for (const auto &item : updates) {
+        // if updates come unsorted, we must check this
+        if (item->update_id >= offset)
             offset = item->update_id + 1;
-        try
-        {
+        try {
             eventHandler.handleUpdate(*item);
-        }
-        catch (std::exception &e)
-        {
+        } catch (std::exception &e) {
             printf("error: %s\n", e.what());
         }
     }
     return offset;
 }
 
-void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) const
-{
+void Bot::longPoll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) const {
     Integer offset = 0;
     while (1)
         offset = processUpdates(offset, limit, timeout, allowed_updates);
 }
 
-std::string Bot::makeFileUrl(const std::string &file_path) const
-{
+std::string Bot::makeFileUrl(const std::string &file_path) const {
     return base_file_url + getToken() + "/" + file_path;
 }
 
