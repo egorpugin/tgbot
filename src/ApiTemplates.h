@@ -5,7 +5,7 @@ struct is_instance<C<Args...>, C> : std::true_type {};
 
 //
 
-template <class T>
+template <typename T>
 static T from_json(const nlohmann::json &j) {
     if constexpr (is_instance<T, std::vector>::value) {
         Vector<T::value_type> v;
@@ -23,7 +23,15 @@ static T from_json(const nlohmann::json &j) {
     }
 }
 
-template <class T>
+template <typename T>
+static void from_json(const nlohmann::json &j, const char *k, T &v) {
+    if (j.contains(k))
+        v = from_json<T>(j[k]);
+}
+
+//
+
+template <typename T>
 static nlohmann::json to_json(const T &r) {
     if constexpr (is_instance<T, std::vector>::value) {
         nlohmann::json j;
@@ -41,8 +49,16 @@ static nlohmann::json to_json(const T &r) {
     }
 }
 
-template <class T>
-static Optional<HttpRequestArgument> to_request_argument(const String &n, const T &r) {
+template <typename T>
+static void to_json(nlohmann::json &j, const char *k, const T &r) {
+    if (auto v = to_json(r); !v.is_null())
+        j[k] = v;
+}
+
+//
+
+template <typename T>
+static Optional<HttpRequestArgument> to_request_argument(const char *n, const T &r) {
     if constexpr (is_instance<T, std::vector>::value) {
         if (r.empty())
             return {};
@@ -72,4 +88,10 @@ static Optional<HttpRequestArgument> to_request_argument(const String &n, const 
         }
         return a;
     }
+}
+
+template <typename T, typename Args>
+static void to_request_argument(Args &args, const char *n, const T &r) {
+    if (auto v = to_request_argument(n, r); v)
+        args.push_back(std::move(*v));
 }

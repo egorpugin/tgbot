@@ -140,7 +140,7 @@ void Type::emitCreateType(primitives::CppEmitter &ctx) const
     ctx.beginFunction("nlohmann::json to_json(const " + name + " &r)");
     ctx.addLine("nlohmann::json j;");
     for (auto &f : fields)
-        ctx.addLine("TO_JSON(" + f.name + ", r." + f.name + ");");
+        ctx.addLine("TO_JSON(" + f.name + ");");
     ctx.addLine("return j;");
     ctx.endFunction();
     ctx.emptyLines();
@@ -216,7 +216,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     {
         cpp.addLine("nlohmann::json j;");
         for (auto &f : fields)
-            cpp.addLine("TO_JSON(" + f.name + ", " + f.name + ");");
+            cpp.addLine("TO_JSON2(" + f.name + ");");
         cpp.addLine("j = SEND_REQUEST(" + name + ", j.dump());");
     }
     cpp.addLine();

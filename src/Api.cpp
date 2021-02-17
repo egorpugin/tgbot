@@ -6,16 +6,17 @@
 
 #include <nlohmann/json.hpp>
 
-#define FROM_JSON(name) if (j.contains(#name)) v.name = from_json<decltype(v.name)>(j[#name])
-#define TO_JSON(name, var) if (auto v = to_json(var); !v.is_null()) j[#name] = v
-#define TO_REQUEST_ARG(name) if (auto v = to_request_argument(#name, name); v) args.push_back(std::move(*v))
-#define SEND_REQUEST(api, var) sendRequest(bot, #api, var)
+#define FROM_JSON(name) from_json(j, #name, v.name)
+#define TO_JSON(name) to_json(j, #name, r.name)
+#define TO_JSON2(name) to_json(j, #name, name)
+#define TO_REQUEST_ARG(name) to_request_argument(args, #name, name)
+#define SEND_REQUEST(api, var) send_request(bot, #api, var)
 
 namespace tgbot
 {
 
 template <class T>
-static nlohmann::json sendRequest(const Bot &bot, const std::string &method, const T &args)
+static nlohmann::json send_request(const Bot &bot, const std::string &method, const T &args)
 {
     auto url = bot.getBaseUrl();
     url += bot.getToken();
