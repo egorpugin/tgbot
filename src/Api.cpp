@@ -6,9 +6,9 @@
 
 #include <nlohmann/json.hpp>
 
-#define FROM_JSON(name) if (j.contains(#name)) v.name = fromJson<decltype(v.name)>(j[#name])
-#define TO_JSON(name, var) if (auto v = toJson(var); !v.is_null()) j[#name] = v
-#define TO_REQUEST_ARG(name) if (auto v = toRequestArgument(#name, name); v) args.push_back(std::move(*v))
+#define FROM_JSON(name) if (j.contains(#name)) v.name = from_json<decltype(v.name)>(j[#name])
+#define TO_JSON(name, var) if (auto v = to_json(var); !v.is_null()) j[#name] = v
+#define TO_REQUEST_ARG(name) if (auto v = to_request_argument(#name, name); v) args.push_back(std::move(*v))
 #define SEND_REQUEST(api, var) sendRequest(bot, #api, var)
 
 namespace tgbot

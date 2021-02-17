@@ -26,10 +26,10 @@ using Variant = std::variant<Args...>;
 template <class ... Args>
 using Vector = std::vector<Args...>;
 
-template <class ... Args>
-auto createPtr()
+template <class ... PtrArgs, class ... Args>
+auto createPtr(Args && ... args)
 {
-    return std::make_unique<Args...>();
+    return std::make_unique<PtrArgs...>(args...);
 }
 
 #include <types.inl.h>
