@@ -222,7 +222,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     cpp.addLine();
     cpp.addText("return from_json<");
     return_type.emitFieldType(cpp);
-    cpp.addLine(">(j);");
+    cpp.addText(">(j);");
     cpp.endBlock();
     cpp.emptyLines();
 
