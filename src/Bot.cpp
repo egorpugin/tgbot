@@ -1,6 +1,6 @@
-#include "tgbot/bot.h"
+#include <tgbot/bot.h>
 
-#include "tgbot/CurlHttpClient.h"
+#include <tgbot/curl_http_client.h>
 
 #include <memory>
 #include <string>

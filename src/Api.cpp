@@ -1,8 +1,9 @@
-#include "tgbot/Api.h"
+#include <tgbot/api.h>
 
-#include "HttpRequestArgument.h"
-#include "tgbot/Bot.h"
-#include "tgbot/CurlHttpClient.h"
+#include "http_request_argument.h"
+
+#include <tgbot/bot.h>
+#include <tgbot/curl_http_client.h>
 
 #include <nlohmann/json.hpp>
 
@@ -37,7 +38,7 @@ static nlohmann::json send_request(const bot &bot, const char *method, const T &
         throw std::runtime_error(result["description"].get<std::string>());
 }
 
-#include "ApiTemplates.h"
+#include "api_templates.h"
 #include <methods.inl.cpp>
 
 }

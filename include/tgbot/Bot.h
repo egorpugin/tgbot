@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tgbot/Api.h"
+#include "api.h"
 
 namespace tgbot {
 

@@ -1,6 +1,6 @@
-#include "tgbot/curlhttpclient.h"
+#include <tgbot/curl_http_client.h>
 
-#include "HttpRequestArgument.h"
+#include "http_request_argument.h"
 
 #include <curl/curl.h>
 
