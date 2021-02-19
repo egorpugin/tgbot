@@ -21,30 +21,6 @@ bot::bot(const std::string &token)
 bot::~bot() {
 }
 
-Integer bot::process_updates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
-    // update timeout here for getUpdates()
-    http_client_->set_timeout(timeout);
-
-    auto updates = api_.getUpdates(offset, limit, timeout, allowed_updates);
-    for (const auto &item : updates) {
-        // if updates come unsorted, we must check this
-        if (item->update_id >= offset)
-            offset = item->update_id + 1;
-        try {
-            handle_update(*item);
-        } catch (std::exception &e) {
-            printf("error: %s\n", e.what());
-        }
-    }
-    return offset;
-}
-
-void bot::long_poll(Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
-    Integer offset = 0;
-    while (1)
-        offset = process_updates(offset, limit, timeout, allowed_updates);
-}
-
 std::string bot::make_file_url(const std::string &file_path) const {
     return base_file_url_ + token_ + "/" + file_path;
 }
