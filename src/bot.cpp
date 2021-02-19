@@ -8,14 +8,14 @@
 namespace tgbot {
 
 bot::bot(const std::string &token)
-    : token(token)
-    , httpClient(std::make_unique<curl_http_client>())
-    , api(*this)
+    : token_(token)
+    , http_client_(std::make_unique<curl_http_client>())
+    , api_(*this)
 {
-    base_url = "https://api.telegram.org/bot";
-    base_file_url = "https://api.telegram.org/file/bot";
+    base_url_ = "https://api.telegram.org/bot";
+    base_file_url_ = "https://api.telegram.org/file/bot";
 
-    httpClient->set_timeout(get_default_timeout()); // default timeout for apis
+    http_client_->set_timeout(default_timeout()); // default timeout for apis
 }
 
 bot::~bot() {
@@ -23,9 +23,9 @@ bot::~bot() {
 
 Integer bot::process_updates(Integer offset, Integer limit, Integer timeout, const Vector<String> &allowed_updates) {
     // update timeout here for getUpdates()
-    httpClient->set_timeout(timeout);
+    http_client_->set_timeout(timeout);
 
-    auto updates = api.getUpdates(offset, limit, timeout, allowed_updates);
+    auto updates = api_.getUpdates(offset, limit, timeout, allowed_updates);
     for (const auto &item : updates) {
         // if updates come unsorted, we must check this
         if (item->update_id >= offset)
@@ -46,7 +46,7 @@ void bot::long_poll(Integer limit, Integer timeout, const Vector<String> &allowe
 }
 
 std::string bot::make_file_url(const std::string &file_path) const {
-    return base_file_url + get_token() + "/" + file_path;
+    return base_file_url_ + token_ + "/" + file_path;
 }
 
 }

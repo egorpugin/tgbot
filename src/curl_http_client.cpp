@@ -22,10 +22,10 @@ static std::size_t curlWriteString(char *ptr, std::size_t size, std::size_t nmem
 namespace tgbot {
 
 curl_http_client::curl_http_client() {
-    curl_settings = curl_easy_init();
+    curl_settings_ = curl_easy_init();
 
     // default options
-    auto curl = get_curl();
+    auto curl = curl_settings();
 
     curl_easy_setopt(curl, CURLOPT_TCP_NODELAY, 1L);
 
@@ -38,7 +38,7 @@ curl_http_client::curl_http_client() {
 }
 
 curl_http_client::~curl_http_client() {
-    curl_easy_cleanup(curl_settings);
+    curl_easy_cleanup(curl_settings());
 }
 
 void curl_http_client::set_timeout(long t) {
@@ -48,7 +48,7 @@ void curl_http_client::set_timeout(long t) {
 }
 
 std::string curl_http_client::make_request(const std::string &url, const std::string &json) const {
-    auto curl = setup_connection(get_curl(), url);
+    auto curl = setup_connection(curl_settings(), url);
 
     struct curl_slist *headers = nullptr;
     headers = curl_slist_append(headers, "Connection: keep-alive");
@@ -63,7 +63,7 @@ std::string curl_http_client::make_request(const std::string &url, const std::st
 }
 
 std::string curl_http_client::make_request(const std::string &url, const http_request_arguments &args) const {
-    auto curl = setup_connection(get_curl(), url);
+    auto curl = setup_connection(curl_settings(), url);
     curl_mime *mime = nullptr;
     if (!args.empty()) {
         mime = curl_mime_init(curl);

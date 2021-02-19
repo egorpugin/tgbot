@@ -21,12 +21,12 @@ struct TGBOT_API curl_http_client {
     std::string make_request(const std::string &url, const std::string &json) const;
 
     /// Get curl settings storage for fine tuning.
-    CURL *get_curl() const { return curl_settings; }
+    CURL *curl_settings() const { return curl_settings_; }
 
     void set_timeout(long timeout);
 
 private:
-    CURL *curl_settings;
+    CURL *curl_settings_;
     mutable int net_delay_on_error = 1;
     long connect_timeout = 5;
     long read_timeout = 5;
