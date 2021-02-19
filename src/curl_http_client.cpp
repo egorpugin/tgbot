@@ -14,11 +14,6 @@ struct scope_exit {
     ~scope_exit() { f(); }
 };
 
-static std::size_t curlWriteString(char *ptr, std::size_t size, std::size_t nmemb, void *userdata) {
-    static_cast<std::string*>(userdata)->append(ptr, size * nmemb);
-    return size * nmemb;
-}
-
 namespace tgbot {
 
 curl_http_client::curl_http_client() {
@@ -94,10 +89,15 @@ CURL *curl_http_client::setup_connection(CURL *in, const std::string &url) const
     return curl;
 }
 
+static std::size_t curl_write_string(char *ptr, std::size_t size, std::size_t nmemb, void *userdata) {
+    static_cast<std::string*>(userdata)->append(ptr, size * nmemb);
+    return size * nmemb;
+}
+
 std::string curl_http_client::execute(CURL *curl) const {
     std::string response;
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWriteString);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_write_string);
 
     auto res = curl_easy_perform(curl);
     long http_code = 0;
