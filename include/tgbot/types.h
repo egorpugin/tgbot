@@ -32,4 +32,4 @@ auto createPtr(Args && ... args) {
 
 #include <types.inl.h>
 
-}
+} // namespace tgbot

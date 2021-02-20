@@ -4,7 +4,7 @@
 
 namespace tgbot {
 
-class curl_http_client;
+struct curl_http_client;
 
 /// This object holds other objects specific for this bot instance.
 struct TGBOT_API bot {

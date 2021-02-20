@@ -4,7 +4,7 @@
 
 namespace tgbot {
 
-class bot;
+struct bot;
 
 /// This class executes telegram api methods.
 /// Telegram docs: <https://core.telegram.org/bots/api#available-methods>

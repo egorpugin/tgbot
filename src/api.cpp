@@ -13,12 +13,10 @@
 #define TO_REQUEST_ARG(name) to_request_argument(args, #name, name)
 #define SEND_REQUEST(method, var) send_request(b, #method, var)
 
-namespace tgbot
-{
+namespace tgbot {
 
-template <class T>
-static nlohmann::json send_request(const bot &bot, const char *method, const T &args)
-{
+template <typename T>
+static nlohmann::json send_request(const bot &bot, const char *method, const T &args) {
     auto url = bot.base_url();
     url += bot.token();
     url += "/";
