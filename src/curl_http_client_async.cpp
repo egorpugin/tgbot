@@ -63,11 +63,13 @@ void curl_http_client::check_multi_info() {
         if (msg->msg == CURLMSG_DONE) {
             easy = msg->easy_handle;
             res = msg->data.result;
-            //curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
+            boost::asio::deadline_timer *timer;
+            curl_easy_getinfo(easy, CURLINFO_PRIVATE, &timer);
             //curl_easy_getinfo(easy, CURLINFO_EFFECTIVE_URL, &eff_url);
             curl_multi_remove_handle(multi_handle, easy);
             //free(conn->url);
             curl_easy_cleanup(easy);
+            timer->cancel();
             //free(conn);
         }
     }
@@ -79,11 +81,6 @@ void curl_http_client::timer_cb() {
     check_multi_info();
 }
 
-boost::asio::awaitable<void> curl_http_client::multi_timer_cb2() {
-    co_await timer->async_wait(boost::asio::use_awaitable);
-    timer_cb();
-}
-
 // Update the event timer after curl_multi library calls
 int curl_http_client::multi_timer_cb(CURLM *multi, long timeout_ms, curl_http_client *client) {
     auto &timer = *client->timer;
@@ -93,27 +90,12 @@ int curl_http_client::multi_timer_cb(CURLM *multi, long timeout_ms, curl_http_cl
     if (timeout_ms > 0) {
         // update timer
         timer.expires_from_now(boost::posix_time::millisec(timeout_ms));
-        client->awaitables.emplace(
-            boost::asio::co_spawn(*client->io_context_, client->multi_timer_cb2(), boost::asio::use_awaitable));
+        timer.async_wait([client](auto &&ec) { if (!ec) client->timer_cb(); });
     } else if (timeout_ms == 0) {
         // call timeout function immediately
         client->timer_cb();
     }
     return 0;
-}
-
-boost::asio::awaitable<void> curl_http_client::event_cb2(boost::asio::ip::tcp::socket &tcp_socket, tcp::socket::wait_type waittype,
-    curl_socket_t s, int action, int *fdp) {
-    bool ok = false;
-    try {
-        co_await tcp_socket.async_wait(waittype, boost::asio::experimental::as_single(boost::asio::use_awaitable));
-        ok = true;
-    } catch (std::exception &) {
-    }
-    boost::system::error_code ec;
-    if (!ok)
-        ec = boost::system::errc::make_error_code(boost::system::errc::operation_canceled);
-    event_cb(s, action, ec, fdp);
 }
 
 // Called by asio when there is an action on a socket
@@ -147,9 +129,9 @@ void curl_http_client::event_cb(curl_socket_t s, int action, const boost::system
                 waittype = tcp::socket::wait_read;
             else if (action == CURL_POLL_OUT)
                 waittype = tcp::socket::wait_write;
-            awaitables.emplace(
-                boost::asio::co_spawn(*io_context_,
-                    event_cb2(tcp_socket, (tcp::socket::wait_type)waittype, s, action, fdp), boost::asio::use_awaitable));
+            tcp_socket.async_wait((tcp::socket::wait_type)waittype, [this, s, action, fdp](auto &&ec) {
+                event_cb(s, action, ec, fdp);
+            });
         }
     }
 }
@@ -206,9 +188,9 @@ void curl_http_client::setsock(int *fdp, curl_socket_t s, CURL *e, int act, int 
     if (waittype != -1 && action != -1) {
         auto &tcp_socket = *it->second;
         *fdp = act;
-        awaitables.emplace(
-            boost::asio::co_spawn(*io_context_,
-                event_cb2(tcp_socket, (tcp::socket::wait_type)waittype, s, action, fdp), boost::asio::use_awaitable));
+        tcp_socket.async_wait((tcp::socket::wait_type)waittype, [this, s, action, fdp](auto &&ec) {
+            event_cb(s, action, ec, fdp);
+        });
     }
 }
 
@@ -257,124 +239,20 @@ int curl_http_client::close_socket(curl_socket_t item) {
 
 std::size_t curl_write_string(char *ptr, std::size_t size, std::size_t nmemb, void *userdata);
 
-struct mytype {
-    boost::asio::this_coro::executor_t e;
-    mytype(boost::asio::this_coro::executor_t e) : e(e) {}
-    operator boost::asio::this_coro::executor_t() const { return e; }
-    auto operator co_await() {
-        throw;
-    }
-};
-/*auto operator co_await(mytype t){
-    struct awaiter {
-        //boost::asio::this_coro::executor_t e;
-        //awaiter(boost::asio::this_coro::executor_t e) : e(e) {}
-        bool await_ready() const { return false; }
-        void await_suspend() {
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-        }
-        //void await_suspend(std::coroutine_handle<> resume_cb) {}
-        void await_resume() {
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-        }
-    };
-    return awaiter{};
-}*/
-
-template <typename T>
-struct mytask {
-    using promise_type = mytask;
-
-    boost::asio::this_coro::executor_t e;
-    mytask() {}
-    mytask(boost::asio::this_coro::executor_t e) : e(e) {}
-    operator boost::asio::this_coro::executor_t() const { return e; }
-
-    auto initial_suspend() { return std::suspend_always{}; }
-    auto final_suspend() { return std::suspend_never{}; }
-    void return_void() {}
-    mytask<void> get_return_object() { return e; }
-
-    /*auto operator co_await() {
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-    }*/
-};
-
-int aaa;
-
-struct mytask2 : mytask<void> {
-    using promise_type = mytask2;
-
-    int x = aaa++;
-
-    mytask2() {
-        printf("creating mytask2 %p\n", this);
-    }
-    ~mytask2() {
-        printf("destroying mytask2 %p\n", this);
-    }
-    mytask2 get_return_object() {
-        printf("creating mytask2 in get_return_object of %p\n", this);
-        return {};
-    }
-
-    auto initial_suspend() { return std::suspend_never{}; }
-
-    bool await_ready() const noexcept
-    {
-        return true;
-    }
-
-    // Support for co_await keyword.
-    void await_suspend(std::coroutine_handle<mytask2> h)
-    {
-        printf("await_suspend in %p, passed handle is %p\n", this, h.address());
-        auto &p = h.promise();
-        int a = 5;
-        a++;
-        return;
-    }
-
-    // Support for co_await keyword.
-    auto await_resume()
-    {
-        return true;
-    }
-};
-
-mytask2 a() {
-    co_return;
-}
-
-mytask2 g() {
-    co_await a();
-}
-
-mytask2 f() {
-    co_await g();
-    int a = 5;
-    a++;
-    co_await g();
-    a = 5;
-    a++;
-    co_await g();
-}
-
-mytask<void> mycoro() {
-    co_return;
-}
-
 boost::asio::awaitable<std::string> curl_http_client::execute_async(CURL *curl) const {
+    // https://curl.se/libcurl/c/libcurl-multi.html
     // https://curl.se/libcurl/c/asiohiper.html
     // https://curl.se/libcurl/c/multi-app.html
     // https://curl.se/libcurl/c/multi-single.html
 
-    co_await f();
-
     if (!async())
         throw std::logic_error("Not in async mode. Call set_io_context() to switch to async mode.");
 
-    //curl_easy_setopt(curl, CURLOPT_PRIVATE, this);
+    // operation timer
+    boost::asio::deadline_timer optimer(*io_context_);
+    optimer.expires_from_now(boost::posix_time::pos_infin);
+
+    curl_easy_setopt(curl, CURLOPT_PRIVATE, &optimer);
     curl_easy_setopt(curl, CURLOPT_OPENSOCKETDATA, this);
     curl_easy_setopt(curl, CURLOPT_OPENSOCKETFUNCTION, &curl_http_client::open_socket);
     curl_easy_setopt(curl, CURLOPT_CLOSESOCKETDATA, this);
@@ -397,22 +275,11 @@ boost::asio::awaitable<std::string> curl_http_client::execute_async(CURL *curl) 
     //return response;
 
     curl_multi_add_handle(multi_handle, curl);
-    //co_await boost::asio::co_spawn(*io_context_, execute_async(curl), boost::asio::use_awaitable);
-    //co_return execute(curl);
-    //co_await boost::asio::awaitable<std::string>{};
-    //co_return "{}";
 
-    while (!awaitables.empty()) {
-        auto a = std::move(awaitables.front());
-        awaitables.pop();
-        co_await std::move(a);
+    try {
+        co_await optimer.async_wait(boost::asio::use_awaitable);
+    } catch (std::exception &) {
     }
-
-    boost::asio::deadline_timer timer(*io_context_);
-    timer.expires_from_now(boost::posix_time::millisec(1000 * 500));
-    co_await timer.async_wait(boost::asio::use_awaitable);
-    co_await mytype{boost::asio::this_coro::executor};
-    co_await mycoro();
     co_return response;
 }
 

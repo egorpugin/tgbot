@@ -54,10 +54,8 @@ private:
     std::unique_ptr<boost::asio::deadline_timer> timer;
     std::unordered_map<curl_socket_t, std::unique_ptr<boost::asio::ip::tcp::socket>> sockmap;
     int still_running = 0;
-    mutable std::queue<boost::asio::awaitable<void>> awaitables;
 public:
     static int multi_timer_cb(CURLM *multi, long timeout_ms, curl_http_client *client);
-    boost::asio::awaitable<void> multi_timer_cb2();
     static int sock_cb(CURL *e, curl_socket_t s, int what, curl_http_client *client, void *sockp);
     void timer_cb();
     curl_socket_t open_socket(curlsocktype purpose, struct curl_sockaddr *address);
@@ -67,9 +65,6 @@ public:
     void setsock(int *fdp, curl_socket_t s, CURL *e, int act, int oldact);
     void addsock(curl_socket_t s, CURL *easy, int action);
     void event_cb(curl_socket_t s, int action, const boost::system::error_code &error, int *fdp);
-    boost::asio::awaitable<void> event_cb2(
-        boost::asio::ip::tcp::socket &tcp_socket, boost::asio::ip::tcp::socket::wait_type wt,
-        curl_socket_t s, int action, int *fdp);
 };
 
 }
