@@ -12,6 +12,7 @@
 #define TO_JSON2(name) to_json(j, #name, name)
 #define TO_REQUEST_ARG(name) to_request_argument(args, #name, name)
 #define SEND_REQUEST(method, var) send_request(b, #method, var)
+#define SEND_REQUEST_ASYNC(method, var) co_await send_request_async(b, #method, var)
 
 namespace tgbot {
 
@@ -32,6 +33,27 @@ static nlohmann::json send_request(const bot &bot, const char *method, const T &
     auto result = nlohmann::json::parse(response);
     if (result["ok"] == true)
         return std::move(result["result"]);
+    else
+        throw std::runtime_error(result["description"].template get<std::string>());
+}
+
+template <typename T>
+static api::awaitable<nlohmann::json> send_request_async(const bot &bot, const char *method, const T &args) {
+    auto url = bot.base_url();
+    url += bot.token();
+    url += "/";
+    url += method;
+
+    auto response = co_await bot.http_client().make_request_async(url, args);
+    if (!response.compare(0, 6, "<html>"))
+        throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
+
+    // reset timeout after call
+    bot.http_client().set_timeout(bot.default_timeout());
+
+    auto result = nlohmann::json::parse(response);
+    if (result["ok"] == true)
+        co_return std::move(result["result"]);
     else
         throw std::runtime_error(result["description"].template get<std::string>());
 }

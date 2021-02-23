@@ -28,6 +28,9 @@ void build(Solution &s)
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.CompileOptions.push_back("/Zc:__cplusplus");
 
+        // we can make asio as feature. If selected, push as public dep
+        //tgbot.Public += "TGBOT_ENABLE_ASYNC"_dep;
+        tgbot.Public += "org.sw.demo.boost.asio"_dep;
         tgbot += "org.sw.demo.nlohmann.json"_dep;
         tgbot += "org.sw.demo.badger.curl.libcurl"_dep;
 

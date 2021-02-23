@@ -2,10 +2,10 @@
 
 #include "http_request_argument.h"
 
-#include <curl/curl.h>
-
 #include <stdexcept>
 #include <thread>
+
+using namespace boost::asio::ip;
 
 template <class F>
 struct scope_exit {
@@ -34,6 +34,7 @@ curl_http_client::curl_http_client() {
 
 curl_http_client::~curl_http_client() {
     curl_easy_cleanup(curl_settings());
+    curl_multi_cleanup(multi_handle);
 }
 
 void curl_http_client::set_timeout(long t) {
@@ -42,22 +43,25 @@ void curl_http_client::set_timeout(long t) {
     read_timeout = connect_timeout + t + 2;
 }
 
-std::string curl_http_client::make_request(const std::string &url, const std::string &json) const {
+bool curl_http_client::use_connection_pool() const {
+    return use_connection_pool_ && !async();
+}
+
+std::tuple<CURL *, void *> curl_http_client::prepare_request(const std::string &url, const std::string &json) const {
     auto curl = setup_connection(curl_settings(), url);
 
     struct curl_slist *headers = nullptr;
     headers = curl_slist_append(headers, "Connection: keep-alive");
     headers = curl_slist_append(headers, "Content-Type: application/json");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    scope_exit se([headers] { curl_slist_free_all(headers); });
 
     curl_easy_setopt(curl, CURLOPT_POST, 1L);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json.c_str());
 
-    return execute(curl);
+    return { curl, headers };
 }
 
-std::string curl_http_client::make_request(const std::string &url, const http_request_arguments &args) const {
+std::tuple<CURL *, void *> curl_http_client::prepare_request(const std::string &url, const http_request_arguments &args) const {
     auto curl = setup_connection(curl_settings(), url);
     curl_mime *mime = nullptr;
     if (!args.empty()) {
@@ -77,19 +81,44 @@ std::string curl_http_client::make_request(const std::string &url, const http_re
         }
         curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime);
     }
-    scope_exit se([mime] { curl_mime_free(mime); });
+    return { curl, mime };
+}
+
+std::string curl_http_client::make_request(const std::string &url, const std::string &json) const {
+    auto [curl,headers] = prepare_request(url, json);
+    scope_exit se([headers] { curl_slist_free_all((curl_slist*)headers); });
     return execute(curl);
 }
 
+std::string curl_http_client::make_request(const std::string &url, const http_request_arguments &args) const {
+    auto [curl,mime] = prepare_request(url, args);
+    scope_exit se([mime] { curl_mime_free((curl_mime*)mime); });
+    return execute(curl);
+}
+
+boost::asio::awaitable<std::string> curl_http_client::make_request_async(const std::string &url,
+                                                                         const std::string &json) const {
+    auto [curl,headers] = prepare_request(url, json);
+    scope_exit se([headers] { curl_slist_free_all((curl_slist*)headers); });
+    co_return co_await execute_async(curl);
+}
+
+boost::asio::awaitable<std::string> curl_http_client::make_request_async(const std::string &url,
+                                                                         const http_request_arguments &args) const {
+    auto [curl,mime] = prepare_request(url, args);
+    scope_exit se([mime] { curl_mime_free((curl_mime*)mime); });
+    co_return co_await execute_async(curl);
+}
+
 CURL *curl_http_client::setup_connection(CURL *in, const std::string &url) const {
-    auto curl = use_connection_pool ? in : curl_easy_duphandle(in);
+    auto curl = use_connection_pool() ? in : curl_easy_duphandle(in);
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_TIMEOUT, read_timeout);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, nullptr); // we must reset http headers, since we free them after use
     return curl;
 }
 
-static std::size_t curl_write_string(char *ptr, std::size_t size, std::size_t nmemb, void *userdata) {
+std::size_t curl_write_string(char *ptr, std::size_t size, std::size_t nmemb, void *userdata) {
     static_cast<std::string*>(userdata)->append(ptr, size * nmemb);
     return size * nmemb;
 }
@@ -103,7 +132,7 @@ std::string curl_http_client::execute(CURL *curl) const {
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 
-    if (!use_connection_pool)
+    if (!use_connection_pool())
         curl_easy_cleanup(curl);
 
     if (http_code >= 500 || res) {
