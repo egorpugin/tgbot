@@ -149,7 +149,7 @@ void Type::emitCreateType(primitives::CppEmitter &ctx) const
 void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const
 {
     bool has_input_file = false;
-    auto get_parameters = [this, &has_input_file](auto &ctx, bool defaults, int last_non_optional = -1)
+    auto get_parameters = [this, &has_input_file](auto &ctx, bool defaults, int last_non_optional)
     {
         for (const auto &[i,f] : enumerate(fields))
         {
@@ -157,24 +157,28 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
             f.emitFieldType(ctx);
             ctx.addText(" &");
             ctx.addText(f.name);
-            if (f.optional && defaults && i > last_non_optional)
+            if (f.optional && static_cast<int>(i) > last_non_optional && defaults)
                 ctx.addText(" = {}");
             ctx.addText(",");
-            if (!f.optional && !defaults)
-                last_non_optional = i;
             has_input_file |= std::find(f.types.begin(), f.types.end(), "InputFile") != f.types.end();
         }
         if (!fields.empty())
             ctx.trimEnd(1);
-        return last_non_optional;
     };
+
+    int last_non_optional = -1;
+    for (const auto &[i,f] : enumerate(fields))
+    {
+        if (!f.optional)
+            last_non_optional = i;
+    }
 
     // before h.
     cpp.addLine();
     return_type.emitFieldType(cpp);
     cpp.addText(" api::" + name + "(");
     cpp.increaseIndent();
-    auto lno = get_parameters(cpp, false);
+    get_parameters(cpp, false, last_non_optional);
     cpp.decreaseIndent();
     cpp.addLine(") const");
 
@@ -186,7 +190,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     if (!fields.empty())
     {
         h.increaseIndent();
-        get_parameters(h, true, lno);
+        get_parameters(h, true, last_non_optional);
         h.decreaseIndent();
         h.addLine();
     }
