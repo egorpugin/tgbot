@@ -10,7 +10,7 @@ struct http_request_argument {
     std::string filename;
     std::string mimetype;
 
-    bool is_file() const { return filename.empty(); }
+    bool is_file() const { return !filename.empty(); }
 };
 
 }
