@@ -49,7 +49,7 @@ void Field::emitField(primitives::CppEmitter &ctx) const
     ctx.emptyLines();
 }
 
-void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional) const
+void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool return_type) const
 {
     if (types.empty())
         throw SW_RUNTIME_ERROR("Empty types");
@@ -80,7 +80,7 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional) const
     else
     {
         auto type = emitoptional ? "Optional<" : "this_namespace::Ptr<";
-        ctx.addText((simple ? "" : type) + t + (simple ? "" : ">"));
+        ctx.addText((simple || return_type ? "" : type) + t + (simple || return_type ? "" : ">"));
         auto a = array;
         while (a--)
             ctx.addText(">");
@@ -92,6 +92,8 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional) const
 void Type::save(nlohmann::json &j) const
 {
     j["name"] = name;
+    j["description"] = description;
+    return_type.save(j["return_type"]);
     for (auto &f : fields)
     {
         nlohmann::json jf;
@@ -180,7 +182,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
         // usual call
         h.addLine("// " + description); // second desc to make intellisense happy
         h.addLine();
-        return_type.emitFieldType(h, true);
+        return_type.emitFieldType(h, true, true);
         h.addText(" " + name + suffix + "(");
         if (!fields.empty())
         {
@@ -196,7 +198,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
         {
             h.addLine("// " + description);
             h.addLine();
-            return_type.emitFieldType(h, true);
+            return_type.emitFieldType(h, true, true);
             h.addText(" " + name + suffix + "(const " + name + "Request &) const;");
             h.emptyLines();
         }
@@ -206,7 +208,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
 
     // usual call
     cpp.addLine();
-    return_type.emitFieldType(cpp, true);
+    return_type.emitFieldType(cpp, true, true);
     cpp.addText(" api::" + name + "(");
     cpp.increaseIndent();
     get_parameters(cpp, false, last_non_optional);
@@ -230,7 +232,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     }
     cpp.addLine();
     cpp.addText("return from_json<");
-    return_type.emitFieldType(cpp, true);
+    return_type.emitFieldType(cpp, true, true);
     cpp.addText(">(j);");
     cpp.endBlock();
     cpp.emptyLines();
@@ -239,7 +241,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     if (!fields.empty())
     {
         cpp.addLine();
-        return_type.emitFieldType(cpp, true);
+        return_type.emitFieldType(cpp, true, true);
         cpp.addText(" api::" + name + "(const " + name + "Request &r) const");
         cpp.beginBlock();
         cpp.addLine("return " + name + "(");
