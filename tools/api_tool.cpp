@@ -37,8 +37,8 @@ int main(int argc, char **argv)
     }
 
     Emitter e(p);
-
-    write_file("types.inl.h", e.emitTypes());
+    e.emitTypes();
+    //e.emitTypesSeparate();
     e.emitMethods();
 
     return 0;

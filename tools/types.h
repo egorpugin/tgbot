@@ -16,6 +16,7 @@ struct Field
     void save(nlohmann::json &j) const;
     void emitField(primitives::CppEmitter &ctx) const;
     void emitFieldType(primitives::CppEmitter &ctx) const;
+    std::vector<String> get_dependent_types() const;
 };
 
 struct Type
@@ -30,6 +31,10 @@ struct Type
 
     bool is_type() const { return isupper(name[0]); }
     bool is_oneof() const { return !oneof.empty(); }
+
+    String get_file_name() const { return name + "_type.inl.h"; }
+    String get_request_file_name() const { return name + "Request_type.inl.h"; }
+    std::vector<String> get_dependent_types() const;
 
     void emitType(primitives::CppEmitter &ctx) const;
     void emitCreateType(primitives::CppEmitter &ctx) const;

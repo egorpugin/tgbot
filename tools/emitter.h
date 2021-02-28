@@ -9,6 +9,7 @@ struct Emitter
 
     Emitter(const Parser &p);
 
-    String emitTypes();
+    void emitTypes();
+    void emitTypesSeparate();
     void emitMethods() const;
 };

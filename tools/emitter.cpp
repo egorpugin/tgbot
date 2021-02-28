@@ -29,6 +29,17 @@ void Field::save(nlohmann::json &j) const
     j["description"] = description;
 }
 
+std::vector<String> Field::get_dependent_types() const
+{
+    std::vector<String> t;
+    for (auto &type : types)
+    {
+        if (!is_simple(type))
+            t.push_back(type);
+    }
+    return t;
+}
+
 void Field::emitField(primitives::CppEmitter &ctx) const
 {
     ctx.addLine("// " + description);
@@ -46,6 +57,9 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
     auto t = types[0];
     auto simple = is_simple(t);
     auto opt = optional && (simple || types.size() != 1);
+
+    // we cannot replace all ptrs with optionals, because we have type deps
+    // we need separate headers or something like this for deps
 
     if (opt) // we do not need Optional since we have Ptr already
         ctx.addText("Optional<");
@@ -87,6 +101,17 @@ void Type::save(nlohmann::json &j) const
         j["oneof"].push_back(f);
     //if (is_type())
         //j["return_type"] = return_type;
+}
+
+std::vector<String> Type::get_dependent_types() const
+{
+    std::vector<String> t;
+    for (auto &f : fields)
+    {
+        auto dt = f.get_dependent_types();
+        t.insert(t.end(), dt.begin(), dt.end());
+    }
+    return t;
 }
 
 void Type::emitType(primitives::CppEmitter &ctx) const
@@ -265,7 +290,7 @@ Emitter::Emitter(const Parser &p)
         methods[t.name] = t;
 }
 
-String Emitter::emitTypes()
+void Emitter::emitTypes()
 {
     primitives::CppEmitter ctx;
     for (auto &[n, t] : types)
@@ -290,7 +315,53 @@ String Emitter::emitTypes()
     ctx.emptyLines();
     for (auto &[n, m] : methods)
         m.emitMethodRequestType(ctx);
-    return ctx.getText();
+    write_file("types.inl.h", ctx.getText());
+}
+
+void Emitter::emitTypesSeparate()
+{
+    primitives::CppEmitter tctx;
+    for (auto &[n, t] : types)
+    {
+        if (!t.is_oneof())
+            t.emitFwdDecl(tctx);
+    }
+    tctx.emptyLines();
+    for (auto &[n, t] : types)
+    {
+        if (t.is_oneof())
+            t.emitFwdDecl(tctx);
+    }
+    tctx.emptyLines();
+    //
+    for (auto &[n, t] : types)
+    {
+        primitives::CppEmitter ctx;
+        ctx.addLine("#pragma once");
+        ctx.addLine();
+        /*if (auto dtypes = t.get_dependent_types(); !dtypes.empty())
+        {
+            for (auto &dt : dtypes)
+                ctx.addLine("#include \"" + types[dt].get_file_name() + "\"");
+            ctx.addLine();
+        }*/
+        if (!t.is_oneof())
+            t.emitType(ctx);
+        ctx.emptyLines();
+        write_file(t.get_file_name(), ctx.getText());
+        tctx.addLine("#include \"" + t.get_file_name() + "\"");
+    }
+    tctx.emptyLines();
+    for (auto &[n, m] : methods)
+    {
+        primitives::CppEmitter ctx;
+        ctx.addLine("#pragma once");
+        ctx.addLine();
+        m.emitMethodRequestType(ctx);
+        write_file(m.get_request_file_name(), ctx.getText());
+        tctx.addLine("#include \"" + m.get_request_file_name() + "\"");
+    }
+    write_file("types.inl.h", tctx.getText());
 }
 
 void Emitter::emitMethods() const
