@@ -130,6 +130,7 @@ void Type::emitType(primitives::CppEmitter &ctx) const
         ctx.emptyLines();
         ctx.addLine("//");
         ctx.addLine(name + "() = default;");
+        ctx.addLine("TGBOT_TYPE_API");
         ctx.addLine(name + "(const std::string &); // from json string");
         ctx.endBlock(true);
     }

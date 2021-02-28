@@ -30,6 +30,7 @@ auto createPtr(Args && ... args) {
     return std::make_unique<PtrArgs...>(args...);
 }
 
+#define TGBOT_TYPE_API TGBOT_API
 #include <types.inl.h>
 
 } // namespace tgbot
