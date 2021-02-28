@@ -37,6 +37,7 @@ struct Type
     std::vector<String> get_dependent_types() const;
 
     void emitType(primitives::CppEmitter &ctx) const;
+    void emitTypeCpp(primitives::CppEmitter &ctx) const;
     void emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const;
     void emitMethodRequestType(primitives::CppEmitter &ctx) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;

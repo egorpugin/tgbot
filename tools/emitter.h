@@ -9,7 +9,8 @@ struct Emitter
 
     Emitter(const Parser &p);
 
-    void emitTypes();
+    void emitTypesHeader();
+    void emitTypesCpp();
     void emitTypesSeparate();
     void emitMethods() const;
     void emitReflection() const;

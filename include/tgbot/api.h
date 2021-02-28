@@ -2,6 +2,12 @@
 
 #include "types.h"
 
+/*namespace nlohmann {
+template<typename...>
+class basic_json;
+using json = basic_json<>;
+}*/
+
 namespace tgbot {
 
 struct bot;

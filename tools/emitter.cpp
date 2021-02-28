@@ -127,6 +127,10 @@ void Type::emitType(primitives::CppEmitter &ctx) const
         ctx.emptyLines();
         for (auto &f : fields)
             f.emitField(ctx);
+        ctx.emptyLines();
+        ctx.addLine("//");
+        ctx.addLine(name + "() = default;");
+        ctx.addLine(name + "(const std::string &); // from json string");
         ctx.endBlock(true);
     }
     else
@@ -138,6 +142,12 @@ void Type::emitType(primitives::CppEmitter &ctx) const
         ctx.decreaseIndent(">;");
     }
     ctx.emptyLines();
+}
+
+void Type::emitTypeCpp(primitives::CppEmitter &ctx) const
+{
+    ctx.addLine(name + "::" + name + "(const std::string &s) : " +
+        name + "{from_json<" + name + ">(nlohmann::json::parse(s))} {}");
 }
 
 void Type::emitMethodRequestType(primitives::CppEmitter &ctx) const
@@ -272,7 +282,7 @@ Emitter::Emitter(const Parser &p)
         methods[t.name] = t;
 }
 
-void Emitter::emitTypes()
+void Emitter::emitTypesHeader()
 {
     primitives::CppEmitter ctx;
     ctx.addLine("#pragma once");
@@ -300,6 +310,24 @@ void Emitter::emitTypes()
     for (auto &[n, m] : methods)
         m.emitMethodRequestType(ctx);
     write_file("types.inl.h", ctx.getText());
+}
+
+void Emitter::emitTypesCpp()
+{
+    primitives::CppEmitter ctx;
+    for (auto &[n, t] : types)
+    {
+        if (
+            n == "InputMediaAnimation" ||
+            n == "InputMediaAudio" ||
+            n == "InputMediaDocument" ||
+            n == "InputMediaVideo"
+            )
+            continue;
+        if (!t.is_oneof())
+            t.emitTypeCpp(ctx);
+    }
+    write_file("types.inl.cpp", ctx.getText());
 }
 
 void Emitter::emitTypesSeparate()

@@ -40,5 +40,6 @@ static nlohmann::json send_request(const bot &bot, const char *method, const T &
 
 #include "api_templates.h"
 #include <methods.inl.cpp>
+#include <types.inl.cpp>
 
 }

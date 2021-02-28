@@ -37,7 +37,8 @@ int main(int argc, char **argv)
     }
 
     Emitter e(p);
-    e.emitTypes();
+    e.emitTypesHeader();
+    e.emitTypesCpp();
     //e.emitTypesSeparate();
     e.emitMethods();
     e.emitReflection();
