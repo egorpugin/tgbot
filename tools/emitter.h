@@ -12,4 +12,5 @@ struct Emitter
     void emitTypes();
     void emitTypesSeparate();
     void emitMethods() const;
+    void emitReflection() const;
 };

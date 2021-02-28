@@ -1,5 +1,6 @@
 #include <tgbot/api.h>
 
+#include <reflection.inl.h>
 #include "http_request_argument.h"
 
 #include <tgbot/bot.h>
@@ -10,8 +11,9 @@
 #define FROM_JSON(name) from_json(j, #name, v.name)
 #define TO_JSON(name) to_json(j, #name, r.name)
 #define TO_JSON2(name) to_json(j, #name, name)
-#define TO_REQUEST_ARG(name) to_request_argument(args, #name, name)
+#define TO_REQUEST_ARG(name) to_request_argument(i, #name, name)
 #define SEND_REQUEST(method, var) send_request(b, #method, var)
+#define SEND_REQUEST2(method) send_request(b, #method, http_request_arguments{args.begin(), i})
 
 namespace tgbot {
 

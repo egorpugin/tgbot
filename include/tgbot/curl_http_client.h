@@ -1,7 +1,7 @@
 #pragma once
 
+#include <span>
 #include <string>
-#include <vector>
 
 // fwd decl
 typedef void CURL;
@@ -9,7 +9,7 @@ typedef void CURL;
 namespace tgbot {
 
 struct http_request_argument;
-using http_request_arguments = std::vector<http_request_argument>;
+using http_request_arguments = std::span<http_request_argument>;
 
 /// This class makes http requests via libcurl.
 /// not mt safe

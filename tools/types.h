@@ -15,7 +15,7 @@ struct Field
 
     void save(nlohmann::json &j) const;
     void emitField(primitives::CppEmitter &ctx) const;
-    void emitFieldType(primitives::CppEmitter &ctx) const;
+    void emitFieldType(primitives::CppEmitter &ctx, bool emitoptional = false) const;
     std::vector<String> get_dependent_types() const;
 };
 
@@ -37,7 +37,6 @@ struct Type
     std::vector<String> get_dependent_types() const;
 
     void emitType(primitives::CppEmitter &ctx) const;
-    void emitCreateType(primitives::CppEmitter &ctx) const;
     void emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const;
     void emitMethodRequestType(primitives::CppEmitter &ctx) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;

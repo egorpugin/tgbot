@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     e.emitTypes();
     //e.emitTypesSeparate();
     e.emitMethods();
+    e.emitReflection();
 
     return 0;
 }

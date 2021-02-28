@@ -49,7 +49,7 @@ void Field::emitField(primitives::CppEmitter &ctx) const
     ctx.emptyLines();
 }
 
-void Field::emitFieldType(primitives::CppEmitter &ctx) const
+void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional) const
 {
     if (types.empty())
         throw SW_RUNTIME_ERROR("Empty types");
@@ -79,7 +79,8 @@ void Field::emitFieldType(primitives::CppEmitter &ctx) const
     }
     else
     {
-        ctx.addText((simple ? "" : "this_namespace::Ptr<") + t + (simple ? "" : ">"));
+        auto type = emitoptional ? "Optional<" : "this_namespace::Ptr<";
+        ctx.addText((simple ? "" : type) + t + (simple ? "" : ">"));
         auto a = array;
         while (a--)
             ctx.addText(">");
@@ -148,29 +149,6 @@ void Type::emitMethodRequestType(primitives::CppEmitter &ctx) const
     ctx.emptyLines();
 }
 
-void Type::emitCreateType(primitives::CppEmitter &ctx) const
-{
-    // from json
-    ctx.addLine("template <>");
-    ctx.beginFunction(name + " from_json(const nlohmann::json &j)");
-    ctx.addLine(name + " v;");
-    for (auto &f : fields)
-        ctx.addLine("FROM_JSON(" + f.name + ");");
-    ctx.addLine("return v;");
-    ctx.endFunction();
-    ctx.emptyLines();
-
-    // to json
-    ctx.addLine("template <>");
-    ctx.beginFunction("nlohmann::json to_json(const " + name + " &r)");
-    ctx.addLine("nlohmann::json j;");
-    for (auto &f : fields)
-        ctx.addLine("TO_JSON(" + f.name + ");");
-    ctx.addLine("return j;");
-    ctx.endFunction();
-    ctx.emptyLines();
-}
-
 void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::CppEmitter &cpp) const
 {
     bool has_input_file = false;
@@ -198,48 +176,50 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
             last_non_optional = i;
     }
 
-    // before h.
+    auto emit_header = [this, &h, &get_parameters, &last_non_optional](const String &suffix = {}) {
+        // usual call
+        h.addLine("// " + description); // second desc to make intellisense happy
+        h.addLine();
+        return_type.emitFieldType(h, true);
+        h.addText(" " + name + suffix + "(");
+        if (!fields.empty())
+        {
+            h.increaseIndent();
+            get_parameters(h, true, last_non_optional);
+            h.decreaseIndent();
+            h.addLine();
+        }
+        h.addText(") const;");
+        h.emptyLines();
+        // with request struct
+        if (!fields.empty())
+        {
+            h.addLine("// " + description);
+            h.addLine();
+            return_type.emitFieldType(h, true);
+            h.addText(" " + name + suffix + "(const " + name + "Request &) const;");
+            h.emptyLines();
+        }
+    };
+    emit_header();
+    //emit_header("Raw");
+
+    // usual call
     cpp.addLine();
-    return_type.emitFieldType(cpp);
+    return_type.emitFieldType(cpp, true);
     cpp.addText(" api::" + name + "(");
     cpp.increaseIndent();
     get_parameters(cpp, false, last_non_optional);
     cpp.decreaseIndent();
     cpp.addLine(") const");
-
-    // usual call
-    h.addLine("// " + description); // second desc to make intellisense happy
-    h.addLine();
-    return_type.emitFieldType(h);
-    h.addText(" " + name + "(");
-    if (!fields.empty())
-    {
-        h.increaseIndent();
-        get_parameters(h, true, last_non_optional);
-        h.decreaseIndent();
-        h.addLine();
-    }
-    h.addText(") const;");
-    h.emptyLines();
-    // with request struct
-    if (!fields.empty())
-    {
-        h.addLine("// " + description);
-        h.addLine();
-        return_type.emitFieldType(h);
-        h.addText(" " + name + "(const " + name + "Request &) const;");
-        h.emptyLines();
-    }
-
-    //
     cpp.beginBlock();
     if (has_input_file)
     {
-        cpp.addLine("http_request_arguments args;");
-        cpp.addLine("args.reserve(" + std::to_string(fields.size()) + ");");
+        cpp.addLine("std::array<http_request_argument, " + std::to_string(fields.size()) + "> args;");
+        cpp.addLine("auto i = args.begin();");
         for (auto &f : fields)
             cpp.addLine("TO_REQUEST_ARG(" + f.name + ");");
-        cpp.addLine("auto j = SEND_REQUEST(" + name + ", args);");
+        cpp.addLine("auto j = SEND_REQUEST2(" + name + ");");
     }
     else
     {
@@ -250,7 +230,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     }
     cpp.addLine();
     cpp.addText("return from_json<");
-    return_type.emitFieldType(cpp);
+    return_type.emitFieldType(cpp, true);
     cpp.addText(">(j);");
     cpp.endBlock();
     cpp.emptyLines();
@@ -259,7 +239,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h, primitives::C
     if (!fields.empty())
     {
         cpp.addLine();
-        return_type.emitFieldType(cpp);
+        return_type.emitFieldType(cpp, true);
         cpp.addText(" api::" + name + "(const " + name + "Request &r) const");
         cpp.beginBlock();
         cpp.addLine("return " + name + "(");
@@ -293,6 +273,8 @@ Emitter::Emitter(const Parser &p)
 void Emitter::emitTypes()
 {
     primitives::CppEmitter ctx;
+    ctx.addLine("#pragma once");
+    ctx.addLine();
     for (auto &[n, t] : types)
     {
         if (!t.is_oneof())
@@ -367,18 +349,39 @@ void Emitter::emitTypesSeparate()
 void Emitter::emitMethods() const
 {
     primitives::CppEmitter h, cpp;
-    for (auto &[n, t] : types)
-    {
-        cpp.addLine("template <> " + t.name + " from_json<" + t.name + ">(const nlohmann::json &);");
-        cpp.addLine("template <> nlohmann::json to_json(const " + t.name + " &);");
-        //cpp.emptyLines();
-    }
-    cpp.emptyLines();
-    for (auto &[n, t] : types)
-        t.emitCreateType(cpp);
-    cpp.emptyLines();
     for (auto &[n,m] : methods)
         m.emitMethod(*this, h, cpp);
     write_file("methods.inl.h", h.getText());
     write_file("methods.inl.cpp", cpp.getText());
+}
+
+void Emitter::emitReflection() const
+{
+    primitives::CppEmitter ctx;
+    ctx.addLine("#pragma once");
+    ctx.addLine();
+    ctx.addLine("namespace tgbot {");
+    ctx.addLine();
+    ctx.addLine("template <typename T> struct refl;");
+    ctx.addLine();
+    // refl
+    for (auto &[n, t] : types)
+    {
+        ctx.addLine("template <> struct refl<" + t.name + "> {");
+        ctx.increaseIndent();
+        ctx.addLine("using T = " + t.name + ";");
+        ctx.addLine();
+        //ctx.addLine("static constexpr auto size() { return " + std::to_string(t.fields.size()) + "; }");
+        //ctx.addLine();
+        ctx.addLine("template <typename F>");
+        ctx.addLine("static void for_each(F &&f) {");
+        ctx.increaseIndent();
+        for (auto &f : t.fields)
+            ctx.addLine("f(\"" + f.name + "\", &T::" + f.name + ");");
+        ctx.endBlock();
+        ctx.endBlock(true);
+        ctx.emptyLines();
+    }
+    ctx.endNamespace("tgbot");
+    write_file("reflection.inl.h", ctx.getText());
 }
