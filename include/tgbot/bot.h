@@ -71,7 +71,7 @@ private:
 
 /// This object holds other objects specific for this bot instance.
 struct TGBOT_API bot {
-    bot(const std::string &t, const detail::http_client &c) : token_(t), http_client_(c), api_(*this) {}
+    bot(const std::string &token, const detail::http_client &client) : token_(token), http_client_(client), api_(*this) {}
     ~bot() = default;
 
     /// returns token for accessing api
