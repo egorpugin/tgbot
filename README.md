@@ -1,16 +1,13 @@
 # tgbot
 
-C++20 library for Telegram bot API with generated API types and methods.
-
-* Current Bot API v5.0
+C++ library for [Telegram Bot API](https://core.telegram.org/bots/api) with generated API types and methods.
 
 Features:
 
-* Generated API structures and methods. No manual typing errors and easily updatable for API changes.
-* Improved connection settings to fix hangs in original library.
-* Lots of cleanups.
-
-License: MIT
+* Bot API v5.0
+* Generated API structures and methods. No manual typing errors. Easily updatable for API changes.
+* C++20
+* License: MIT
 
 # Build
 
