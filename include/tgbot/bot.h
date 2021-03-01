@@ -24,7 +24,7 @@ struct TGBOT_API bot {
     const std::string &base_file_url() const { return base_file_url_; }
     std::string make_file_url(const std::string &file_path) const;
 
-    int default_timeout() const { return 10; }
+    //int default_timeout() const { return 10; }
 
 private:
     std::string token_;

@@ -14,8 +14,6 @@ bot::bot(const std::string &token)
 {
     base_url_ = "https://api.telegram.org/bot";
     base_file_url_ = "https://api.telegram.org/file/bot";
-
-    http_client_->set_timeout(default_timeout()); // default timeout for apis
 }
 
 bot::~bot() {

@@ -28,9 +28,6 @@ static nlohmann::json send_request(const bot &bot, const char *method, const T &
     if (!response.compare(0, 6, "<html>"))
         throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
 
-    // reset timeout after call
-    bot.http_client().set_timeout(bot.default_timeout());
-
     auto result = nlohmann::json::parse(response);
     if (result["ok"] == true)
         return std::move(result["result"]);

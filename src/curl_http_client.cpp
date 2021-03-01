@@ -5,7 +5,6 @@
 #include <curl/curl.h>
 
 #include <stdexcept>
-#include <thread>
 
 template <class F>
 struct scope_exit {
@@ -106,11 +105,6 @@ std::string curl_http_client::execute(CURL *curl) const {
     if (!use_connection_pool)
         curl_easy_cleanup(curl);
 
-    if (http_code >= 500 || res) {
-        std::this_thread::sleep_for(std::chrono::seconds(net_delay_on_error));
-        if (net_delay_on_error < 30)
-            net_delay_on_error *= 2;
-    }
     if (res != CURLE_OK)
         throw std::runtime_error(std::string("curl error: ") + curl_easy_strerror(res));
     return response;

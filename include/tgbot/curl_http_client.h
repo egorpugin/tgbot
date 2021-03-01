@@ -27,7 +27,6 @@ struct TGBOT_API curl_http_client {
 
 private:
     CURL *curl_settings_;
-    mutable int net_delay_on_error = 1;
     long connect_timeout = 5;
     long read_timeout = 5;
     bool use_connection_pool = true;
