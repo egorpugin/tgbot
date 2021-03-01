@@ -26,7 +26,7 @@ static nlohmann::json send_request(const bot &bot, const char *method, const T &
 
     auto response = bot.http_client().make_request(url, args);
     if (!response.compare(0, 6, "<html>"))
-        throw std::runtime_error("tgbot-cpp library have got html page instead of json response. Maybe you entered wrong bot token.");
+        throw std::runtime_error("tgbot library has got html page instead of json response. Maybe you entered wrong bot token.");
 
     auto result = nlohmann::json::parse(response);
     if (result["ok"] == true)
