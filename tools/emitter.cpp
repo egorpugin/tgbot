@@ -79,7 +79,7 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
     }
     else
     {
-        auto type = emitoptional ? "Optional<" : "this_namespace::Ptr<";
+        auto type = emitoptional ? "Optional<" : "Ptr<";
         ctx.addText((simple || return_type ? "" : type) + t + (simple || return_type ? "" : ">"));
         auto a = array;
         while (a--)
@@ -123,13 +123,14 @@ void Type::emitType(primitives::CppEmitter &ctx) const
     if (!is_oneof())
     {
         ctx.beginBlock("struct " + name);
-        ctx.addLine("using Ptr = this_namespace::Ptr<" + name + ">;");
-        ctx.emptyLines();
+        //ctx.addLine("using Ptr = this_namespace::Ptr<" + name + ">;");
+        //ctx.emptyLines();
         for (auto &f : fields)
             f.emitField(ctx);
         ctx.emptyLines();
         ctx.addLine("//");
         ctx.addLine(name + "() = default;");
+        ctx.emptyLines();
         ctx.addLine("TGBOT_TYPE_API");
         ctx.addLine(name + "(const std::string &); // from json string");
         ctx.endBlock(true);

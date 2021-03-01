@@ -9,8 +9,6 @@
 
 namespace tgbot {
 
-namespace this_namespace = ::tgbot;
-
 using Boolean = bool;
 using Integer = std::int64_t;
 using Float = double;
