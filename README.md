@@ -19,4 +19,4 @@ Build: `sw build`
 
 (Dev) Generate IDE project: `sw generate`
 
-Dependencies: nlohmann.json, libcurl.
+Dependencies: nlohmann.json.
