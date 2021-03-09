@@ -15,16 +15,16 @@ using Integer = std::int64_t;
 using Float = double;
 using String = std::string;
 
-template <class T>
+template <typename T>
 using Optional = std::optional<T>;
-template <class ... Args>
+template <typename ... Args>
 using Ptr = std::unique_ptr<Args...>;
-template <class ... Args>
+template <typename ... Args>
 using Variant = std::variant<Args...>;
-template <class ... Args>
+template <typename ... Args>
 using Vector = std::vector<Args...>;
 
-template <class ... PtrArgs, class ... Args>
+template <typename ... PtrArgs, typename ... Args>
 auto createPtr(Args && ... args) {
     return std::make_unique<PtrArgs...>(args...);
 }
