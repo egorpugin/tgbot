@@ -50,6 +50,38 @@ To learn how to create…">
 <blockquote>
 <p>Subscribe to <a href="https://t.me/botnews">@BotNews</a> to be the first to know about the latest updates and join the discussion in <a href="https://t.me/bottalk">@BotTalk</a></p>
 </blockquote>
+<h4><a class="anchor" name="march-9-2021" href="#march-9-2021"><i class="anchor-icon"></i></a>March 9, 2021</h4>
+<p><strong>Bot API 5.1</strong></p>
+<p><strong>Added two new update types</strong></p>
+<ul>
+<li>Added updates about member status changes in chats, represented by the class <a href="#chatmemberupdated">ChatMemberUpdated</a> and the fields <em>my_chat_member</em> and <em>chat_member</em> in the <a href="#update">Update</a> class. The bot must be an administrator in the chat to receive <em>chat_member</em> updates about other chat members. By default, only <em>my_chat_member</em> updates about the bot itself are received.</li>
+</ul>
+<p><strong>Improved Invite Links</strong></p>
+<ul>
+<li>Added the class <a href="#chatinvitelink">ChatInviteLink</a>, representing an invite link to a chat.</li>
+<li>Added the method <a href="#createchatinvitelink">createChatInviteLink</a>, which can be used to create new invite links in addition to the primary invite link.</li>
+<li>Added the method <a href="#editchatinvitelink">editChatInviteLink</a>, which can be used to edit non-primary invite links created by the bot.</li>
+<li>Added the method <a href="#revokechatinvitelink">revokeChatInviteLink</a>, which can be used to revoke invite links created by the bot.</li>
+</ul>
+<p><strong>Voice Chat Info</strong></p>
+<ul>
+<li>Added the type <a href="#voicechatstarted">VoiceChatStarted</a> and the field <em>voice_chat_started</em> to the class <a href="#message">Message</a>.</li>
+<li>Added the type <a href="#voicechatended">VoiceChatEnded</a> and the field <em>voice_chat_ended</em> to the class <a href="#message">Message</a>.</li>
+<li>Added the type <a href="#voicechatparticipantsinvited">VoiceChatParticipantsInvited</a> and the field <em>voice_chat_participants_invited</em> to the class <a href="#message">Message</a>.</li>
+<li>Added the new administrator privilege <em>can_manage_voice_chats</em> to the class <a href="#chatmember">ChatMember</a> and parameter <em>can_manage_voice_chats</em> to the method <a href="#promotechatmember">promoteChatMember</a>. For now, bots can use this privilege only for passing to other administrators.</li>
+</ul>
+<p><strong>And More</strong></p>
+<ul>
+<li>Added the type <a href="#messageautodeletetimerchanged">MessageAutoDeleteTimerChanged</a> and the field <em>message_auto_delete_timer_changed</em> to the class <a href="#message">Message</a>.</li>
+<li>Added the parameter <em>revoke_messages</em> to the method <a href="#kickchatmember">kickChatMember</a>, allowing to delete all messages from a group for the user who is being removed.</li>
+<li>Added the new administrator privilege <em>can_manage_chat</em> to the class <a href="#chatmember">ChatMember</a> and parameter <em>can_manage_chat</em> to the method <a href="#promotechatmember">promoteChatMember</a>. This administrator right is implied by any other administrator privilege.</li>
+<li>Supported the new <em>bowling</em> animation for the random <a href="#dice">dice</a>. Choose between different animations (dice, darts, basketball, football, bowling, slot machine) by specifying the <em>emoji</em> parameter in the method <a href="#senddice">sendDice</a>.</li>
+</ul>
+<hr>
+<blockquote>
+<p><strong><img class="emoji" src="//telegram.org/img/emoji/40/E29AA0.png" width="20" height="20" alt="⚠️" /> WARNING! <img class="emoji" src="//telegram.org/img/emoji/40/E29AA0.png" width="20" height="20" alt="⚠️" /></strong><br>After one of the upcoming Bot API updates, user identifiers will become bigger than <code>2^31 - 1</code> and it will be no longer possible to store them in a signed 32-bit integer type. User identifiers will have up to 52 significant bits, so a 64-bit integer or double-precision float type would still be safe for storing them. Please make sure that your code can correctly handle such user identifiers.</p>
+</blockquote>
+<hr>
 <h4><a class="anchor" name="november-4-2020" href="#november-4-2020"><i class="anchor-icon"></i></a>November 4, 2020</h4>
 <p>Introducing <strong>Bot API 5.0</strong></p>
 <p><strong>Run Your Own Bot API Server</strong></p>
@@ -116,35 +148,6 @@ To learn how to create…">
 <p><strong>And Last but bot Least</strong></p>
 <ul>
 <li>Supported the new <strong>football</strong> and <strong>slot machine</strong> animations for the random <a href="#dice">dice</a>. Choose between different animations (dice, darts, basketball, football, slot machine) by specifying the <em>emoji</em> parameter in the method <a href="#senddice">sendDice</a>.</li>
-</ul>
-<h4><a class="anchor" name="june-4-2020" href="#june-4-2020"><i class="anchor-icon"></i></a>June 4, 2020</h4>
-<p><strong>Bot API 4.9</strong></p>
-<ul>
-<li>Added the new field <em>via_bot</em> to the <a href="#message">Message</a> object. You can now know which bot was used to send a message.</li>
-<li>Supported video thumbnails for inline <a href="#inlinequeryresultgif">GIF</a> and <a href="#inlinequeryresultmpeg4gif">MPEG4</a> animations.</li>
-<li>Supported the new basketball animation for the random <a href="#dice">dice</a>. Choose between different animations (dice, darts, basketball) by specifying the <em>emoji</em> parameter in the method <a href="#senddice">sendDice</a>.</li>
-</ul>
-<h4><a class="anchor" name="april-24-2020" href="#april-24-2020"><i class="anchor-icon"></i></a>April 24, 2020</h4>
-<p><strong>Bot API 4.8</strong></p>
-<ul>
-<li>Supported explanations for <a href="https://telegram.org/blog/400-million#better-quizzes">Quizzes 2.0</a>. Add explanations by specifying the parameters <em>explanation</em> and <em>explanation_parse_mode</em> in the method <a href="#sendpoll">sendPoll</a>.</li>
-<li>Added the fields <em>explanation</em> and <em>explanation_entities</em> to the <a href="#poll">Poll</a> object.</li>
-<li>Supported timed polls that automatically close at a certain date and time. Set up by specifying the parameter <em>open_period</em> or <em>close_date</em> in the method <a href="#sendpoll">sendPoll</a>.</li>
-<li>Added the fields <em>open_period</em> and <em>close_date</em> to the <a href="#poll">Poll</a> object.</li>
-<li>Supported the new <a href="https://telegram.org/blog/400-million#bullseye">darts</a> animation for the dice mini-game. Choose between the default dice animation and darts animation by specifying the parameter <em>emoji</em> in the method <a href="#senddice">sendDice</a>.</li>
-<li>Added the field <em>emoji</em> to the <a href="#dice">Dice</a> object.</li>
-</ul>
-<h4><a class="anchor" name="march-30-2020" href="#march-30-2020"><i class="anchor-icon"></i></a>March 30, 2020</h4>
-<p><strong>Bot API 4.7</strong></p>
-<ul>
-<li>Added the method <a href="#senddice">sendDice</a> for sending a dice message, which will have a random value from 1 to 6. (Yes, we&#39;re aware of the <em>“proper”</em> singular of <em>die</em>. But it&#39;s awkward, and we decided to help it change. One dice at a time!)</li>
-<li>Added the field <a href="#dice">dice</a> to the <a href="#message">Message</a> object.</li>
-<li>Added the method <a href="#getmycommands">getMyCommands</a> for getting the current list of the bot&#39;s commands.</li>
-<li>Added the method <a href="#setmycommands">setMyCommands</a> for changing the list of the bot&#39;s commands through the Bot API instead of <a href="https://t.me/botfather">@BotFather</a>.</li>
-<li>Added the ability to create animated sticker sets by specifying the parameter <em>tgs_sticker</em> instead of <em>png_sticker</em> in the method <a href="#createnewstickerset">createNewStickerSet</a>.</li>
-<li>Added the ability to add animated stickers to sets created by the bot by specifying the parameter <em>tgs_sticker</em> instead of <em>png_sticker</em> in the method <a href="#addstickertoset">addStickerToSet</a>.</li>
-<li>Added the field <em>thumb</em> to the <a href="#stickerset">StickerSet</a> object.</li>
-<li>Added the ability to change thumbnails of sticker sets created by the bot using the method <a href="#setstickersetthumb">setStickerSetThumb</a>.</li>
 </ul>
 <p><strong><a href="/bots/api-changelog">See earlier changes »</a></strong></p>
 <h3><a class="anchor" name="authorizing-your-bot" href="#authorizing-your-bot"><i class="anchor-icon"></i></a>Authorizing your bot</h3>
@@ -256,6 +259,16 @@ To learn how to create…">
 <td>poll_answer</td>
 <td><a href="#pollanswer">PollAnswer</a></td>
 <td><em>Optional</em>. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.</td>
+</tr>
+<tr>
+<td>my_chat_member</td>
+<td><a href="#chatmemberupdated">ChatMemberUpdated</a></td>
+<td><em>Optional</em>. The bot&#39;s chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.</td>
+</tr>
+<tr>
+<td>chat_member</td>
+<td><a href="#chatmemberupdated">ChatMemberUpdated</a></td>
+<td><em>Optional</em>. A chat member&#39;s status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of <em>allowed_updates</em> to receive these updates.</td>
 </tr>
 </tbody>
 </table>
@@ -450,7 +463,7 @@ To learn how to create…">
 <tr>
 <td>id</td>
 <td>Integer</td>
-<td>Unique identifier for this user or bot</td>
+<td>Unique identifier for this user or bot. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.</td>
 </tr>
 <tr>
 <td>is_bot</td>
@@ -508,7 +521,7 @@ To learn how to create…">
 <tr>
 <td>id</td>
 <td>Integer</td>
-<td>Unique identifier for this chat. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.</td>
+<td>Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.</td>
 </tr>
 <tr>
 <td>type</td>
@@ -553,7 +566,7 @@ To learn how to create…">
 <tr>
 <td>invite_link</td>
 <td>String</td>
-<td><em>Optional</em>. Chat invite link, for groups, supergroups and channel chats. Each administrator in a chat generates their own invite links, so the bot must first generate the link using <a href="#exportchatinvitelink">exportChatInviteLink</a>. Returned only in <a href="#getchat">getChat</a>.</td>
+<td><em>Optional</em>. Primary invite link, for groups, supergroups and channel chats. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
 <td>pinned_message</td>
@@ -569,6 +582,11 @@ To learn how to create…">
 <td>slow_mode_delay</td>
 <td>Integer</td>
 <td><em>Optional</em>. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>message_auto_delete_time</td>
+<td>Integer</td>
+<td><em>Optional</em>. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
 <td>sticker_set_name</td>
@@ -751,7 +769,7 @@ To learn how to create…">
 <tr>
 <td>dice</td>
 <td><a href="#dice">Dice</a></td>
-<td><em>Optional</em>. Message is a dice with random value from 1 to 6</td>
+<td><em>Optional</em>. Message is a dice with random value</td>
 </tr>
 <tr>
 <td>game</td>
@@ -814,14 +832,19 @@ To learn how to create…">
 <td><em>Optional</em>. Service message: the channel has been created. This field can&#39;t be received in a message coming through updates, because bot can&#39;t be a member of a channel when it is created. It can only be found in reply_to_message if someone replies to a very first message in a channel.</td>
 </tr>
 <tr>
+<td>message_auto_delete_timer_changed</td>
+<td><a href="#messageautodeletetimerchanged">MessageAutoDeleteTimerChanged</a></td>
+<td><em>Optional</em>. Service message: auto-delete timer settings changed in the chat</td>
+</tr>
+<tr>
 <td>migrate_to_chat_id</td>
 <td>Integer</td>
-<td><em>Optional</em>. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.</td>
+<td><em>Optional</em>. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.</td>
 </tr>
 <tr>
 <td>migrate_from_chat_id</td>
 <td>Integer</td>
-<td><em>Optional</em>. The supergroup has been migrated from a group with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.</td>
+<td><em>Optional</em>. The supergroup has been migrated from a group with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.</td>
 </tr>
 <tr>
 <td>pinned_message</td>
@@ -852,6 +875,21 @@ To learn how to create…">
 <td>proximity_alert_triggered</td>
 <td><a href="#proximityalerttriggered">ProximityAlertTriggered</a></td>
 <td><em>Optional</em>. Service message. A user in the chat triggered another user&#39;s proximity alert while sharing Live Location.</td>
+</tr>
+<tr>
+<td>voice_chat_started</td>
+<td><a href="#voicechatstarted">VoiceChatStarted</a></td>
+<td><em>Optional</em>. Service message: voice chat started</td>
+</tr>
+<tr>
+<td>voice_chat_ended</td>
+<td><a href="#voicechatended">VoiceChatEnded</a></td>
+<td><em>Optional</em>. Service message: voice chat ended</td>
+</tr>
+<tr>
+<td>voice_chat_participants_invited</td>
+<td><a href="#voicechatparticipantsinvited">VoiceChatParticipantsInvited</a></td>
+<td><em>Optional</em>. Service message: new participants invited to a voice chat</td>
 </tr>
 <tr>
 <td>reply_markup</td>
@@ -1286,7 +1324,7 @@ To learn how to create…">
 <tr>
 <td>user_id</td>
 <td>Integer</td>
-<td><em>Optional</em>. Contact&#39;s user identifier in Telegram</td>
+<td><em>Optional</em>. Contact&#39;s user identifier in Telegram. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.</td>
 </tr>
 <tr>
 <td>vcard</td>
@@ -1314,7 +1352,7 @@ To learn how to create…">
 <tr>
 <td>value</td>
 <td>Integer</td>
-<td>Value of the dice, 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />” base emoji, 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />” base emoji, 1-64 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />” base emoji</td>
+<td>Value of the dice, 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB3.png" width="20" height="20" alt="🎳" />” base emoji, 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />” base emoji, 1-64 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />” base emoji</td>
 </tr>
 </tbody>
 </table>
@@ -1388,7 +1426,7 @@ To learn how to create…">
 <tr>
 <td>question</td>
 <td>String</td>
-<td>Poll question, 1-255 characters</td>
+<td>Poll question, 1-300 characters</td>
 </tr>
 <tr>
 <td>options</td>
@@ -1563,6 +1601,62 @@ To learn how to create…">
 <td>distance</td>
 <td>Integer</td>
 <td>The distance between the users</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="messageautodeletetimerchanged" href="#messageautodeletetimerchanged"><i class="anchor-icon"></i></a>MessageAutoDeleteTimerChanged</h4>
+<p>This object represents a service message about a change in auto-delete timer settings.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>message_auto_delete_time</td>
+<td>Integer</td>
+<td>New auto-delete time for messages in the chat</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="voicechatstarted" href="#voicechatstarted"><i class="anchor-icon"></i></a>VoiceChatStarted</h4>
+<p>This object represents a service message about a voice chat started in the chat. Currently holds no information.</p>
+<h4><a class="anchor" name="voicechatended" href="#voicechatended"><i class="anchor-icon"></i></a>VoiceChatEnded</h4>
+<p>This object represents a service message about a voice chat ended in the chat.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>duration</td>
+<td>Integer</td>
+<td>Voice chat duration; in seconds</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="voicechatparticipantsinvited" href="#voicechatparticipantsinvited"><i class="anchor-icon"></i></a>VoiceChatParticipantsInvited</h4>
+<p>This object represents a service message about new members invited to a voice chat.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>users</td>
+<td>Array of <a href="#user">User</a></td>
+<td><em>Optional</em>. New members that were invited to the voice chat</td>
 </tr>
 </tbody>
 </table>
@@ -1961,6 +2055,49 @@ To learn how to create…">
 </tr>
 </tbody>
 </table>
+<h4><a class="anchor" name="chatinvitelink" href="#chatinvitelink"><i class="anchor-icon"></i></a>ChatInviteLink</h4>
+<p>Represents an invite link for a chat.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>invite_link</td>
+<td>String</td>
+<td>The invite link. If the link was created by another chat administrator, then the second part of the link will be replaced with “…”.</td>
+</tr>
+<tr>
+<td>creator</td>
+<td><a href="#user">User</a></td>
+<td>Creator of the link</td>
+</tr>
+<tr>
+<td>is_primary</td>
+<td>Boolean</td>
+<td>True, if the link is primary</td>
+</tr>
+<tr>
+<td>is_revoked</td>
+<td>Boolean</td>
+<td>True, if the link is revoked</td>
+</tr>
+<tr>
+<td>expire_date</td>
+<td>Integer</td>
+<td><em>Optional</em>. Point in time (Unix timestamp) when the link will expire or has been expired</td>
+</tr>
+<tr>
+<td>member_limit</td>
+<td>Integer</td>
+<td><em>Optional</em>. Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="chatmember" href="#chatmember"><i class="anchor-icon"></i></a>ChatMember</h4>
 <p>This object contains information about one member of a chat.</p>
 <table class="table">
@@ -1998,6 +2135,11 @@ To learn how to create…">
 <td><em>Optional</em>. Administrators only. True, if the bot is allowed to edit administrator privileges of that user</td>
 </tr>
 <tr>
+<td>can_manage_chat</td>
+<td>Boolean</td>
+<td><em>Optional</em>. Administrators only. True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergoups and ignore slow mode. Implied by any other administrator privilege</td>
+</tr>
+<tr>
 <td>can_post_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. Administrators only. True, if the administrator can post in the channel; channels only</td>
@@ -2011,6 +2153,11 @@ To learn how to create…">
 <td>can_delete_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. Administrators only. True, if the administrator can delete messages of other users</td>
+</tr>
+<tr>
+<td>can_manage_voice_chats</td>
+<td>Boolean</td>
+<td><em>Optional</em>. Administrators only. True, if the administrator can manage voice chats</td>
 </tr>
 <tr>
 <td>can_restrict_members</td>
@@ -2071,6 +2218,49 @@ To learn how to create…">
 <td>until_date</td>
 <td>Integer</td>
 <td><em>Optional</em>. Restricted and kicked only. Date when restrictions will be lifted for this user; unix time</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="chatmemberupdated" href="#chatmemberupdated"><i class="anchor-icon"></i></a>ChatMemberUpdated</h4>
+<p>This object represents changes in the status of a chat member.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat</td>
+<td><a href="#chat">Chat</a></td>
+<td>Chat the user belongs to</td>
+</tr>
+<tr>
+<td>from</td>
+<td><a href="#user">User</a></td>
+<td>Performer of the action, which resulted in the change</td>
+</tr>
+<tr>
+<td>date</td>
+<td>Integer</td>
+<td>Date the change was done in Unix time</td>
+</tr>
+<tr>
+<td>old_chat_member</td>
+<td><a href="#chatmember">ChatMember</a></td>
+<td>Previous information about the chat member</td>
+</tr>
+<tr>
+<td>new_chat_member</td>
+<td><a href="#chatmember">ChatMember</a></td>
+<td>New information about the chat member</td>
+</tr>
+<tr>
+<td>invite_link</td>
+<td><a href="#chatinvitelink">ChatInviteLink</a></td>
+<td><em>Optional</em>. Chat invite link, which was used by the user to join the chat; for joining by invite link events only.</td>
 </tr>
 </tbody>
 </table>
@@ -2187,7 +2377,7 @@ To learn how to create…">
 <tr>
 <td>migrate_to_chat_id</td>
 <td>Integer</td>
-<td><em>Optional</em>. The group has been migrated to a supergroup with the specified identifier. This number may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier.</td>
+<td><em>Optional</em>. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.</td>
 </tr>
 <tr>
 <td>retry_after</td>
@@ -2687,7 +2877,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="copymessage" href="#copymessage"><i class="anchor-icon"></i></a>copyMessage</h4>
-<p>Use this method to copy messages of any kind. The method is analogous to the method <a href="#forwardmessages">forwardMessages</a>, but the copied message doesn&#39;t have a link to the original message. Returns the <a href="#messageid">MessageId</a> of the sent message on success.</p>
+<p>Use this method to copy messages of any kind. The method is analogous to the method <a href="#forwardmessage">forwardMessage</a>, but the copied message doesn&#39;t have a link to the original message. Returns the <a href="#messageid">MessageId</a> of the sent message on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -3861,7 +4051,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>emoji</td>
 <td>String</td>
 <td>Optional</td>
-<td>Emoji on which the dice throw animation is based. Currently, must be one of “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />”, or “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />”. Dice can have values 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, values 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />”, and values 1-64 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />”. Defaults to “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”</td>
+<td>Emoji on which the dice throw animation is based. Currently, must be one of “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB3.png" width="20" height="20" alt="🎳" />”, or “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />”. Dice can have values 1-6 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”, “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB3.png" width="20" height="20" alt="🎳" />”, values 1-5 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />” and “<img class="emoji" src="//telegram.org/img/emoji/40/E29ABD.png" width="20" height="20" alt="⚽" />”, and values 1-64 for “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB0.png" width="20" height="20" alt="🎰" />”. Defaults to “<img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" />”</td>
 </tr>
 <tr>
 <td>disable_notification</td>
@@ -3973,7 +4163,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </table>
 <p><strong>Note:</strong> This function may not preserve the original file name and MIME type. You should save the file&#39;s MIME type and name (if available) when the File object is received.</p>
 <h4><a class="anchor" name="kickchatmember" href="#kickchatmember"><i class="anchor-icon"></i></a>kickChatMember</h4>
-<p>Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the group on their own using invite links, etc., unless <a href="#unbanchatmember">unbanned</a> first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns <em>True</em> on success.</p>
+<p>Use this method to kick a user from a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless <a href="#unbanchatmember">unbanned</a> first. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4000,7 +4190,13 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>until_date</td>
 <td>Integer</td>
 <td>Optional</td>
-<td>Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever</td>
+<td>Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less than 30 seconds from the current time they are considered to be banned forever. Applied for supergroups and channels only.</td>
+</tr>
+<tr>
+<td>revoke_messages</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> to delete all messages from the chat for the user that is being removed. If <em>False</em>, the user will be able to see messages in the group that were sent before the user was removed. Always <em>True</em> for supergroups and channels.</td>
 </tr>
 </tbody>
 </table>
@@ -4105,10 +4301,10 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Pass <em>True</em>, if the administrator&#39;s presence in the chat is hidden</td>
 </tr>
 <tr>
-<td>can_change_info</td>
+<td>can_manage_chat</td>
 <td>Boolean</td>
 <td>Optional</td>
-<td>Pass True, if the administrator can change chat title, photo and other settings</td>
+<td>Pass True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergoups and ignore slow mode. Implied by any other administrator privilege</td>
 </tr>
 <tr>
 <td>can_post_messages</td>
@@ -4129,10 +4325,10 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Pass True, if the administrator can delete messages of other users</td>
 </tr>
 <tr>
-<td>can_invite_users</td>
+<td>can_manage_voice_chats</td>
 <td>Boolean</td>
 <td>Optional</td>
-<td>Pass True, if the administrator can invite new users to the chat</td>
+<td>Pass True, if the administrator can manage voice chats, supergroups only</td>
 </tr>
 <tr>
 <td>can_restrict_members</td>
@@ -4141,16 +4337,28 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Pass True, if the administrator can restrict, ban or unban chat members</td>
 </tr>
 <tr>
-<td>can_pin_messages</td>
-<td>Boolean</td>
-<td>Optional</td>
-<td>Pass True, if the administrator can pin messages, supergroups only</td>
-</tr>
-<tr>
 <td>can_promote_members</td>
 <td>Boolean</td>
 <td>Optional</td>
 <td>Pass True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by him)</td>
+</tr>
+<tr>
+<td>can_change_info</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass True, if the administrator can change chat title, photo and other settings</td>
+</tr>
+<tr>
+<td>can_invite_users</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass True, if the administrator can invite new users to the chat</td>
+</tr>
+<tr>
+<td>can_pin_messages</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass True, if the administrator can pin messages, supergroups only</td>
 </tr>
 </tbody>
 </table>
@@ -4213,7 +4421,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="exportchatinvitelink" href="#exportchatinvitelink"><i class="anchor-icon"></i></a>exportChatInviteLink</h4>
-<p>Use this method to generate a new invite link for a chat; any previously generated link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as <em>String</em> on success.</p>
+<p>Use this method to generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the new invite link as <em>String</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -4233,8 +4441,104 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <blockquote>
-<p>Note: Each administrator in a chat generates their own invite links. Bots can&#39;t use invite links generated by other administrators. If you want your bot to work with invite links, it will need to generate its own link using <a href="#exportchatinvitelink">exportChatInviteLink</a> — after this the link will become available to the bot via the <a href="#getchat">getChat</a> method. If your bot needs to generate a new invite link replacing its previous one, use <a href="#exportchatinvitelink">exportChatInviteLink</a> again.</p>
+<p>Note: Each administrator in a chat generates their own invite links. Bots can&#39;t use invite links generated by other administrators. If you want your bot to work with invite links, it will need to generate its own link using <a href="#exportchatinvitelink">exportChatInviteLink</a> or by calling the <a href="#getchat">getChat</a> method. If your bot needs to generate a new primary invite link replacing its previous one, use <a href="#exportchatinvitelink">exportChatInviteLink</a> again.</p>
 </blockquote>
+<h4><a class="anchor" name="createchatinvitelink" href="#createchatinvitelink"><i class="anchor-icon"></i></a>createChatInviteLink</h4>
+<p>Use this method to create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. The link can be revoked using the method <a href="#revokechatinvitelink">revokeChatInviteLink</a>. Returns the new invite link as <a href="#chatinvitelink">ChatInviteLink</a> object.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>expire_date</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Point in time (Unix timestamp) when the link will expire</td>
+</tr>
+<tr>
+<td>member_limit</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="editchatinvitelink" href="#editchatinvitelink"><i class="anchor-icon"></i></a>editChatInviteLink</h4>
+<p>Use this method to edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the edited invite link as a <a href="#chatinvitelink">ChatInviteLink</a> object.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>invite_link</td>
+<td>String</td>
+<td>Yes</td>
+<td>The invite link to edit</td>
+</tr>
+<tr>
+<td>expire_date</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Point in time (Unix timestamp) when the link will expire</td>
+</tr>
+<tr>
+<td>member_limit</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Maximum number of users that can be members of the chat simultaneously after joining the chat via this invite link; 1-99999</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="revokechatinvitelink" href="#revokechatinvitelink"><i class="anchor-icon"></i></a>revokeChatInviteLink</h4>
+<p>Use this method to revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns the revoked invite link as <a href="#chatinvitelink">ChatInviteLink</a> object.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier of the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>invite_link</td>
+<td>String</td>
+<td>Yes</td>
+<td>The invite link to revoke</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="setchatphoto" href="#setchatphoto"><i class="anchor-icon"></i></a>setChatPhoto</h4>
 <p>Use this method to set a new profile photo for the chat. Photos can&#39;t be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate admin rights. Returns <em>True</em> on success.</p>
 <table class="table">
@@ -5443,6 +5747,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <li><a href="#inlinequeryresultvideo">InlineQueryResultVideo</a></li>
 <li><a href="#inlinequeryresultvoice">InlineQueryResultVoice</a></li>
 </ul>
+<p><strong>Note:</strong> All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.</p>
 <h4><a class="anchor" name="inlinequeryresultarticle" href="#inlinequeryresultarticle"><i class="anchor-icon"></i></a>InlineQueryResultArticle</h4>
 <p>Represents a link to an article or web page.</p>
 <table class="table">
@@ -8326,17 +8631,10 @@ pre-formatted fixed-width code block written in the Python programming language
     <script src="/js/jquery.min.js?1"></script>
 <script src="/js/bootstrap.min.js"></script>
 
-    <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-45099287-4', 'auto');
-ga('set', 'anonymizeIp', true);
-ga('send', 'pageview');window.initDevPageNav&&initDevPageNav();
+    <script>window.initDevPageNav&&initDevPageNav();
 backToTopInit("Go up");
 removePreloadInit();
 </script>
   </body>
 </html>
-<!-- page generated in 30.54ms -->
+<!-- page generated in 31.35ms -->
