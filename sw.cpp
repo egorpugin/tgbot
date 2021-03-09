@@ -6,6 +6,7 @@ void build(Solution &s)
     auto &apitool = tgbot.addExecutable("apitool");
     {
         auto &t = apitool;
+        t.PackageDefinitions = true;
         t += cpp20;
         t += "tools/.*"_rr;
         t += "pub.egorpugin.primitives.emitter"_dep;
