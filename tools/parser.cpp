@@ -1,5 +1,6 @@
 #include "parser.h"
 
+#include <boost/algorithm/string.hpp>
 #include <primitives/exceptions.h>
 #include <pystring.h>
 
@@ -240,6 +241,49 @@ void Parser::parseType(Type &t, xmlNode *tb) const
             auto desc = getNext(comment, "td");
             if (desc && desc->children)
                 f.description = getAllText(desc->children);
+        }
+
+        if (!f.description.empty())
+        {
+            auto p = f.description.find(" one of ");
+            if (p == f.description.npos)
+                p = f.description.find("One of ");
+            if (p != f.description.npos)
+            {
+                auto end = f.description.find(".", p);
+                auto sub = f.description.substr(p, end - p);
+                boost::replace_all(sub, "\xe2\x80\x9c", "\"");
+                boost::replace_all(sub, "\xe2\x80\x9d", "\"");
+                p = 0;
+                while (1)
+                {
+                    p = sub.find("\"", p);
+                    if (p == sub.npos)
+                        break;
+                    end = sub.find("\"", p + 1);
+                    auto s = sub.substr(p + 1, end - p - 1);
+                    if (!s.empty())
+                    {
+                        boost::replace_all(s, "/", "_");
+                        f.enum_values[s] = s;
+                    }
+                    p = end + 1;
+                }
+            }
+        }
+
+        if (f.name == "parse_mode")
+        {
+            f.types[0] = "ParseMode";
+            f.enum_ = true;
+        }
+        else if (
+            t.name == "Dice" && f.name == "emoji" ||
+            t.name == "sendDice" && f.name == "emoji"
+            )
+        {
+            f.types[0] = "DiceEmoji";
+            f.enum_ = true;
         }
 
         t.fields.push_back(f);

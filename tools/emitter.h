@@ -6,6 +6,7 @@ struct Emitter
 {
     std::map<String, Type> types;
     std::map<String, Type> methods;
+    std::map<String, std::map<String, String>> enums;
 
     Emitter(const Parser &p);
 
