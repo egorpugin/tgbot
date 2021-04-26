@@ -2,3 +2,4 @@
 .sw
 .settings
 *.patch
+*.json
