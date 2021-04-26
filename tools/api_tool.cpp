@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     cl::opt<String> target(cl::Positional, cl::Required, cl::desc("Html file or url to parse"));
     cl::opt<path> json("j", cl::desc("Output api as json file"));
