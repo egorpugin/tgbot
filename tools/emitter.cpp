@@ -19,14 +19,16 @@ static bool is_simple(const String &t)
 
 void Field::save(nlohmann::json &j) const
 {
-    j["name"] = name;
+    if (!name.empty())
+        j["name"] = name;
     for (auto &t : types)
         j["type"].push_back(t);
     if (optional)
         j["optional"] = optional;
     if (array)
         j["array"] = array;
-    j["description"] = description;
+    if (!description.empty())
+        j["description"] = description;
 }
 
 bool Field::is_enum() const
@@ -146,9 +148,12 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
 
 void Type::save(nlohmann::json &j) const
 {
-    j["name"] = name;
-    j["description"] = description;
-    return_type.save(j["return_type"]);
+    if (!name.empty())
+        j["name"] = name;
+    if (!description.empty())
+        j["description"] = description;
+    if (!is_type())
+        return_type.save(j["return_type"]);
     for (auto &f : fields)
     {
         nlohmann::json jf;
@@ -157,8 +162,6 @@ void Type::save(nlohmann::json &j) const
     }
     for (auto &f : oneof)
         j["oneof"].push_back(f);
-    //if (is_type())
-        //j["return_type"] = return_type;
 }
 
 std::vector<String> Type::get_dependent_types() const
