@@ -23,7 +23,7 @@ jobs:
     - name: Install (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install flex bison gcc-11
+        brew install flex bison gcc
 
     - name: build (non macOS)
       if: runner.os != 'macOS'
