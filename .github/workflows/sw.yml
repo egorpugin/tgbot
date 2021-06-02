@@ -34,5 +34,5 @@ jobs:
       run: |
         export PATH="/usr/local/opt/flex/bin:$PATH"
         export PATH="/usr/local/opt/bison/bin:$PATH"
-        ./sw -static build -compiler gcc-10
+        ./sw -static build -compiler gcc-11
         
