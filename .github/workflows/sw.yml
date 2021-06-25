@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-20.04, macOS-latest]
+        os: [windows-latest, ubuntu-20.04, macos-11]
 
     steps:
     - uses: actions/checkout@v1
@@ -23,7 +23,7 @@ jobs:
     - name: Install (macOS)
       if: runner.os == 'macOS'
       run: |
-        brew install flex bison
+        brew install flex bison gcc
 
     - name: build (non macOS)
       if: runner.os != 'macOS'
@@ -34,5 +34,5 @@ jobs:
       run: |
         export PATH="/usr/local/opt/flex/bin:$PATH"
         export PATH="/usr/local/opt/bison/bin:$PATH"
-        ./sw -static build
+        ./sw -static build -compiler gcc-11
         
