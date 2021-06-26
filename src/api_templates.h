@@ -17,6 +17,9 @@ template <typename T>
 static void from_json(const nlohmann::json &j, const char *k, T &v);
 
 template <typename T>
+static T from_json_variant(const nlohmann::json &j);
+
+template <typename T>
 static T from_json(const nlohmann::json &j) {
     if constexpr (is_instance<T, std::vector>::value) {
         Vector<typename T::value_type> v;
@@ -31,6 +34,8 @@ static T from_json(const nlohmann::json &j) {
         return from_json<typename T::value_type>(j);
     } else if constexpr (is_simple<T>) {
         return j;
+    } else if constexpr (refl<T>::is_received_variant) {
+        return from_json_variant<T>(j);
     } else {
         T v;
         refl<T>::for_each([&v, &j](auto n, auto f) {from_json(j, n, v.*f); });

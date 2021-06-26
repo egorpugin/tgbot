@@ -14,6 +14,7 @@ struct Field
     int array = 0;
     std::map<String, String> enum_values;
     bool enum_ = false;
+    String always;
 
     void save(nlohmann::json &j) const;
     void emitField(primitives::CppEmitter &ctx) const;
@@ -36,6 +37,17 @@ struct Type
 
     bool is_type() const { return isupper(name[0]); }
     bool is_oneof() const { return !oneof.empty(); }
+    bool is_received_variant(const std::map<String, Type> &types) const {
+        std::map<String, std::vector<std::pair<const Type *, const Field *>>> fields;
+        for (auto &tn : oneof) {
+            auto &t2 = types.find(tn)->second;
+            for (auto &f : t2.fields) {
+                if (!f.always.empty())
+                    fields[f.name].push_back({ &t2, &f });
+            }
+        }
+        return !fields.empty();
+    }
 
     String get_file_name() const { return name + "_type.inl.h"; }
     String get_request_file_name() const { return name + "Request_type.inl.h"; }

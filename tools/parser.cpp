@@ -251,6 +251,9 @@ void Parser::parseType(Type &t, xmlNode *tb) const
 
         if (!f.description.empty())
         {
+            boost::replace_all(f.description, "\xe2\x80\x9c", "\"");
+            boost::replace_all(f.description, "\xe2\x80\x9d", "\"");
+
             auto p = f.description.find(" one of ");
             if (p == f.description.npos)
                 p = f.description.find("One of ");
@@ -258,8 +261,6 @@ void Parser::parseType(Type &t, xmlNode *tb) const
             {
                 auto end = f.description.find(".", p);
                 auto sub = f.description.substr(p, end - p);
-                boost::replace_all(sub, "\xe2\x80\x9c", "\"");
-                boost::replace_all(sub, "\xe2\x80\x9d", "\"");
                 p = 0;
                 while (1)
                 {
@@ -275,6 +276,12 @@ void Parser::parseType(Type &t, xmlNode *tb) const
                     }
                     p = end + 1;
                 }
+            }
+
+            std::regex r{ ", always \"(.*?)\"" };
+            std::smatch m;
+            if (std::regex_search(f.description, m, r)) {
+                f.always = m[1].str();
             }
         }
 

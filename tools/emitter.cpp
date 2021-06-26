@@ -434,6 +434,38 @@ void Emitter::emitTypesCpp()
     }
     ctx.emptyLines();
 
+    ctx.addLine("// variants");
+    for (auto &[n, t] : types)
+    {
+        if (!t.is_received_variant(types))
+            continue;
+        std::map<String, std::vector<std::pair<Type*,Field*>>> fields;
+        for (auto &tn : t.oneof) {
+            auto &t2 = types.find(tn)->second;
+            for (auto &f : t2.fields) {
+                if (!f.always.empty())
+                    fields[f.name].push_back({ &t2, &f });
+            }
+        }
+
+        ctx.addLine("template <>");
+        ctx.beginFunction(t.name + " from_json_variant(const nlohmann::json &j)");
+        for (auto &[_,f] : fields) {
+            ctx.addLine("auto v = from_json<");
+            f.begin()->second->emitFieldType(ctx);
+            ctx.addText(">(j[\"" + f.begin()->second->name + "\"]);");
+            for (auto &[t,f2] : f) {
+                ctx.addLine("if (v == \"" + f2->always + "\")");
+                ctx.increaseIndent();
+                ctx.addLine("return from_json<" + t->name + ">(j);");
+                ctx.decreaseIndent();
+            }
+            ctx.addLine("throw std::runtime_error(\"unreachable\");");
+        }
+        ctx.endFunction();
+    }
+    ctx.emptyLines();
+
     ctx.addLine("// enums");
     auto print_enum = [&ctx](const auto &name, auto &&vals, const String &suffix = {})
     {
@@ -562,8 +594,9 @@ void Emitter::emitReflection() const
         ctx.increaseIndent();
         ctx.addLine("using T = " + t.name + ";");
         ctx.addLine();
+        ctx.addLine("static constexpr auto is_received_variant = "s + (t.is_received_variant(types) ? "true" : "false") + ";");
         //ctx.addLine("static constexpr auto size() { return " + std::to_string(t.fields.size()) + "; }");
-        //ctx.addLine();
+        ctx.addLine();
         ctx.addLine("template <typename F>");
         ctx.addLine("static void for_each(F &&f) {");
         ctx.increaseIndent();
