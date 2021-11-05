@@ -78,7 +78,7 @@ struct TGBOT_API bot {
     const std::string &token() const { return token_; }
 
     /// returns object which can execute Telegram Bot API methods
-    const api &api() const { return api_; }
+    const struct api &api() const { return api_; }
 
     /// used for fine tune setup of http connections
     const detail::http_client &http_client() const { return http_client_; }
