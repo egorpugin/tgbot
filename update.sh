@@ -9,4 +9,4 @@ curl https://core.telegram.org/bots/api > TelegramBotAPI.html
 sed -i -e "s/$OLD_VERSION/$NEW_VERSION/g" README.md sw.cpp
 git commit -am "Update Bot API to $NEW_VERSION."
 git push --all
-sw upload org.sw.demo
+sw build && sw upload org.sw.demo
