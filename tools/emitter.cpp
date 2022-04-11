@@ -238,12 +238,12 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h) const {
         cpp.addLine("auto i = args.begin();");
         for (auto &f: fields)
             cpp.addLine("to_request_argument(i, \"" + f.name + "\", " + f.name + ");");
-        cpp.addLine("auto j = send_request(b, \"" + name + "\", http_request_arguments{args.begin(), i});");
+        cpp.addLine("auto j = send_request(\"" + name + "\", http_request_arguments{args.begin(), i});");
     } else {
         cpp.addLine("nlohmann::json j;");
         for (auto &f: fields)
             cpp.addLine("to_json(j, \"" + f.name + "\", " + f.name + ");");
-        cpp.addLine("j = send_request(b, \"" + name + "\", j.dump());");
+        cpp.addLine("j = send_request(\"" + name + "\", j.dump());");
     }
     cpp.addLine();
     cpp.addText("return from_json<");
@@ -333,7 +333,7 @@ void Emitter::emitTypesHeader() {
     for (auto &[n, m]: methods)
         m.emitMethodRequestType(ctx);
     ctx.emptyLines();
-    write_file("types.inl.h", ctx.getText());
+    write_file("types.inl.h", ctx.getText() + emitReflection());
 }
 
 void Emitter::emitTypesCpp() {
@@ -414,17 +414,17 @@ void Emitter::emitTypesCpp() {
     print_enums(types);
     print_enums(methods, "Request");
 
-    write_file("types2.inl.h", ctx.getText());
+    write_file("methods.inl.h", emitMethods() + "private:\n\n" + ctx.getText());
 }
 
-void Emitter::emitMethods() const {
+String Emitter::emitMethods() const {
     primitives::CppEmitter h;
     for (auto &[n, m]: methods)
         m.emitMethod(*this, h);
-    write_file("methods.inl.h", h.getText());
+    return h.getText();
 }
 
-void Emitter::emitReflection() const {
+String Emitter::emitReflection() const {
     primitives::CppEmitter ctx;
     ctx.addLine("template <typename T> struct refl;");
     ctx.addLine();
@@ -448,5 +448,5 @@ void Emitter::emitReflection() const {
         ctx.endBlock(true);
         ctx.emptyLines();
     }
-    write_file("reflection.inl.h", ctx.getText());
+    return ctx.getText();
 }

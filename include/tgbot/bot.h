@@ -35,36 +35,11 @@ template <typename ... Args>
 using Vector = std::vector<Args...>;
 
 template <typename ... PtrArgs, typename ... Args>
-auto createPtr(Args && ... args) {
+auto create_ptr(Args && ... args) {
     return std::make_unique<PtrArgs...>(args...);
 }
 
 #include <types.inl.h>
-#include <reflection.inl.h>
-
-namespace detail {
-/*struct TGBOT_API http_client {
-    std::string make_request(const std::string &url, const http_request_arguments &args) const = 0;
-    std::string make_request(const std::string &url, const std::string &json) const = 0;
-};*/
-} // namespace detail
-
-static nlohmann::json send_request(auto &&bot, const char *method, auto &&args) {
-    auto url = bot.base_url();
-    url += bot.token();
-    url += "/";
-    url += method;
-
-    auto response = bot.http_client().make_request(url, args);
-    if (!response.compare(0, 6, "<html>"))
-        throw std::runtime_error("tgbot library has got html page instead of json response. Maybe you entered wrong bot token.");
-
-    auto result = nlohmann::json::parse(response);
-    if (result["ok"] == true)
-        return std::move(result["result"]);
-    else
-        throw std::runtime_error(result["description"].template get<std::string>());
-}
 
 /// Used to send files using their filenames in some requests.
 struct http_request_argument {
@@ -82,15 +57,36 @@ using http_request_arguments = std::span<http_request_argument>;
 /// Telegram docs: <https://core.telegram.org/bots/api#available-methods>
 template <typename Bot>
 struct api {
-    api(const Bot &b) : b{b} {}
+private:
+    template <typename T> struct type {};
+
+public:
+    api(const Bot &b) : bot{bot} {}
 
 #include <methods.inl.h>
 
 private:
-    const Bot &b;
+    const Bot &bot;
 
-private:
-    template <typename T> struct type {};
+    // Bot's HttpClient must implement
+    //std::string make_request(const std::string &url, const http_request_arguments &args) const = 0;
+    //std::string make_request(const std::string &url, const std::string &json) const = 0;
+    nlohmann::json send_request(const char *method, auto &&args) const {
+        auto url = bot.base_url();
+        url += bot.token();
+        url += "/";
+        url += method;
+
+        auto response = bot.http_client().make_request(url, args);
+        if (!response.compare(0, 6, "<html>"))
+            throw std::runtime_error("tgbot library has got html page instead of json response. Maybe you entered wrong bot token.");
+
+        auto result = nlohmann::json::parse(response);
+        if (result["ok"] == true)
+            return std::move(result["result"]);
+        else
+            throw std::runtime_error(result["description"].template get<std::string>());
+    }
 
     template<typename, template <typename...> typename>
     struct is_instance : std::false_type {};
@@ -174,7 +170,7 @@ private:
                 v.emplace_back(from_json<typename T::value_type>(i));
             return v;
         } else if constexpr (is_instance<T, std::unique_ptr>::value) {
-            auto p = createPtr<typename T::element_type>();
+            auto p = create_ptr<typename T::element_type>();
             *p = from_json<typename T::element_type>(j);
             return p;
         } else if constexpr (is_instance<T, std::optional>::value) {
@@ -196,8 +192,6 @@ private:
         if (j.contains(k))
             v = from_json<T>(j[k]);
     }
-
-#include <types2.inl.h>
 };
 
 /// This object holds other objects specific for this bot instance.

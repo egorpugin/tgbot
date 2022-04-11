@@ -10,7 +10,7 @@ struct Emitter {
     Emitter(const Parser &p);
 
     void emitTypesHeader();
+    String emitReflection() const;
     void emitTypesCpp();
-    void emitMethods() const;
-    void emitReflection() const;
+    String emitMethods() const;
 };

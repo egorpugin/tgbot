@@ -35,7 +35,6 @@ void build(Solution &s)
                 << cmd::wdir(tgbot.BinaryDir)
                 << cmd::in("TelegramBotAPI.html")
                 << cmd::end()
-                << cmd::out("reflection.inl.h")
                 << cmd::out("types.inl.h")
                 << cmd::out("methods.inl.h")
                 ;
