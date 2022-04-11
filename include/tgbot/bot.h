@@ -61,7 +61,7 @@ private:
     template <typename T> struct type {};
 
 public:
-    api(const Bot &b) : bot{bot} {}
+    api(const Bot &b) : bot{b} {}
 
 #include <methods.inl.h>
 
@@ -69,8 +69,8 @@ private:
     const Bot &bot;
 
     // Bot's HttpClient must implement
-    //std::string make_request(const std::string &url, const http_request_arguments &args) const = 0;
-    //std::string make_request(const std::string &url, const std::string &json) const = 0;
+    //std::string make_request(const std::string &url, const http_request_arguments &args) const;
+    //std::string make_request(const std::string &url, const std::string &json) const;
     nlohmann::json send_request(const char *method, auto &&args) const {
         auto url = bot.base_url();
         url += bot.token();
