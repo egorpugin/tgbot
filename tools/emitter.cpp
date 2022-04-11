@@ -1,7 +1,6 @@
 #include "emitter.h"
 
 #include <primitives/exceptions.h>
-#include <primitives/http.h>
 
 static bool is_simple(const String &t) {
     return 0

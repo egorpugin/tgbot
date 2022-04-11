@@ -10,8 +10,8 @@ void build(Solution &s)
         t += cpp20;
         t += "tools/.*"_rr;
         t += "pub.egorpugin.primitives.emitter"_dep;
-        t += "pub.egorpugin.primitives.http"_dep;
         t += "pub.egorpugin.primitives.xml"_dep;
+        t += "pub.egorpugin.primitives.http"_dep;
         t += "pub.egorpugin.primitives.sw.main"_dep;
         t += "org.sw.demo.nlohmann.json"_dep;
         t += "org.sw.demo.imageworks.pystring"_dep;
@@ -20,15 +20,10 @@ void build(Solution &s)
     //
     {
         tgbot += cpp20;
-
         tgbot += "include/.*"_rr;
-
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.Public.CompileOptions.push_back("/Zc:__cplusplus");
-
         tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
-        //tgbot += "org.sw.demo.badger.curl.libcurl"_dep;
-
         {
             auto c = tgbot.addCommand();
             c << cmd::prog(apitool)
