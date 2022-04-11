@@ -3,3 +3,6 @@
 .settings
 *.patch
 *.json
+cmake*
+CMake*
+.idea

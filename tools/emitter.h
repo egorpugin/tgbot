@@ -2,8 +2,7 @@
 
 #include "parser.h"
 
-struct Emitter
-{
+struct Emitter {
     std::map<String, Type> types;
     std::map<String, Type> methods;
     std::map<String, std::map<String, String>> enums;
@@ -12,7 +11,6 @@ struct Emitter
 
     void emitTypesHeader();
     void emitTypesCpp();
-    void emitTypesSeparate();
     void emitMethods() const;
     void emitReflection() const;
 };

@@ -6,8 +6,7 @@
 
 #include <iostream>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     cl::opt<String> target(cl::Positional, cl::Required, cl::desc("Html file or url to parse"));
     cl::opt<path> json("j", cl::desc("Output api as json file"));
     cl::ParseCommandLineOptions(argc, argv);
@@ -28,9 +27,9 @@ int main(int argc, char *argv[])
     // json
     {
         nlohmann::json j;
-        for (auto &t : p.types)
+        for (auto &t: p.types)
             t.save(j["types"][t.name]);
-        for (auto &t : p.methods)
+        for (auto &t: p.methods)
             t.save(j["methods"][t.name]);
         if (!json.empty())
             write_file(json, j.dump(2));

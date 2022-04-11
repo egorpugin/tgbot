@@ -5,14 +5,12 @@
 #include <libxml/HTMLparser.h>
 #include <primitives/xml.h>
 
-struct Parser
-{
+struct Parser {
     std::vector<Type> types;
     std::vector<Type> methods;
 
     Parser(const String &s);
     ~Parser();
-
     void enumerateSectionChildren(const String &name);
 
 private:

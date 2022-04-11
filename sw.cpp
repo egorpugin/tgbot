@@ -21,16 +21,13 @@ void build(Solution &s)
     {
         tgbot += cpp20;
 
-        tgbot.ApiName = "TGBOT_API";
-
         tgbot += "include/.*"_rr;
-        tgbot += "src/.*"_rr;
 
         if (tgbot.getCompilerType() == CompilerType::MSVC)
-            tgbot.CompileOptions.push_back("/Zc:__cplusplus");
+            tgbot.Public.CompileOptions.push_back("/Zc:__cplusplus");
 
-        tgbot += "org.sw.demo.nlohmann.json"_dep;
-        tgbot += "org.sw.demo.badger.curl.libcurl"_dep;
+        tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
+        //tgbot += "org.sw.demo.badger.curl.libcurl"_dep;
 
         {
             auto c = tgbot.addCommand();
@@ -41,7 +38,6 @@ void build(Solution &s)
                 << cmd::out("reflection.inl.h")
                 << cmd::out("types.inl.h")
                 << cmd::out("methods.inl.h")
-                << cmd::out("methods.inl.cpp", cmd::Skip)
                 ;
         }
     }
