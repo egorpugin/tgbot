@@ -6,7 +6,7 @@ Features:
 
 * Bot API v6.0
 * Generated API structures and methods. No manual typing errors. Easily updatable for API changes.
-* C++20
+* C++23
 * License: MIT
 
 # Build

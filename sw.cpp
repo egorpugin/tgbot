@@ -7,7 +7,7 @@ void build(Solution &s)
     {
         auto &t = apitool;
         t.PackageDefinitions = true;
-        t += cpp20;
+        t += cpp23;
         t += "tools/.*"_rr;
         t += "pub.egorpugin.primitives.emitter"_dep;
         t += "pub.egorpugin.primitives.xml"_dep;
@@ -19,7 +19,7 @@ void build(Solution &s)
 
     //
     {
-        tgbot += cpp20;
+        tgbot += cpp23;
         tgbot += "include/.*"_rr;
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.Public.CompileOptions.push_back("/Zc:__cplusplus");
