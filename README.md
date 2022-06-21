@@ -4,7 +4,7 @@ C++ library for [Telegram Bot API](https://core.telegram.org/bots/api) with gene
 
 Features:
 
-* Bot API v6.0
+* Bot API v6.1
 * Generated API structures and methods. No manual typing errors. Easily updatable for API changes.
 * C++23
 * License: MIT
