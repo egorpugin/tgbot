@@ -4,6 +4,7 @@ SW_VERSION=1.1.4
 OLD_VERSION=$1
 NEW_VERSION=$2
 
+git pull origin master
 curl https://core.telegram.org/bots/api > TelegramBotAPI.html
 sed -i '$ d' TelegramBotAPI.html # remove the last line with generation time
 sed -i -e "s/$OLD_VERSION/$NEW_VERSION/g" README.md sw.cpp
