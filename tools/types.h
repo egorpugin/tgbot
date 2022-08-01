@@ -32,6 +32,7 @@ struct Type
     std::vector<Field> fields;
     std::vector<String> oneof;
     String description;
+    bool method = false;
 
     void save(nlohmann::json &j) const;
 
@@ -59,4 +60,9 @@ struct Type
     void emitMethodRequestType(primitives::CppEmitter &ctx) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;
     void emitEnums(primitives::CppEmitter &ctx) const;
+};
+
+struct Method : Type {
+    void emit(const Emitter &e, primitives::CppEmitter &h) const;
+    void emitRequestType(primitives::CppEmitter &ctx) const;
 };

@@ -129,10 +129,10 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
                 }
 
                 // chat_id field is always string in form @chat_id
-                if (t.name == "BotCommandScopeChat" || t.name == "BotCommandScopeChatAdministrators" ||
+                /*if (t.name == "BotCommandScopeChat" || t.name == "BotCommandScopeChatAdministrators" ||
                     t.name == "BotCommandScopeChatMember") {
                     t.fields[1].types = {"String"};
-                }
+                }*/
 
                 (t.is_type() ? types : methods).push_back(t);
             }

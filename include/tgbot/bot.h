@@ -197,7 +197,7 @@ private:
 /// This object holds other objects specific for this bot instance.
 template <typename HttpClient>
 struct bot {
-    bot(const std::string &token, const HttpClient &client) : token_{token}, http_client_{client}, api_{*this} {}
+    bot(const std::string &token, const HttpClient &client) : token_{token}, http_client_{client} {}
 
     /// returns token for accessing api
     const std::string &token() const { return token_; }
@@ -215,7 +215,7 @@ struct bot {
 private:
     std::string token_;
     const HttpClient &http_client_;
-    struct api<bot> api_;
+    struct api<bot> api_{*this};
     std::string base_url_{ "https://api.telegram.org/bot" };
     std::string base_file_url_{ "https://api.telegram.org/file/bot" };
 };

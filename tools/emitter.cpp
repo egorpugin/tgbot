@@ -72,9 +72,9 @@ String Field::get_enum_name() const {
 }
 
 String Field::get_enum_type(const String &parent_type) const {
-    if (enum_values.empty())
+    if (enum_values.empty()) {
         return types[0];
-    else {
+    } else {
         String s;
         if (!parent_type.empty())
             s += parent_type + "::";
@@ -193,6 +193,13 @@ void Type::emitMethodRequestType(primitives::CppEmitter &ctx) const {
     emitEnums(ctx);
     for (auto &f: fields)
         f.emitField(ctx);
+    /*ctx.emptyLines();
+    ctx.addLine();
+    ctx.addText("NLOHMANN_DEFINE_TYPE_INTRUSIVE(" + name + "Request, ");
+    for (auto &f: fields)
+        ctx.addText(f.name + ", ");
+    ctx.trimEnd(2);
+    ctx.addText(");");*/
     ctx.endBlock(true);
     //
     ctx.emptyLines();
@@ -254,8 +261,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h) const {
     // with request struct
     if (!fields.empty()) {
         cpp.addLine();
-        return_type.emitFieldType(cpp, true, true);
-        cpp.addText(" " + name + "(const " + name + "Request &r) const");
+        cpp.addText("auto " + name + "(const " + name + "Request &r) const");
         cpp.beginBlock();
         cpp.addLine("return " + name + "(");
         cpp.increaseIndent();
@@ -329,8 +335,10 @@ void Emitter::emitTypesHeader() {
     //
     ctx.addLine("// requests");
     ctx.emptyLines();
-    for (auto &[n, m]: methods)
+    for (auto &[n, m]: methods) {
+        m.method = true;
         m.emitMethodRequestType(ctx);
+    }
     ctx.emptyLines();
     write_file("types.inl.h", ctx.getText() + emitReflection());
 }
@@ -413,7 +421,7 @@ void Emitter::emitTypesCpp() {
     print_enums(types);
     print_enums(methods, "Request");
 
-    write_file("methods.inl.h", emitMethods() + "private:\n\n" + ctx.getText());
+    write_file("methods.inl.h", emitMethods() + ctx.getText());
 }
 
 String Emitter::emitMethods() const {

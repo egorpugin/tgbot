@@ -35,4 +35,17 @@ void build(Solution &s)
                 ;
         }
     }
+
+    auto &report_detection_bot = tgbot.addTarget<ExecutableTarget>("examples.report_detection_bot");
+    {
+        auto &bot = report_detection_bot;
+        bot.PackageDefinitions = true;
+        bot += cpp23;
+        bot += "examples/report_detection_bot/src/.*"_rr;
+        bot +=
+            "pub.egorpugin.primitives.http"_dep,
+            "pub.egorpugin.primitives.sw.main"_dep,
+            tgbot
+            ;
+    }
 }
