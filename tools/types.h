@@ -17,7 +17,7 @@ struct Field
     String always;
 
     void save(nlohmann::json &j) const;
-    void emitField(primitives::CppEmitter &ctx) const;
+    void emitField(primitives::CppEmitter &ctx, bool emitoptional = false) const;
     void emitFieldType(primitives::CppEmitter &ctx, bool emitoptional = false, bool return_type = false, const String &parent_type = {}) const;
     std::vector<String> get_dependent_types() const;
     bool is_enum() const;

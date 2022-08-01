@@ -33,17 +33,17 @@ bool Field::is_enum() const {
 
 std::vector<String> Field::get_dependent_types() const {
     std::vector<String> t;
-    for (auto &type: types) {
+    for (auto &&type : types) {
         if (!is_simple(type))
             t.push_back(type);
     }
     return t;
 }
 
-void Field::emitField(primitives::CppEmitter &ctx) const {
+void Field::emitField(primitives::CppEmitter &ctx, bool emitoptional) const {
     ctx.addLine("// " + description);
     ctx.addLine();
-    emitFieldType(ctx);
+    emitFieldType(ctx, emitoptional);
     ctx.addText(" " + name + ";");
     //ctx.emptyLines();
 }
@@ -165,12 +165,19 @@ void Type::emitEnums(primitives::CppEmitter &ctx) const {
     }
 }
 
+void Type::emitFwdDecl(primitives::CppEmitter &ctx) const {
+    if (!is_oneof())
+        ctx.addLine("struct " + name + ";");
+    else
+        emit(ctx);
+}
+
 void Method::emitRequestType(primitives::CppEmitter &ctx) const {
     if (fields.empty())
         return;
     ctx.beginBlock("struct " + cpp_name());
     for (auto &f: fields)
-        f.emitField(ctx);
+        f.emitField(ctx, true);
     ctx.endBlock(true);
     //
     ctx.emptyLines();
@@ -181,7 +188,7 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
     auto get_parameters = [this, &has_input_file](auto &ctx, bool defaults, int last_non_optional) {
         for (const auto &[i, f]: enumerate(fields)) {
             ctx.addLine("const ");
-            f.emitFieldType(ctx, false, false, f.is_enum() ? cpp_name() : "");
+            f.emitFieldType(ctx, true, false, f.is_enum() ? cpp_name() : "");
             ctx.addText(" &");
             ctx.addText(f.name);
             if (f.optional && static_cast<int>(i) > last_non_optional && defaults)
@@ -244,13 +251,6 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
         cpp.endBlock();
         cpp.emptyLines();
     }
-}
-
-void Type::emitFwdDecl(primitives::CppEmitter &ctx) const {
-    if (!is_oneof())
-        ctx.addLine("struct " + name + ";");
-    else
-        emit(ctx);
 }
 
 Emitter::Emitter(const Parser &p) {
