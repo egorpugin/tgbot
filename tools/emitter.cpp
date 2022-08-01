@@ -126,22 +126,6 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
         ctx.addText(">");
 }
 
-void Type::save(nlohmann::json &j) const {
-    if (!name.empty())
-        j["name"] = name;
-    if (!description.empty())
-        j["description"] = description;
-    if (!is_type())
-        return_type.save(j["return_type"]);
-    for (auto &f: fields) {
-        nlohmann::json jf;
-        f.save(jf);
-        j["fields"].push_back(jf);
-    }
-    for (auto &f: oneof)
-        j["oneof"].push_back(f);
-}
-
 std::vector<String> Type::get_dependent_types() const {
     std::vector<String> t;
     for (auto &f: fields) {
@@ -151,7 +135,7 @@ std::vector<String> Type::get_dependent_types() const {
     return t;
 }
 
-void Type::emitType(primitives::CppEmitter &ctx) const {
+void Type::emit(primitives::CppEmitter &ctx) const {
     ctx.addLine("// " + description);
     if (!is_oneof()) {
         ctx.beginBlock("struct " + name);
@@ -169,11 +153,6 @@ void Type::emitType(primitives::CppEmitter &ctx) const {
     ctx.emptyLines();
 }
 
-void Type::emitTypeCpp(primitives::CppEmitter &ctx) const {
-    ctx.addLine(name + "::" + name + "(const std::string &s) : " +
-                name + "{from_json<" + name + ">(nlohmann::json::parse(s))} {}");
-}
-
 void Type::emitEnums(primitives::CppEmitter &ctx) const {
     for (auto &f: fields) {
         if (!f.is_enum() || f.enum_values.empty())
@@ -186,31 +165,23 @@ void Type::emitEnums(primitives::CppEmitter &ctx) const {
     }
 }
 
-void Type::emitMethodRequestType(primitives::CppEmitter &ctx) const {
+void Method::emitRequestType(primitives::CppEmitter &ctx) const {
     if (fields.empty())
         return;
-    ctx.beginBlock("struct " + name + "Request");
-    emitEnums(ctx);
+    ctx.beginBlock("struct " + cpp_name());
     for (auto &f: fields)
         f.emitField(ctx);
-    /*ctx.emptyLines();
-    ctx.addLine();
-    ctx.addText("NLOHMANN_DEFINE_TYPE_INTRUSIVE(" + name + "Request, ");
-    for (auto &f: fields)
-        ctx.addText(f.name + ", ");
-    ctx.trimEnd(2);
-    ctx.addText(");");*/
     ctx.endBlock(true);
     //
     ctx.emptyLines();
 }
 
-void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h) const {
+void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
     bool has_input_file = false;
     auto get_parameters = [this, &has_input_file](auto &ctx, bool defaults, int last_non_optional) {
         for (const auto &[i, f]: enumerate(fields)) {
             ctx.addLine("const ");
-            f.emitFieldType(ctx, false, false, f.is_enum() ? name + "Request" : "");
+            f.emitFieldType(ctx, false, false, f.is_enum() ? cpp_name() : "");
             ctx.addText(" &");
             ctx.addText(f.name);
             if (f.optional && static_cast<int>(i) > last_non_optional && defaults)
@@ -261,7 +232,7 @@ void Type::emitMethod(const Emitter &e, primitives::CppEmitter &h) const {
     // with request struct
     if (!fields.empty()) {
         cpp.addLine();
-        cpp.addText("auto " + name + "(const " + name + "Request &r) const");
+        cpp.addText("auto " + name + "(const " + cpp_name() + " &r) const");
         cpp.beginBlock();
         cpp.addLine("return " + name + "(");
         cpp.increaseIndent();
@@ -279,7 +250,7 @@ void Type::emitFwdDecl(primitives::CppEmitter &ctx) const {
     if (!is_oneof())
         ctx.addLine("struct " + name + ";");
     else
-        emitType(ctx);
+        emit(ctx);
 }
 
 Emitter::Emitter(const Parser &p) {
@@ -329,15 +300,14 @@ void Emitter::emitTypesHeader() {
     //
     for (auto &[n, t]: types) {
         if (!t.is_oneof())
-            t.emitType(ctx);
+            t.emit(ctx);
     }
     ctx.emptyLines();
     //
     ctx.addLine("// requests");
     ctx.emptyLines();
     for (auto &[n, m]: methods) {
-        m.method = true;
-        m.emitMethodRequestType(ctx);
+        m.emitRequestType(ctx);
     }
     ctx.emptyLines();
     write_file("types.inl.h", ctx.getText() + emitReflection());
@@ -419,7 +389,6 @@ void Emitter::emitTypesCpp() {
     for (auto &[n, vals]: enums)
         print_enum(n, vals);
     print_enums(types);
-    print_enums(methods, "Request");
 
     write_file("methods.inl.h", emitMethods() + ctx.getText());
 }
@@ -427,7 +396,7 @@ void Emitter::emitTypesCpp() {
 String Emitter::emitMethods() const {
     primitives::CppEmitter h;
     for (auto &[n, m]: methods)
-        m.emitMethod(*this, h);
+        m.emit(*this, h);
     return h.getText();
 }
 

@@ -7,7 +7,7 @@
 
 struct Parser {
     std::vector<Type> types;
-    std::vector<Type> methods;
+    std::vector<Method> methods;
 
     Parser(const String &s);
     ~Parser();
@@ -19,7 +19,4 @@ private:
 
     void enumerateSectionChildren(xmlNode *in, const String &name);
     xmlNode *getSection(xmlNode *in, const String &name) const;
-    String getAllText(xmlNode *in) const;
-    void parseTypeOneOf(Type &t, xmlNode *ul) const;
-    void parseType(Type &t, xmlNode *tb) const;
 };

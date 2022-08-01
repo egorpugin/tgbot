@@ -25,18 +25,33 @@ struct Field
     String get_enum_type(const String &parent_type = {}) const;
 };
 
-struct Type
-{
+struct basic_info {
     String name;
-    Field return_type;
     std::vector<Field> fields;
-    std::vector<String> oneof;
     String description;
-    bool method = false;
 
-    void save(nlohmann::json &j) const;
+    void save(nlohmann::json &j) const {
+        if (!name.empty())
+            j["name"] = name;
+        if (!description.empty())
+            j["description"] = description;
+        for (auto &f: fields) {
+            nlohmann::json jf;
+            f.save(jf);
+            j["fields"].push_back(jf);
+        }
+    }
+};
 
-    bool is_type() const { return isupper(name[0]); }
+struct Type : basic_info {
+    std::vector<String> oneof;
+
+    void save(nlohmann::json &j) const {
+        basic_info::save(j);
+        for (auto &f: oneof)
+            j["oneof"].push_back(f);
+    }
+
     bool is_oneof() const { return !oneof.empty(); }
     bool is_received_variant(const std::map<String, Type> &types) const {
         std::map<String, std::vector<std::pair<const Type *, const Field *>>> fields;
@@ -50,19 +65,23 @@ struct Type
         return !fields.empty();
     }
 
-    String get_file_name() const { return name + "_type.inl.h"; }
-    String get_request_file_name() const { return name + "Request_type.inl.h"; }
     std::vector<String> get_dependent_types() const;
 
-    void emitType(primitives::CppEmitter &ctx) const;
-    void emitTypeCpp(primitives::CppEmitter &ctx) const;
-    void emitMethod(const Emitter &e, primitives::CppEmitter &h) const;
-    void emitMethodRequestType(primitives::CppEmitter &ctx) const;
+    void emit(primitives::CppEmitter &ctx) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;
     void emitEnums(primitives::CppEmitter &ctx) const;
 };
 
-struct Method : Type {
+struct Method : basic_info {
+    Field return_type;
+
+    void save(nlohmann::json &j) const {
+        basic_info::save(j);
+        return_type.save(j["return_type"]);
+    }
+
+    auto cpp_name() const { return name + "Request"; }
+
     void emit(const Emitter &e, primitives::CppEmitter &h) const;
     void emitRequestType(primitives::CppEmitter &ctx) const;
 };

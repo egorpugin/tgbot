@@ -2,6 +2,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <primitives/exceptions.h>
+#include <primitives/overload.h>
 #include <pystring.h>
 
 #include <iostream>
@@ -59,106 +60,7 @@ static Field extract_return_type(const String &desc) {
     return f;
 }
 
-Parser::Parser(const String &s) {
-    ctx = htmlNewParserCtxt();
-    auto doc = htmlCtxtReadMemory(ctx, s.c_str(), s.size(), nullptr, nullptr,
-                                  XML_PARSE_NOERROR | XML_PARSE_NOWARNING);
-    root = xmlDocGetRootElement(doc);
-    if (!root)
-        throw SW_RUNTIME_ERROR("Invalid document");
-}
-
-Parser::~Parser() {
-    htmlFreeParserCtxt(ctx);
-}
-
-void Parser::enumerateSectionChildren(const String &name) {
-    enumerateSectionChildren(root, name);
-}
-
-void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
-    auto n = getSection(in, name);
-    checkNullptr(n);
-    do {
-        if (getName(n) == "h4" && n->children && n->children->next && n->children->next->type == XML_TEXT_NODE) {
-            Type t;
-            t.name = getContent(n->children->next);
-            if (t.name.find(" ") == t.name.npos) // skip other headers
-            {
-                auto nt = n->next;
-                decltype(nt) tb = nullptr;
-                decltype(nt) ul = nullptr;
-                decltype(nt) p = nullptr;
-                while (nt) {
-                    if (getName(nt) == "h4")
-                        break;
-                    else if (getName(nt) == "table") {
-                        tb = nt;
-                        break;
-                    } else if (getName(nt) == "ul") {
-                        ul = nt;
-                        break;
-                    } else if (!p && getName(nt) == "p") {
-                        p = nt;
-                    }
-                    nt = nt->next;
-                }
-                checkNullptr(p); // there is return type in desc
-                t.description = getAllText(p->children);
-                if (ul)
-                    parseTypeOneOf(t, ul->children);
-                if (tb)
-                    parseType(t, tb);
-
-                // return type
-                if (!t.is_type())
-                    t.return_type = extract_return_type(t.description);
-
-                if (t.fields.empty() && t.name == "InputFile") {
-                    Field fn;
-                    fn.name = "file_name";
-                    fn.types.push_back("String");
-                    fn.description = "Local file name of file to upload.";
-                    t.fields.push_back(fn);
-
-                    Field mt;
-                    mt.name = "mime_type";
-                    mt.types.push_back("String");
-                    mt.description = "MIME type of file to upload.";
-                    t.fields.push_back(mt);
-                }
-
-                // chat_id field is always string in form @chat_id
-                /*if (t.name == "BotCommandScopeChat" || t.name == "BotCommandScopeChatAdministrators" ||
-                    t.name == "BotCommandScopeChatMember") {
-                    t.fields[1].types = {"String"};
-                }*/
-
-                (t.is_type() ? types : methods).push_back(t);
-            }
-        }
-        n = n->next;
-    } while (n && getName(n) != "h3");
-}
-
-xmlNode *Parser::getSection(xmlNode *in, const String &name) const {
-    auto n = getNext(in, "h3");
-    checkNullptr(n);
-    auto a = getNext(n, "a");
-    if (a) {
-        auto p = a->properties;
-        while (p) {
-            if (getName(p) == "name" &&
-                p->children && getName(p->children) == "text" &&
-                getContent(p->children) == name)
-                return n;
-            p = p->next;
-        }
-    }
-    return getSection(n, name);
-}
-
-String Parser::getAllText(xmlNode *in) const {
+static String getAllText(xmlNode *in) {
     String s;
     if (getName(in) == "text")
         s += getContent(in);
@@ -169,14 +71,14 @@ String Parser::getAllText(xmlNode *in) const {
     return s;
 }
 
-void Parser::parseTypeOneOf(Type &t, xmlNode *ul) const {
+static void parseTypeOneOf(auto &t, xmlNode *ul) {
     while (ul = getNext(ul, "li")) {
         if (ul->children)
             t.oneof.push_back(getAllText(ul->children));
     }
 }
 
-void Parser::parseType(Type &t, xmlNode *tb) const {
+static void parseType(auto &t, xmlNode *tb) {
     tb = getNext(tb, "tbody");
     for (auto b = getNext(tb, "tr"); b; b = getNext(b, "tr")) {
         Field f;
@@ -203,21 +105,23 @@ void Parser::parseType(Type &t, xmlNode *tb) const {
 
         auto comment = getNext(field_type, "td");
         checkNullptr(comment);
-        if (t.is_type()) {
-            if (comment->children && getName(comment->children) == "em" &&
-                comment->children->children && getName(comment->children->children) == "text" &&
-                getContent(comment->children->children) == "Optional")
-                f.optional = true;
-            if (comment->children)
-                f.description = getAllText(comment->children);
-        } else {
-            if (comment->children && getName(comment->children) == "text" &&
-                comment->children->content && getContent(comment->children) == "Optional")
-                f.optional = true;
-            auto desc = getNext(comment, "td");
-            if (desc && desc->children)
-                f.description = getAllText(desc->children);
-        }
+        overload(
+            [&](Type &t) {
+                if (comment->children && getName(comment->children) == "em" && comment->children->children &&
+                    getName(comment->children->children) == "text" &&
+                    getContent(comment->children->children) == "Optional")
+                    f.optional = true;
+                if (comment->children)
+                    f.description = getAllText(comment->children);
+            },
+            [&](Method &t) {
+                if (comment->children && getName(comment->children) == "text" && comment->children->content &&
+                    getContent(comment->children) == "Optional")
+                    f.optional = true;
+                auto desc = getNext(comment, "td");
+                if (desc && desc->children)
+                    f.description = getAllText(desc->children);
+            })(t);
 
         if (!f.description.empty()) {
             boost::replace_all(f.description, "\xe2\x80\x9c", "\"");
@@ -264,4 +168,108 @@ void Parser::parseType(Type &t, xmlNode *tb) const {
 
         t.fields.push_back(f);
     }
+}
+
+
+Parser::Parser(const String &s) {
+    ctx = htmlNewParserCtxt();
+    auto doc = htmlCtxtReadMemory(ctx, s.c_str(), s.size(), nullptr, nullptr,
+                                  XML_PARSE_NOERROR | XML_PARSE_NOWARNING);
+    root = xmlDocGetRootElement(doc);
+    if (!root)
+        throw SW_RUNTIME_ERROR("Invalid document");
+}
+
+Parser::~Parser() {
+    htmlFreeParserCtxt(ctx);
+}
+
+void Parser::enumerateSectionChildren(const String &name) {
+    enumerateSectionChildren(root, name);
+}
+
+void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
+    auto n = getSection(in, name);
+    checkNullptr(n);
+    do {
+        SCOPE_EXIT{n = n->next;};
+        auto good_node = getName(n) == "h4" && n->children && n->children->next && n->children->next->type == XML_TEXT_NODE;
+        if (!good_node) {
+            continue;
+        }
+        auto name = getContent(n->children->next);
+        auto is_type = isupper(name[0]);
+        // skip other headers
+        if (name.find(" ") != name.npos) {
+            continue;
+        }
+        auto nt = n->next;
+        decltype(nt) tb = nullptr;
+        decltype(nt) ul = nullptr;
+        decltype(nt) p = nullptr;
+        while (nt) {
+            if (getName(nt) == "h4") {
+                break;
+            } else if (getName(nt) == "table") {
+                tb = nt;
+                break;
+            } else if (getName(nt) == "ul") {
+                ul = nt;
+                break;
+            } else if (!p && getName(nt) == "p") {
+                p = nt;
+            }
+            nt = nt->next;
+        }
+        checkNullptr(p); // there is return type in desc
+
+        if (is_type) {
+            Type t;
+            t.name = name;
+            t.description = getAllText(p->children);
+            if (ul)
+                parseTypeOneOf(t, ul->children);
+            if (tb)
+                parseType(t, tb);
+            if (t.fields.empty() && t.name == "InputFile") {
+                Field fn;
+                fn.name = "file_name";
+                fn.types.push_back("String");
+                fn.description = "Local file name of file to upload.";
+                t.fields.push_back(fn);
+
+                Field mt;
+                mt.name = "mime_type";
+                mt.types.push_back("String");
+                mt.description = "MIME type of file to upload.";
+                t.fields.push_back(mt);
+            }
+            types.push_back(t);
+        } else {
+            Method t;
+            t.name = name;
+            t.description = getAllText(p->children);
+            t.return_type = extract_return_type(t.description);
+            if (tb)
+                parseType(t, tb);
+            methods.push_back(t);
+        }
+    } while (n && getName(n) != "h3");
+}
+
+xmlNode *Parser::getSection(xmlNode *in, const String &name) const {
+    auto n = getNext(in, "h3");
+    checkNullptr(n);
+    auto a = getNext(n, "a");
+    if (a) {
+        auto p = a->properties;
+        while (p) {
+            if (getName(p) == "name" &&
+                p->children && getName(p->children) == "text" &&
+                getContent(p->children) == name)
+                return n;
+            p = p->next;
+        }
+    }
+    return getSection(n, name);
 }
