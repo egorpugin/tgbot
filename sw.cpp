@@ -35,7 +35,6 @@ void build(Solution &s)
                 ;
         }
     }
-    return;
 
     auto &report_detection_bot = tgbot.addTarget<ExecutableTarget>("examples.report_detection_bot");
     {

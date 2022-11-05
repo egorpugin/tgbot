@@ -252,6 +252,10 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
             t.return_type = extract_return_type(t.description);
             if (tb)
                 parseType(t, tb);
+            // sometimes optional fields won't be last in api spec
+            std::ranges::stable_sort(t.fields, [](auto &&f1, auto &&f2){
+                return f1.optional < f2.optional;
+            });
             methods.push_back(t);
         }
     } while (n && getName(n) != "h3");
