@@ -17,7 +17,7 @@ To learn how to create…">
 <link rel="alternate icon" href="/img/favicon.ico" type="image/x-icon" />
     <link href="/css/bootstrap.min.css?3" rel="stylesheet">
     
-    <link href="/css/telegram.css?231" rel="stylesheet" media="screen">
+    <link href="/css/telegram.css?232" rel="stylesheet" media="screen">
     <style>
     </style>
   </head>
@@ -47,12 +47,26 @@ To learn how to create…">
   <div id="dev_page_content"><!-- scroll_nav -->
 
 <blockquote>
-<p>The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram.<br>To learn how to create and set up a bot, please consult our <a href="https://core.telegram.org/bots"><strong>Introduction to Bots</strong></a> and <a href="/bots/faq"><strong>Bot FAQ</strong></a>.</p>
+<p>The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram.<br>To learn how to create and set up a bot, please consult our <a href="/bots"><strong>Introduction to Bots</strong></a> and <a href="/bots/faq"><strong>Bot FAQ</strong></a>.</p>
 </blockquote>
 <h3><a class="anchor" name="recent-changes" href="#recent-changes"><i class="anchor-icon"></i></a>Recent changes</h3>
 <blockquote>
 <p>Subscribe to <a href="https://t.me/botnews">@BotNews</a> to be the first to know about the latest updates and join the discussion in <a href="https://t.me/bottalk">@BotTalk</a></p>
 </blockquote>
+<h4><a class="anchor" name="november-5-2022" href="#november-5-2022"><i class="anchor-icon"></i></a>November 5, 2022</h4>
+<p><strong>Bot API 6.3</strong></p>
+<ul>
+<li>Added support for <a href="https://telegram.org/blog/topics-in-groups-collectible-usernames#topics-in-groups">Topics in Groups</a>.</li>
+<li>Added the field <em>is_forum</em> to the class <a href="#chat">Chat</a>.</li>
+<li>Added the fields <em>is_topic_message</em> and <em>message_thread_id</em> to the class <a href="#message">Message</a> to allow detection of messages belonging to a forum topic and their message thread identifier.</li>
+<li>Added the classes <a href="#forumtopiccreated">ForumTopicCreated</a>, <a href="#forumtopicclosed">ForumTopicClosed</a>, and <a href="#forumtopicreopened">ForumTopicReopened</a> and the fields <em>forum_topic_created</em>, <em>forum_topic_closed</em>, and <em>forum_topic_reopened</em> to the class <a href="#message">Message</a>. Note that service messages about forum topic creation can&#39;t be deleted with the <a href="#deletemessage">deleteMessage</a> method.</li>
+<li>Added the field <em>can_manage_topics</em> to the classes <a href="#chatadministratorrights">ChatAdministratorRights</a>, <a href="#chatpermissions">ChatPermissions</a>, <a href="#chatmemberadministrator">ChatMemberAdministrator</a>, and <a href="#chatmemberrestricted">ChatMemberRestricted</a>.</li>
+<li>Added the parameter <em>can_manage_topics</em> to the method <a href="#promotechatmember">promoteChatMember</a>.</li>
+<li>Added the methods <a href="#createforumtopic">createForumTopic</a>, <a href="#editforumtopic">editForumTopic</a>, <a href="#closeforumtopic">closeForumTopic</a>, <a href="#reopenforumtopic">reopenForumTopic</a>, <a href="#deleteforumtopic">deleteForumTopic</a>, <a href="#unpinallforumtopicmessages">unpinAllForumTopicMessages</a>, and <a href="#getforumtopiciconstickers">getForumTopicIconStickers</a> for forum topic management.</li>
+<li>Added the parameter <em>message_thread_id</em> to the methods <a href="#sendmessage">sendMessage</a>, <a href="#sendphoto">sendPhoto</a>, <a href="#sendvideo">sendVideo</a>, <a href="#sendanimation">sendAnimation</a>, <a href="#sendaudio">sendAudio</a>, <a href="#senddocument">sendDocument</a>, <a href="#sendsticker">sendSticker</a>, <a href="#sendvideonote">sendVideoNote</a>, <a href="#sendvoice">sendVoice</a>, <a href="#sendlocation">sendLocation</a>, <a href="#sendvenue">sendVenue</a>, <a href="#sendcontact">sendContact</a>, <a href="#sendpoll">sendPoll</a>, <a href="#senddice">sendDice</a>, <a href="#sendinvoice">sendInvoice</a>, <a href="#sendgame">sendGame</a>, <a href="#sendmediagroup">sendMediaGroup</a>, <a href="#copymessage">copyMessage</a>, <a href="#forwardmessage">forwardMessage</a> to support sending of messages to a forum topic.</li>
+<li>Added support for <a href="https://telegram.org/blog/topics-in-groups-collectible-usernames#collectible-usernames">Multiple Usernames</a> via the field <em>active_usernames</em> in the class <a href="#chat">Chat</a>.</li>
+<li>Added the field <em>emoji_status_custom_emoji_id</em> to the class <a href="#chat">Chat</a>.</li>
+</ul>
 <h4><a class="anchor" name="august-12-2022" href="#august-12-2022"><i class="anchor-icon"></i></a>August 12, 2022</h4>
 <p><strong>Bot API 6.2</strong></p>
 <p><strong>Custom Emoji Support</strong></p>
@@ -142,7 +156,7 @@ To learn how to create…">
 </ul>
 <p><strong><a href="/bots/api-changelog">See earlier changes »</a></strong></p>
 <h3><a class="anchor" name="authorizing-your-bot" href="#authorizing-your-bot"><i class="anchor-icon"></i></a>Authorizing your bot</h3>
-<p>Each bot is given a unique authentication token <a href="/bots#6-botfather">when it is created</a>. The token looks something like <code>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</code>, but we&#39;ll use simply <strong>&lt;token&gt;</strong> in this document instead. You can learn about obtaining tokens and generating new ones in <a href="https://core.telegram.org/bots#6-botfather">this document</a>.</p>
+<p>Each bot is given a unique authentication token <a href="/bots/features#botfather">when it is created</a>. The token looks something like <code>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</code>, but we&#39;ll use simply <strong>&lt;token&gt;</strong> in this document instead. You can learn about obtaining tokens and generating new ones in <a href="/bots/features#botfather">this document</a>.</p>
 <h3><a class="anchor" name="making-requests" href="#making-requests"><i class="anchor-icon"></i></a>Making requests</h3>
 <p>All queries to the Telegram Bot API must be served over HTTPS and need to be presented in this form: <code>https://api.telegram.org/bot&lt;token&gt;/METHOD_NAME</code>. Like this for example:</p>
 <pre><code>https://api.telegram.org/bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11/getMe</code></pre>
@@ -515,7 +529,7 @@ To learn how to create…">
 <tr>
 <td>can_read_all_group_messages</td>
 <td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if <a href="https://core.telegram.org/bots#privacy-mode">privacy mode</a> is disabled for the bot. Returned only in <a href="#getme">getMe</a>.</td>
+<td><em>Optional</em>. <em>True</em>, if <a href="/bots/features#privacy-mode">privacy mode</a> is disabled for the bot. Returned only in <a href="#getme">getMe</a>.</td>
 </tr>
 <tr>
 <td>supports_inline_queries</td>
@@ -566,9 +580,24 @@ To learn how to create…">
 <td><em>Optional</em>. Last name of the other party in a private chat</td>
 </tr>
 <tr>
+<td>is_forum</td>
+<td>True</td>
+<td><em>Optional</em>. <em>True</em>, if the supergroup chat is a forum (has <a href="https://telegram.org/blog/topics-in-groups-collectible-usernames#topics-in-groups">topics</a> enabled)</td>
+</tr>
+<tr>
 <td>photo</td>
 <td><a href="#chatphoto">ChatPhoto</a></td>
 <td><em>Optional</em>. Chat photo. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>active_usernames</td>
+<td>Array of String</td>
+<td><em>Optional</em>. If non-empty, the list of all <a href="https://telegram.org/blog/topics-in-groups-collectible-usernames#collectible-usernames">active chat usernames</a>; for private chats, supergroups and channels. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>emoji_status_custom_emoji_id</td>
+<td>String</td>
+<td><em>Optional</em>. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
 <td>bio</td>
@@ -669,6 +698,11 @@ To learn how to create…">
 <td>Unique message identifier inside this chat</td>
 </tr>
 <tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td><em>Optional</em>. Unique identifier of a message thread to which the message belongs; for supergroups only</td>
+</tr>
+<tr>
 <td>from</td>
 <td><a href="#user">User</a></td>
 <td><em>Optional</em>. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.</td>
@@ -717,6 +751,11 @@ To learn how to create…">
 <td>forward_date</td>
 <td>Integer</td>
 <td><em>Optional</em>. For forwarded messages, date the original message was sent in Unix time</td>
+</tr>
+<tr>
+<td>is_topic_message</td>
+<td>True</td>
+<td><em>Optional</em>. <em>True</em>, if the message is sent to a forum topic</td>
 </tr>
 <tr>
 <td>is_automatic_forward</td>
@@ -927,6 +966,21 @@ To learn how to create…">
 <td>proximity_alert_triggered</td>
 <td><a href="#proximityalerttriggered">ProximityAlertTriggered</a></td>
 <td><em>Optional</em>. Service message. A user in the chat triggered another user&#39;s proximity alert while sharing Live Location.</td>
+</tr>
+<tr>
+<td>forum_topic_created</td>
+<td><a href="#forumtopiccreated">ForumTopicCreated</a></td>
+<td><em>Optional</em>. Service message: forum topic created</td>
+</tr>
+<tr>
+<td>forum_topic_closed</td>
+<td><a href="#forumtopicclosed">ForumTopicClosed</a></td>
+<td><em>Optional</em>. Service message: forum topic closed</td>
+</tr>
+<tr>
+<td>forum_topic_reopened</td>
+<td><a href="#forumtopicreopened">ForumTopicReopened</a></td>
+<td><em>Optional</em>. Service message: forum topic reopened</td>
 </tr>
 <tr>
 <td>video_chat_scheduled</td>
@@ -1712,6 +1766,38 @@ To learn how to create…">
 </tr>
 </tbody>
 </table>
+<h4><a class="anchor" name="forumtopiccreated" href="#forumtopiccreated"><i class="anchor-icon"></i></a>ForumTopicCreated</h4>
+<p>This object represents a service message about a new forum topic created in the chat.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the topic</td>
+</tr>
+<tr>
+<td>icon_color</td>
+<td>Integer</td>
+<td>Color of the topic icon in RGB format</td>
+</tr>
+<tr>
+<td>icon_custom_emoji_id</td>
+<td>String</td>
+<td><em>Optional</em>. Unique identifier of the custom emoji shown as the topic icon</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="forumtopicclosed" href="#forumtopicclosed"><i class="anchor-icon"></i></a>ForumTopicClosed</h4>
+<p>This object represents a service message about a forum topic closed in the chat. Currently holds no information.</p>
+<h4><a class="anchor" name="forumtopicreopened" href="#forumtopicreopened"><i class="anchor-icon"></i></a>ForumTopicReopened</h4>
+<p>This object represents a service message about a forum topic reopened in the chat. Currently holds no information.</p>
 <h4><a class="anchor" name="videochatscheduled" href="#videochatscheduled"><i class="anchor-icon"></i></a>VideoChatScheduled</h4>
 <p>This object represents a service message about a video chat scheduled in the chat.</p>
 <table class="table">
@@ -1846,7 +1932,7 @@ To learn how to create…">
 </tbody>
 </table>
 <h4><a class="anchor" name="replykeyboardmarkup" href="#replykeyboardmarkup"><i class="anchor-icon"></i></a>ReplyKeyboardMarkup</h4>
-<p>This object represents a <a href="https://core.telegram.org/bots#keyboards">custom keyboard</a> with reply options (see <a href="https://core.telegram.org/bots#keyboards">Introduction to bots</a> for details and examples).</p>
+<p>This object represents a <a href="/bots/features#keyboards">custom keyboard</a> with reply options (see <a href="/bots/features#keyboards">Introduction to bots</a> for details and examples).</p>
 <table class="table">
 <thead>
 <tr>
@@ -1964,7 +2050,7 @@ To learn how to create…">
 </tbody>
 </table>
 <h4><a class="anchor" name="inlinekeyboardmarkup" href="#inlinekeyboardmarkup"><i class="anchor-icon"></i></a>InlineKeyboardMarkup</h4>
-<p>This object represents an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a> that appears right next to the message it belongs to.</p>
+<p>This object represents an <a href="/bots/features#inline-keyboards">inline keyboard</a> that appears right next to the message it belongs to.</p>
 <table class="table">
 <thead>
 <tr>
@@ -2016,7 +2102,7 @@ To learn how to create…">
 <tr>
 <td>login_url</td>
 <td><a href="#loginurl">LoginUrl</a></td>
-<td><em>Optional</em>. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the <a href="https://core.telegram.org/widgets/login">Telegram Login Widget</a>.</td>
+<td><em>Optional</em>. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the <a href="/widgets/login">Telegram Login Widget</a>.</td>
 </tr>
 <tr>
 <td>switch_inline_query</td>
@@ -2041,7 +2127,7 @@ To learn how to create…">
 </tbody>
 </table>
 <h4><a class="anchor" name="loginurl" href="#loginurl"><i class="anchor-icon"></i></a>LoginUrl</h4>
-<p>This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the <a href="https://core.telegram.org/widgets/login">Telegram Login Widget</a> when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:</p>
+<p>This object represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the <a href="/widgets/login">Telegram Login Widget</a> when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in:</p>
 <div class="blog_image_wrap">
   <a href="/file/811140015/1734/8VZFkwWXalM.97872/6127fa62d8a0bf2b3c" target="_blank"><img src="/file/811140909/1631/20k1Z53eiyY.23995/c541e89b74253623d9" title="TITLE" alt="TITLE" srcset="/file/811140015/1734/8VZFkwWXalM.97872/6127fa62d8a0bf2b3c , 2x" /></a>
 </div>
@@ -2062,7 +2148,7 @@ To learn how to create…">
 <tr>
 <td>url</td>
 <td>String</td>
-<td>An HTTPS URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in <a href="https://core.telegram.org/widgets/login#receiving-authorization-data">Receiving authorization data</a>.<br><br><strong>NOTE:</strong> You <strong>must</strong> always check the hash of the received data to verify the authentication and the integrity of the data as described in <a href="https://core.telegram.org/widgets/login#checking-authorization">Checking authorization</a>.</td>
+<td>An HTTPS URL to be opened with user authorization data added to the query string when the button is pressed. If the user refuses to provide authorization data, the original URL without information about the user will be opened. The data added is the same as described in <a href="/widgets/login#receiving-authorization-data">Receiving authorization data</a>.<br><br><strong>NOTE:</strong> You <strong>must</strong> always check the hash of the received data to verify the authentication and the integrity of the data as described in <a href="/widgets/login#checking-authorization">Checking authorization</a>.</td>
 </tr>
 <tr>
 <td>forward_text</td>
@@ -2072,7 +2158,7 @@ To learn how to create…">
 <tr>
 <td>bot_username</td>
 <td>String</td>
-<td><em>Optional</em>. Username of a bot, which will be used for user authorization. See <a href="https://core.telegram.org/widgets/login#setting-up-a-bot">Setting up a bot</a> for more details. If not specified, the current bot&#39;s username will be assumed. The <em>url</em>&#39;s domain must be the same as the domain linked with the bot. See <a href="https://core.telegram.org/widgets/login#linking-your-domain-to-the-bot">Linking your domain to the bot</a> for more details.</td>
+<td><em>Optional</em>. Username of a bot, which will be used for user authorization. See <a href="/widgets/login#setting-up-a-bot">Setting up a bot</a> for more details. If not specified, the current bot&#39;s username will be assumed. The <em>url</em>&#39;s domain must be the same as the domain linked with the bot. See <a href="/widgets/login#linking-your-domain-to-the-bot">Linking your domain to the bot</a> for more details.</td>
 </tr>
 <tr>
 <td>request_write_access</td>
@@ -2082,7 +2168,7 @@ To learn how to create…">
 </tbody>
 </table>
 <h4><a class="anchor" name="callbackquery" href="#callbackquery"><i class="anchor-icon"></i></a>CallbackQuery</h4>
-<p>This object represents an incoming callback query from a callback button in an <a href="/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>. If the button that originated the query was attached to a message sent by the bot, the field <em>message</em> will be present. If the button was attached to a message sent via the bot (in <a href="#inline-mode">inline mode</a>), the field <em>inline_message_id</em> will be present. Exactly one of the fields <em>data</em> or <em>game_short_name</em> will be present.</p>
+<p>This object represents an incoming callback query from a callback button in an <a href="/bots/features#inline-keyboards">inline keyboard</a>. If the button that originated the query was attached to a message sent by the bot, the field <em>message</em> will be present. If the button was attached to a message sent via the bot (in <a href="#inline-mode">inline mode</a>), the field <em>inline_message_id</em> will be present. Exactly one of the fields <em>data</em> or <em>game_short_name</em> will be present.</p>
 <table class="table">
 <thead>
 <tr>
@@ -2133,7 +2219,7 @@ To learn how to create…">
 <p><strong>NOTE:</strong> After the user presses a callback button, Telegram clients will display a progress bar until you call <a href="#answercallbackquery">answerCallbackQuery</a>. It is, therefore, necessary to react by calling <a href="#answercallbackquery">answerCallbackQuery</a> even if no notification to the user is needed (e.g., without specifying any of the optional parameters).</p>
 </blockquote>
 <h4><a class="anchor" name="forcereply" href="#forcereply"><i class="anchor-icon"></i></a>ForceReply</h4>
-<p>Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot&#39;s message and tapped &#39;Reply&#39;). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice <a href="/bots#privacy-mode">privacy mode</a>.</p>
+<p>Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot&#39;s message and tapped &#39;Reply&#39;). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice <a href="/bots/features#privacy-mode">privacy mode</a>.</p>
 <table class="table">
 <thead>
 <tr>
@@ -2325,6 +2411,11 @@ To learn how to create…">
 <td>Boolean</td>
 <td><em>Optional</em>. <em>True</em>, if the user is allowed to pin messages; groups and supergroups only</td>
 </tr>
+<tr>
+<td>can_manage_topics</td>
+<td>Boolean</td>
+<td><em>Optional</em>. <em>True</em>, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only</td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="chatmember" href="#chatmember"><i class="anchor-icon"></i></a>ChatMember</h4>
@@ -2452,6 +2543,11 @@ To learn how to create…">
 <td><em>Optional</em>. <em>True</em>, if the user is allowed to pin messages; groups and supergroups only</td>
 </tr>
 <tr>
+<td>can_manage_topics</td>
+<td>Boolean</td>
+<td><em>Optional</em>. <em>True</em>, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only</td>
+</tr>
+<tr>
 <td>custom_title</td>
 <td>String</td>
 <td><em>Optional</em>. Custom title for this user</td>
@@ -2521,6 +2617,11 @@ To learn how to create…">
 <td>can_pin_messages</td>
 <td>Boolean</td>
 <td><em>True</em>, if the user is allowed to pin messages</td>
+</tr>
+<tr>
+<td>can_manage_topics</td>
+<td>Boolean</td>
+<td><em>True</em>, if the user is allowed to create forum topics</td>
 </tr>
 <tr>
 <td>can_send_messages</td>
@@ -2737,6 +2838,11 @@ To learn how to create…">
 <td>Boolean</td>
 <td><em>Optional</em>. <em>True</em>, if the user is allowed to pin messages. Ignored in public supergroups</td>
 </tr>
+<tr>
+<td>can_manage_topics</td>
+<td>Boolean</td>
+<td><em>Optional</em>. <em>True</em>, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages</td>
+</tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="chatlocation" href="#chatlocation"><i class="anchor-icon"></i></a>ChatLocation</h4>
@@ -2759,6 +2865,39 @@ To learn how to create…">
 <td>address</td>
 <td>String</td>
 <td>Location address; 1-64 characters, as defined by the chat owner</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="forumtopic" href="#forumtopic"><i class="anchor-icon"></i></a>ForumTopic</h4>
+<p>This object represents a forum topic.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Unique identifier of the forum topic</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Name of the topic</td>
+</tr>
+<tr>
+<td>icon_color</td>
+<td>Integer</td>
+<td>Color of the topic icon in RGB format</td>
+</tr>
+<tr>
+<td>icon_custom_emoji_id</td>
+<td>String</td>
+<td><em>Optional</em>. Unique identifier of the custom emoji shown as the topic icon</td>
 </tr>
 </tbody>
 </table>
@@ -3392,6 +3531,12 @@ To learn how to create…">
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
 </tr>
 <tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
+</tr>
+<tr>
 <td>text</td>
 <td>String</td>
 <td>Yes</td>
@@ -3443,7 +3588,7 @@ To learn how to create…">
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -3542,6 +3687,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
 </tr>
 <tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
+</tr>
+<tr>
 <td>from_chat_id</td>
 <td>Integer or String</td>
 <td>Yes</td>
@@ -3584,6 +3735,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>from_chat_id</td>
@@ -3643,7 +3800,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -3664,6 +3821,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>photo</td>
@@ -3717,7 +3880,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -3739,6 +3902,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>audio</td>
@@ -3816,7 +3985,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -3837,6 +4006,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>document</td>
@@ -3902,7 +4077,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -3923,6 +4098,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>video</td>
@@ -4006,7 +4187,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4027,6 +4208,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>animation</td>
@@ -4104,7 +4291,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4125,6 +4312,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>voice</td>
@@ -4184,7 +4377,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4205,6 +4398,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>video_note</td>
@@ -4258,7 +4457,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4279,6 +4478,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>media</td>
@@ -4329,6 +4534,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>latitude</td>
@@ -4394,7 +4605,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4462,7 +4673,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for a new <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for a new <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -4500,7 +4711,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for a new <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for a new <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -4521,6 +4732,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>latitude</td>
@@ -4598,7 +4815,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4619,6 +4836,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>phone_number</td>
@@ -4672,7 +4895,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4693,6 +4916,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>question</td>
@@ -4794,7 +5023,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -4815,6 +5044,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Integer or String</td>
 <td>Yes</td>
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
 </tr>
 <tr>
 <td>emoji</td>
@@ -4850,7 +5085,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -5134,6 +5369,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Boolean</td>
 <td>Optional</td>
 <td>Pass <em>True</em> if the administrator can pin messages, supergroups only</td>
+</tr>
+<tr>
+<td>can_manage_topics</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> if the user is allowed to create, rename, close, and reopen forum topics, supergroups only</td>
 </tr>
 </tbody>
 </table>
@@ -5510,7 +5751,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>title</td>
 <td>String</td>
 <td>Yes</td>
-<td>New chat title, 1-255 characters</td>
+<td>New chat title, 1-128 characters</td>
 </tr>
 </tbody>
 </table>
@@ -5770,8 +6011,190 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
+<h4><a class="anchor" name="getforumtopiciconstickers" href="#getforumtopiciconstickers"><i class="anchor-icon"></i></a>getForumTopicIconStickers</h4>
+<p>Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of <a href="#sticker">Sticker</a> objects.</p>
+<h4><a class="anchor" name="createforumtopic" href="#createforumtopic"><i class="anchor-icon"></i></a>createForumTopic</h4>
+<p>Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the <em>can_manage_topics</em> administrator rights. Returns information about the created topic as a <a href="#forumtopic">ForumTopic</a> object.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Yes</td>
+<td>Topic name, 1-128 characters</td>
+</tr>
+<tr>
+<td>icon_color</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Color of the topic icon in RGB format. Currently, must be one of 0x6FB9F0, 0xFFD67E, 0xCB86DB, 0x8EEE98, 0xFF93B2, or 0xFB6F5F</td>
+</tr>
+<tr>
+<td>icon_custom_emoji_id</td>
+<td>String</td>
+<td>Optional</td>
+<td>Unique identifier of the custom emoji shown as the topic icon. Use <a href="#getforumtopiciconstickers">getForumTopicIconStickers</a> to get all allowed custom emoji identifiers.</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="editforumtopic" href="#editforumtopic"><i class="anchor-icon"></i></a>editForumTopic</h4>
+<p>Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have <em>can_manage_topics</em> administrator rights, unless it is the creator of the topic. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Unique identifier for the target message thread of the forum topic</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Yes</td>
+<td>New topic name, 1-128 characters</td>
+</tr>
+<tr>
+<td>icon_custom_emoji_id</td>
+<td>String</td>
+<td>Yes</td>
+<td>New unique identifier of the custom emoji shown as the topic icon. Use <a href="#getforumtopiciconstickers">getForumTopicIconStickers</a> to get all allowed custom emoji identifiers</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="closeforumtopic" href="#closeforumtopic"><i class="anchor-icon"></i></a>closeForumTopic</h4>
+<p>Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the <em>can_manage_topics</em> administrator rights, unless it is the creator of the topic. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Unique identifier for the target message thread of the forum topic</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="reopenforumtopic" href="#reopenforumtopic"><i class="anchor-icon"></i></a>reopenForumTopic</h4>
+<p>Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the <em>can_manage_topics</em> administrator rights, unless it is the creator of the topic. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Unique identifier for the target message thread of the forum topic</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="deleteforumtopic" href="#deleteforumtopic"><i class="anchor-icon"></i></a>deleteForumTopic</h4>
+<p>Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the <em>can_delete_messages</em> administrator rights. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Unique identifier for the target message thread of the forum topic</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="unpinallforumtopicmessages" href="#unpinallforumtopicmessages"><i class="anchor-icon"></i></a>unpinAllForumTopicMessages</h4>
+<p>Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the <em>can_pin_messages</em> administrator right in the supergroup. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+<tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Unique identifier for the target message thread of the forum topic</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="answercallbackquery" href="#answercallbackquery"><i class="anchor-icon"></i></a>answerCallbackQuery</h4>
-<p>Use this method to send answers to callback queries sent from <a href="/bots#inline-keyboards-and-on-the-fly-updating">inline keyboards</a>. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, <em>True</em> is returned.</p>
+<p>Use this method to send answers to callback queries sent from <a href="/bots/features#inline-keyboards">inline keyboards</a>. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, <em>True</em> is returned.</p>
 <blockquote>
 <p>Alternatively, the user can be redirected to the specified Game URL. For this option to work, you must first create a game for your bot via <a href="https://t.me/botfather">@BotFather</a> and accept the terms. Otherwise, you may use links like <code>t.me/your_bot?start=XXXX</code> that open your bot with a parameter.</p>
 </blockquote>
@@ -5818,7 +6241,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="setmycommands" href="#setmycommands"><i class="anchor-icon"></i></a>setMyCommands</h4>
-<p>Use this method to change the list of the bot&#39;s commands. See <a href="https://core.telegram.org/bots#commands"><a href="https://core.telegram.org/bots#commands">https://core.telegram.org/bots#commands</a></a> for more details about bot commands. Returns <em>True</em> on success.</p>
+<p>Use this method to change the list of the bot&#39;s commands. See <a href="/bots/features#commands">this manual</a> for more details about bot commands. Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -5996,8 +6419,8 @@ pre-formatted fixed-width code block written in the Python programming language
 <h4><a class="anchor" name="inline-mode-methods" href="#inline-mode-methods"><i class="anchor-icon"></i></a>Inline mode methods</h4>
 <p>Methods and objects used in the inline mode are described in the <a href="#inline-mode">Inline mode section</a>.</p>
 <h3><a class="anchor" name="updating-messages" href="#updating-messages"><i class="anchor-icon"></i></a>Updating messages</h3>
-<p>The following methods allow you to change an existing message in the message history instead of sending a new one with a result of an action. This is most useful for messages with <a href="/bots#inline-keyboards-and-on-the-fly-updating">inline keyboards</a> using callback queries, but can also help reduce clutter in conversations with regular chat bots.</p>
-<p>Please note, that it is currently only possible to edit messages without <em>reply_markup</em> or with <a href="/bots#inline-keyboards-and-on-the-fly-updating">inline keyboards</a>.</p>
+<p>The following methods allow you to change an existing message in the message history instead of sending a new one with a result of an action. This is most useful for messages with <a href="/bots/features#inline-keyboards">inline keyboards</a> using callback queries, but can also help reduce clutter in conversations with regular chat bots.</p>
+<p>Please note, that it is currently only possible to edit messages without <em>reply_markup</em> or with <a href="/bots/features#inline-keyboards">inline keyboards</a>.</p>
 <h4><a class="anchor" name="editmessagetext" href="#editmessagetext"><i class="anchor-icon"></i></a>editMessageText</h4>
 <p>Use this method to edit text and <a href="#games">game</a> messages. On success, if the edited message is not an inline message, the edited <a href="#message">Message</a> is returned, otherwise <em>True</em> is returned.</p>
 <table class="table">
@@ -6056,7 +6479,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -6112,7 +6535,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -6156,7 +6579,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for a new <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for a new <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -6194,7 +6617,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -6226,12 +6649,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for a new message <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>.</td>
+<td>A JSON-serialized object for a new message <a href="/bots/features#inline-keyboards">inline keyboard</a>.</td>
 </tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="deletemessage" href="#deletemessage"><i class="anchor-icon"></i></a>deleteMessage</h4>
-<p>Use this method to delete a message, including service messages, with the following limitations:<br>- A message can only be deleted if it was sent less than 48 hours ago.<br>- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.<br>- Bots can delete outgoing messages in private chats, groups, and supergroups.<br>- Bots can delete incoming messages in private chats.<br>- Bots granted <em>can_post_messages</em> permissions can delete outgoing messages in channels.<br>- If the bot is an administrator of a group, it can delete any message there.<br>- If the bot has <em>can_delete_messages</em> permission in a supergroup or a channel, it can delete any message there.<br>Returns <em>True</em> on success.</p>
+<p>Use this method to delete a message, including service messages, with the following limitations:<br>- A message can only be deleted if it was sent less than 48 hours ago.<br>- Service messages about a supergroup, channel, or forum topic creation can&#39;t be deleted.<br>- A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.<br>- Bots can delete outgoing messages in private chats, groups, and supergroups.<br>- Bots can delete incoming messages in private chats.<br>- Bots granted <em>can_post_messages</em> permissions can delete outgoing messages in channels.<br>- If the bot is an administrator of a group, it can delete any message there.<br>- If the bot has <em>can_delete_messages</em> permission in a supergroup or a channel, it can delete any message there.<br>Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -6441,6 +6864,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
 </tr>
 <tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
+</tr>
+<tr>
 <td>sticker</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Yes</td>
@@ -6474,7 +6903,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a> or <a href="#replykeyboardmarkup">ReplyKeyboardMarkup</a> or <a href="#replykeyboardremove">ReplyKeyboardRemove</a> or <a href="#forcereply">ForceReply</a></td>
 <td>Optional</td>
-<td>Additional interface options. A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>, <a href="https://core.telegram.org/bots#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
+<td>Additional interface options. A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>, <a href="/bots/features#keyboards">custom reply keyboard</a>, instructions to remove reply keyboard or to force a reply from the user.</td>
 </tr>
 </tbody>
 </table>
@@ -6584,13 +7013,13 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>tgs_sticker</td>
 <td><a href="#inputfile">InputFile</a></td>
 <td>Optional</td>
-<td><strong>TGS</strong> animation with the sticker, uploaded using multipart/form-data. See <a href="https://core.telegram.org/stickers#animated-sticker-requirements"><a href="https://core.telegram.org/stickers#animated-sticker-requirements">https://core.telegram.org/stickers#animated-sticker-requirements</a></a> for technical requirements</td>
+<td><strong>TGS</strong> animation with the sticker, uploaded using multipart/form-data. See <a href="/stickers#animated-sticker-requirements"><a href="https://core.telegram.org/stickers#animated-sticker-requirements">https://core.telegram.org/stickers#animated-sticker-requirements</a></a> for technical requirements</td>
 </tr>
 <tr>
 <td>webm_sticker</td>
 <td><a href="#inputfile">InputFile</a></td>
 <td>Optional</td>
-<td><strong>WEBM</strong> video with the sticker, uploaded using multipart/form-data. See <a href="https://core.telegram.org/stickers#video-sticker-requirements"><a href="https://core.telegram.org/stickers#video-sticker-requirements">https://core.telegram.org/stickers#video-sticker-requirements</a></a> for technical requirements</td>
+<td><strong>WEBM</strong> video with the sticker, uploaded using multipart/form-data. See <a href="/stickers#video-sticker-requirements"><a href="https://core.telegram.org/stickers#video-sticker-requirements">https://core.telegram.org/stickers#video-sticker-requirements</a></a> for technical requirements</td>
 </tr>
 <tr>
 <td>sticker_type</td>
@@ -6646,13 +7075,13 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>tgs_sticker</td>
 <td><a href="#inputfile">InputFile</a></td>
 <td>Optional</td>
-<td><strong>TGS</strong> animation with the sticker, uploaded using multipart/form-data. See <a href="https://core.telegram.org/stickers#animated-sticker-requirements"><a href="https://core.telegram.org/stickers#animated-sticker-requirements">https://core.telegram.org/stickers#animated-sticker-requirements</a></a> for technical requirements</td>
+<td><strong>TGS</strong> animation with the sticker, uploaded using multipart/form-data. See <a href="/stickers#animated-sticker-requirements"><a href="https://core.telegram.org/stickers#animated-sticker-requirements">https://core.telegram.org/stickers#animated-sticker-requirements</a></a> for technical requirements</td>
 </tr>
 <tr>
 <td>webm_sticker</td>
 <td><a href="#inputfile">InputFile</a></td>
 <td>Optional</td>
-<td><strong>WEBM</strong> video with the sticker, uploaded using multipart/form-data. See <a href="https://core.telegram.org/stickers#video-sticker-requirements"><a href="https://core.telegram.org/stickers#video-sticker-requirements">https://core.telegram.org/stickers#video-sticker-requirements</a></a> for technical requirements</td>
+<td><strong>WEBM</strong> video with the sticker, uploaded using multipart/form-data. See <a href="/stickers#video-sticker-requirements"><a href="https://core.telegram.org/stickers#video-sticker-requirements">https://core.telegram.org/stickers#video-sticker-requirements</a></a> for technical requirements</td>
 </tr>
 <tr>
 <td>emojis</td>
@@ -6742,7 +7171,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>thumb</td>
 <td><a href="#inputfile">InputFile</a> or String</td>
 <td>Optional</td>
-<td>A <strong>PNG</strong> image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a <strong>TGS</strong> animation with the thumbnail up to 32 kilobytes in size; see <a href="https://core.telegram.org/stickers#animated-sticker-requirements"><a href="https://core.telegram.org/stickers#animated-sticker-requirements">https://core.telegram.org/stickers#animated-sticker-requirements</a></a> for animated sticker technical requirements, or a <strong>WEBM</strong> video with the thumbnail up to 32 kilobytes in size; see <a href="https://core.telegram.org/stickers#video-sticker-requirements"><a href="https://core.telegram.org/stickers#video-sticker-requirements">https://core.telegram.org/stickers#video-sticker-requirements</a></a> for video sticker technical requirements. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More information on Sending Files »</a>. Animated sticker set thumbnails can&#39;t be uploaded via HTTP URL.</td>
+<td>A <strong>PNG</strong> image with the thumbnail, must be up to 128 kilobytes in size and have width and height exactly 100px, or a <strong>TGS</strong> animation with the thumbnail up to 32 kilobytes in size; see <a href="/stickers#animated-sticker-requirements"><a href="https://core.telegram.org/stickers#animated-sticker-requirements">https://core.telegram.org/stickers#animated-sticker-requirements</a></a> for animated sticker technical requirements, or a <strong>WEBM</strong> video with the thumbnail up to 32 kilobytes in size; see <a href="/stickers#video-sticker-requirements"><a href="https://core.telegram.org/stickers#video-sticker-requirements">https://core.telegram.org/stickers#video-sticker-requirements</a></a> for video sticker technical requirements. Pass a <em>file_id</em> as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. <a href="#sending-files">More information on Sending Files »</a>. Animated sticker set thumbnails can&#39;t be uploaded via HTTP URL.</td>
 </tr>
 </tbody>
 </table>
@@ -6844,7 +7273,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>switch_pm_parameter</td>
 <td>String</td>
 <td>Optional</td>
-<td><a href="/bots#deep-linking">Deep-linking</a> parameter for the /start message sent to the bot when user presses the switch button. 1-64 characters, only <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, <code>_</code> and <code>-</code> are allowed.<br><br><em>Example:</em> An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly. To do this, it displays a &#39;Connect your YouTube account&#39; button above the results, or even before showing any. The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a <a href="#inlinekeyboardmarkup"><em>switch_inline</em></a> button so that the user can easily return to the chat where they wanted to use the bot&#39;s inline capabilities.</td>
+<td><a href="/bots/features#deep-linking">Deep-linking</a> parameter for the /start message sent to the bot when user presses the switch button. 1-64 characters, only <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, <code>_</code> and <code>-</code> are allowed.<br><br><em>Example:</em> An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly. To do this, it displays a &#39;Connect your YouTube account&#39; button above the results, or even before showing any. The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a <a href="#inlinekeyboardmarkup"><em>switch_inline</em></a> button so that the user can easily return to the chat where they wanted to use the bot&#39;s inline capabilities.</td>
 </tr>
 </tbody>
 </table>
@@ -6907,7 +7336,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>url</td>
@@ -7010,7 +7439,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7093,7 +7522,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7176,7 +7605,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7267,7 +7696,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7335,7 +7764,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7399,7 +7828,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7552,7 +7981,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7641,7 +8070,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7710,7 +8139,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7764,7 +8193,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 </tbody>
 </table>
@@ -7823,7 +8252,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7881,7 +8310,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7939,7 +8368,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -7977,7 +8406,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -8041,7 +8470,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -8105,7 +8534,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -8163,7 +8592,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -8217,7 +8646,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
-<td><em>Optional</em>. <a href="/bots#inline-keyboards-and-on-the-fly-updating">Inline keyboard</a> attached to the message</td>
+<td><em>Optional</em>. <a href="/bots/features#inline-keyboards">Inline keyboard</a> attached to the message</td>
 </tr>
 <tr>
 <td>input_message_content</td>
@@ -8442,7 +8871,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>max_tip_amount</td>
 <td>Integer</td>
-<td><em>Optional</em>. The maximum accepted amount for tips in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a maximum tip of <code>US$ 1.45</code> pass <code>max_tip_amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0</td>
+<td><em>Optional</em>. The maximum accepted amount for tips in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a maximum tip of <code>US$ 1.45</code> pass <code>max_tip_amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0</td>
 </tr>
 <tr>
 <td>suggested_tip_amounts</td>
@@ -8615,6 +9044,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Unique identifier for the target chat or username of the target channel (in the format <code>@channelusername</code>)</td>
 </tr>
 <tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
+</tr>
+<tr>
 <td>title</td>
 <td>String</td>
 <td>Yes</td>
@@ -8654,7 +9089,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>max_tip_amount</td>
 <td>Integer</td>
 <td>Optional</td>
-<td>The maximum accepted amount for tips in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a maximum tip of <code>US$ 1.45</code> pass <code>max_tip_amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0</td>
+<td>The maximum accepted amount for tips in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a maximum tip of <code>US$ 1.45</code> pass <code>max_tip_amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0</td>
 </tr>
 <tr>
 <td>suggested_tip_amounts</td>
@@ -8768,7 +9203,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>. If empty, one &#39;Pay <code>total price</code>&#39; button will be shown. If not empty, the first button must be a Pay button.</td>
+<td>A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>. If empty, one &#39;Pay <code>total price</code>&#39; button will be shown. If not empty, the first button must be a Pay button.</td>
 </tr>
 </tbody>
 </table>
@@ -8824,7 +9259,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>max_tip_amount</td>
 <td>Integer</td>
 <td>Optional</td>
-<td>The maximum accepted amount for tips in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a maximum tip of <code>US$ 1.45</code> pass <code>max_tip_amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0</td>
+<td>The maximum accepted amount for tips in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a maximum tip of <code>US$ 1.45</code> pass <code>max_tip_amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Defaults to 0</td>
 </tr>
 <tr>
 <td>suggested_tip_amounts</td>
@@ -8995,7 +9430,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>amount</td>
 <td>Integer</td>
-<td>Price of the product in the <em>smallest units</em> of the <a href="/bots/payments#supported-currencies">currency</a> (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
+<td>Price of the product in the <em>smallest units</em> of the <a href="/bots/payments#supported-currencies">currency</a> (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
 </tr>
 </tbody>
 </table>
@@ -9033,7 +9468,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>total_amount</td>
 <td>Integer</td>
-<td>Total price in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
+<td>Total price in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
 </tr>
 </tbody>
 </table>
@@ -9160,7 +9595,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>total_amount</td>
 <td>Integer</td>
-<td>Total price in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
+<td>Total price in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
 </tr>
 <tr>
 <td>invoice_payload</td>
@@ -9251,7 +9686,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>total_amount</td>
 <td>Integer</td>
-<td>Total price in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
+<td>Total price in the <em>smallest units</em> of the currency (integer, <strong>not</strong> float/double). For example, for a price of <code>US$ 1.45</code> pass <code>amount = 145</code>. See the <em>exp</em> parameter in <a href="/bots/payments/currencies.json">currencies.json</a>, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).</td>
 </tr>
 <tr>
 <td>invoice_payload</td>
@@ -9392,7 +9827,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="encryptedcredentials" href="#encryptedcredentials"><i class="anchor-icon"></i></a>EncryptedCredentials</h4>
-<p>Describes data required for decrypting and authenticating <a href="#encryptedpassportelement">EncryptedPassportElement</a>. See the <a href="https://core.telegram.org/passport#receiving-information">Telegram Passport Documentation</a> for a complete description of the data decryption and authentication processes.</p>
+<p>Describes data required for decrypting and authenticating <a href="#encryptedpassportelement">EncryptedPassportElement</a>. See the <a href="/passport#receiving-information">Telegram Passport Documentation</a> for a complete description of the data decryption and authentication processes.</p>
 <table class="table">
 <thead>
 <tr>
@@ -9793,6 +10228,12 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Unique identifier for the target chat</td>
 </tr>
 <tr>
+<td>message_thread_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Unique identifier for the target message thread (topic) of the forum; for forum supergroups only</td>
+</tr>
+<tr>
 <td>game_short_name</td>
 <td>String</td>
 <td>Yes</td>
@@ -9826,7 +10267,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>reply_markup</td>
 <td><a href="#inlinekeyboardmarkup">InlineKeyboardMarkup</a></td>
 <td>Optional</td>
-<td>A JSON-serialized object for an <a href="https://core.telegram.org/bots#inline-keyboards-and-on-the-fly-updating">inline keyboard</a>. If empty, one &#39;Play game_title&#39; button will be shown. If not empty, the first button must launch the game.</td>
+<td>A JSON-serialized object for an <a href="/bots/features#inline-keyboards">inline keyboard</a>. If empty, one &#39;Play game_title&#39; button will be shown. If not empty, the first button must launch the game.</td>
 </tr>
 </tbody>
 </table>
@@ -10020,16 +10461,16 @@ pre-formatted fixed-width code block written in the Python programming language
       <h5><a href="//telegram.org/faq">About</a></h5>
       <ul>
         <li><a href="//telegram.org/faq">FAQ</a></li>
-        <li><a href="//telegram.org/blog">Blog</a></li>
-        <li><a href="//telegram.org/jobs">Jobs</a></li>
+        <li><a href="//telegram.org/privacy">Privacy</a></li>
+        <li><a href="//telegram.org/press">Press</a></li>
       </ul>
     </div>
     <div class="footer_column">
       <h5><a href="//telegram.org/apps#mobile-apps">Mobile Apps</a></h5>
       <ul>
         <li><a href="//telegram.org/dl/ios">iPhone/iPad</a></li>
-        <li><a href="//telegram.org/dl/android">Android</a></li>
-        <li><a href="//telegram.org/dl/wp">Windows Phone</a></li>
+        <li><a href="//telegram.org/android">Android</a></li>
+        <li><a href="//telegram.org/dl/web">Mobile Web</a></li>
       </ul>
     </div>
     <div class="footer_column">

@@ -1,6 +1,6 @@
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.1.5.6.2");
+    auto &tgbot = s.addLibrary("tgbot", "1.1.5.6.3");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto &apitool = tgbot.addExecutable("apitool");
@@ -35,6 +35,7 @@ void build(Solution &s)
                 ;
         }
     }
+    return;
 
     auto &report_detection_bot = tgbot.addTarget<ExecutableTarget>("examples.report_detection_bot");
     {
