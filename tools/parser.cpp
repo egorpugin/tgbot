@@ -253,7 +253,7 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
             if (tb)
                 parseType(t, tb);
             // sometimes optional fields won't be last in api spec
-            std::ranges::stable_sort(t.fields, [](auto &&f1, auto &&f2){
+            std::stable_sort(t.fields.begin(), t.fields.end(), [](auto &&f1, auto &&f2){
                 return f1.optional < f2.optional;
             });
             methods.push_back(t);
