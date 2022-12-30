@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 version"
+    exit 1
+fi
+
 SW_VERSION=1.1.5
 OLD_VERSION=`git tag | tail -n 1`
 NEW_VERSION=$1 # Telegram Bot API version (e.g. 6.1, 6.2 etc.)
