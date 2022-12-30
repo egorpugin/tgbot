@@ -23,5 +23,5 @@ git tag -a $NEW_SW_VERSION -m "$NEW_SW_VERSION"
 git push
 git push --tags
 gh api --method POST /repos/egorpugin/tgbot/releases -f tag_name="$NEW_SW_VERSION" -f name="$NEW_SW_VERSION" -f body="Update to Bot API v$NEW_VERSION." > /dev/null
-# why build? delete?
+# why second build? delete?
 sw build $* && sw upload org.sw.demo
