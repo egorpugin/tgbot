@@ -153,13 +153,14 @@ void Type::emit(primitives::CppEmitter &ctx) const {
     ctx.emptyLines();
 }
 
-void Type::emitEnums(primitives::CppEmitter &ctx) const {
+void basic_info::emitEnums(primitives::CppEmitter &ctx) const {
     for (auto &f: fields) {
         if (!f.is_enum() || f.enum_values.empty())
             continue;
         ctx.beginBlock("enum class " + f.get_enum_name());
-        for (auto &[k, _]: f.enum_values)
+        for (auto &[k, _]: f.enum_values) {
             ctx.addLine(k + ",");
+        }
         ctx.endBlock(true);
         ctx.emptyLines();
     }
@@ -176,6 +177,7 @@ void Method::emitRequestType(primitives::CppEmitter &ctx) const {
     if (fields.empty())
         return;
     ctx.beginBlock("struct " + cpp_name());
+    emitEnums(ctx);
     for (auto &f: fields)
         f.emitField(ctx, true);
     ctx.endBlock(true);

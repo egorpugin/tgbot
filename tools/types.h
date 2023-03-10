@@ -41,6 +41,7 @@ struct basic_info {
             j["fields"].push_back(jf);
         }
     }
+    void emitEnums(primitives::CppEmitter &ctx) const;
 };
 
 struct Type : basic_info {
@@ -69,7 +70,6 @@ struct Type : basic_info {
 
     void emit(primitives::CppEmitter &ctx) const;
     void emitFwdDecl(primitives::CppEmitter &ctx) const;
-    void emitEnums(primitives::CppEmitter &ctx) const;
 };
 
 struct Method : basic_info {

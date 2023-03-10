@@ -142,6 +142,8 @@ static void parseType(auto &t, xmlNode *tb) {
                     auto s = sub.substr(p + 1, end - p - 1);
                     if (!s.empty()) {
                         boost::replace_all(s, "/", "_");
+                        if (s == "static")
+                            s += "_";
                         f.enum_values[s] = s;
                     }
                     p = end + 1;

@@ -215,7 +215,7 @@ struct bot {
 private:
     std::string token_;
     const HttpClient &http_client_;
-    struct api<bot> api_{*this};
+    ::tgbot::api<bot<HttpClient>> api_{*this};
     std::string base_url_{ "https://api.telegram.org/bot" };
     std::string base_file_url_{ "https://api.telegram.org/file/bot" };
 };
