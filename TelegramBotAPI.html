@@ -53,6 +53,15 @@ To learn how to create…">
 <blockquote>
 <p>Subscribe to <a href="https://t.me/botnews">@BotNews</a> to be the first to know about the latest updates and join the discussion in <a href="https://t.me/bottalk">@BotTalk</a></p>
 </blockquote>
+<h4><a class="anchor" name="august-18-2023" href="#august-18-2023"><i class="anchor-icon"></i></a>August 18, 2023</h4>
+<p><strong>Bot API 6.8</strong></p>
+<ul>
+<li>Added the field <em>story</em> to the class <a href="#message">Message</a> for messages with forwarded stories. Currently, it holds no information.</li>
+<li>Added the field <em>voter_chat</em> to the class <a href="#pollanswer">PollAnswer</a>, to contain channel chat voters in <a href="#poll">Polls</a>. For backward compatibility, the field <em>user</em> in such objects will contain the user 136817688 (<a href="https://t.me/Channel_Bot">@Channel_Bot</a>).</li>
+<li>Added the field <em>emoji_status_expiration_date</em> to the class <a href="#chat">Chat</a>.</li>
+<li>Added the method <a href="#unpinallgeneralforumtopicmessages">unpinAllGeneralForumTopicMessages</a>.</li>
+<li>Increased to 512 characters the maximum length of the <code>startapp</code> parameter in direct Web App links.</li>
+</ul>
 <h4><a class="anchor" name="april-21-2023" href="#april-21-2023"><i class="anchor-icon"></i></a>April 21, 2023</h4>
 <p><strong>Bot API 6.7</strong></p>
 <ul>
@@ -551,6 +560,11 @@ To learn how to create…">
 <td><em>Optional</em>. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
+<td>emoji_status_expiration_date</td>
+<td>Integer</td>
+<td><em>Optional</em>. Expiration date of the emoji status of the other party in a private chat, if any. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
 <td>bio</td>
 <td>String</td>
 <td><em>Optional</em>. Bio of the other party in a private chat. Returned only in <a href="#getchat">getChat</a>.</td>
@@ -787,6 +801,11 @@ To learn how to create…">
 <td>sticker</td>
 <td><a href="#sticker">Sticker</a></td>
 <td><em>Optional</em>. Message is a sticker, information about the sticker</td>
+</tr>
+<tr>
+<td>story</td>
+<td><a href="#story">Story</a></td>
+<td><em>Optional</em>. Message is a forwarded story</td>
 </tr>
 <tr>
 <td>video</td>
@@ -1273,6 +1292,8 @@ To learn how to create…">
 </tr>
 </tbody>
 </table>
+<h4><a class="anchor" name="story" href="#story"><i class="anchor-icon"></i></a>Story</h4>
+<p>This object represents a message about a forwarded story in the chat. Currently holds no information.</p>
 <h4><a class="anchor" name="video" href="#video"><i class="anchor-icon"></i></a>Video</h4>
 <p>This object represents a video file.</p>
 <table class="table">
@@ -1513,14 +1534,19 @@ To learn how to create…">
 <td>Unique poll identifier</td>
 </tr>
 <tr>
+<td>voter_chat</td>
+<td><a href="#chat">Chat</a></td>
+<td><em>Optional</em>. The chat that changed the answer to the poll, if the voter is anonymous</td>
+</tr>
+<tr>
 <td>user</td>
 <td><a href="#user">User</a></td>
-<td>The user, who changed the answer to the poll</td>
+<td><em>Optional</em>. The user that changed the answer to the poll, if the voter isn&#39;t anonymous</td>
 </tr>
 <tr>
 <td>option_ids</td>
 <td>Array of Integer</td>
-<td>0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.</td>
+<td>0-based identifiers of chosen answer options. May be empty if the vote was retracted.</td>
 </tr>
 </tbody>
 </table>
@@ -2290,7 +2316,7 @@ To learn how to create…">
 <tr>
 <td>switch_inline_query</td>
 <td>String</td>
-<td><em>Optional</em>. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot&#39;s username and the specified inline query in the input field. May be empty, in which case just the bot&#39;s username will be inserted.<br><br><strong>Note:</strong> This offers an easy way for users to start using your bot in <a href="/bots/inline">inline mode</a> when they are currently in a private chat with it. Especially useful when combined with <a href="#answerinlinequery"><em>switch_pm…</em></a> actions - in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.</td>
+<td><em>Optional</em>. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot&#39;s username and the specified inline query in the input field. May be empty, in which case just the bot&#39;s username will be inserted.</td>
 </tr>
 <tr>
 <td>switch_inline_query_current_chat</td>
@@ -6590,6 +6616,26 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
+<h4><a class="anchor" name="unpinallgeneralforumtopicmessages" href="#unpinallgeneralforumtopicmessages"><i class="anchor-icon"></i></a>unpinAllGeneralForumTopicMessages</h4>
+<p>Use this method to clear the list of pinned messages in a General forum topic. The bot must be an administrator in the chat for this to work and must have the <em>can_pin_messages</em> administrator right in the supergroup. Returns <em>True</em> on success.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat_id</td>
+<td>Integer or String</td>
+<td>Yes</td>
+<td>Unique identifier for the target chat or username of the target supergroup (in the format <code>@supergroupusername</code>)</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="answercallbackquery" href="#answercallbackquery"><i class="anchor-icon"></i></a>answerCallbackQuery</h4>
 <p>Use this method to send answers to callback queries sent from <a href="/bots/features#inline-keyboards">inline keyboards</a>. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, <em>True</em> is returned.</p>
 <blockquote>
@@ -8095,7 +8141,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <tr>
 <td>web_app</td>
 <td><a href="#webappinfo">WebAppInfo</a></td>
-<td><em>Optional</em>. Description of the <a href="/bots/webapps">Web App</a> that will be launched when the user presses the button. The Web App will be able to switch back to the inline mode using the method <em>web_app_switch_inline_query</em> inside the Web App.</td>
+<td><em>Optional</em>. Description of the <a href="/bots/webapps">Web App</a> that will be launched when the user presses the button. The Web App will be able to switch back to the inline mode using the method <a href="/bots/webapps#initializing-web-apps">switchInlineQuery</a> inside the Web App.</td>
 </tr>
 <tr>
 <td>start_parameter</td>
