@@ -16,7 +16,7 @@ if [ -x "$(command -v gsed)" ]; then
     SED=gsed
 fi
 
-git pull origin master
+git pull --tags origin master
 curl https://core.telegram.org/bots/api > TelegramBotAPI.html
 $SED -i -e '$ d' TelegramBotAPI.html # remove the last line with generation time
 $SED -i -e "s/$OLD_VERSION/$NEW_VERSION/g" README.md
