@@ -24,7 +24,7 @@
 
 #define TBGOT_TO_REQUEST_ARGUMENT_REQUEST_MACRO(f, ret)                                                                \
     auto f(const f##Request &r) const {                                                                                \
-        std::array<http_request_argument, boost::pfr::tuple_size<f##Request>> args;                                    \
+        std::array<http_request_argument, boost::pfr::tuple_size<f##Request>::value> args;                             \
         auto i = args.begin();                                                                                         \
         boost::pfr::for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {                   \
             to_request_argument(i, boost::pfr::get_name<I, f##Request>(), field);                                      \
