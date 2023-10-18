@@ -24,6 +24,7 @@ void build(Solution &s)
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.Public.CompileOptions.push_back("/Zc:__cplusplus");
         tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
+        tgbot.Public += "org.sw.demo.boostorg.pfr-develop"_dep;
         {
             auto c = tgbot.addCommand();
             c << cmd::prog(apitool)
@@ -33,6 +34,9 @@ void build(Solution &s)
                 << cmd::out("types.inl.h")
                 << cmd::out("methods.inl.h")
                 ;
+            // to make dependency? (in VS IDE only?)
+            //tgbot.Public += "types.inl.h";
+            //tgbot.Public += "methods.inl.h";
         }
     }
 

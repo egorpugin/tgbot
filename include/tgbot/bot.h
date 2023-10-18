@@ -1,5 +1,6 @@
 #pragma once
 
+#include <boost/pfr.hpp>
 #include <nlohmann/json.hpp>
 
 #include <cstdint>
@@ -7,10 +8,34 @@
 #include <optional>
 #include <span>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <vector>
 
+#define TBGOT_TO_JSON_REQUEST_MACRO(f, ret)                                                                            \
+    auto f(const f##Request &r) const {                                                                                \
+        nlohmann::json j;                                                                                              \
+        boost::pfr::for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {                   \
+            to_json(j, boost::pfr::get_name<I, f##Request>(), field);                                                  \
+        });                                                                                                            \
+        j = send_request(#f, j.dump());                                                                                \
+        return from_json<ret>(j);                                                                                      \
+    }
+
+#define TBGOT_TO_REQUEST_ARGUMENT_REQUEST_MACRO(f, ret)                                                                \
+    auto f(const f##Request &r) const {                                                                                \
+        std::array<http_request_argument, boost::pfr::tuple_size<f##Request>> args;                                    \
+        auto i = args.begin();                                                                                         \
+        boost::pfr::for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {                   \
+            to_request_argument(i, boost::pfr::get_name<I, f##Request>(), field);                                      \
+        });                                                                                                            \
+        auto j = send_request(#f, http_request_arguments{args.begin(), i});                                            \
+        return from_json<ret>(j);                                                                                      \
+    }
+
 namespace tgbot {
+
+using namespace std::literals;
 
 using Boolean = bool;
 using Integer = std::int64_t;
@@ -71,7 +96,7 @@ private:
     // Bot's HttpClient must implement
     //std::string make_request(const std::string &url, const http_request_arguments &args) const;
     //std::string make_request(const std::string &url, const std::string &json) const;
-    nlohmann::json send_request(const char *method, auto &&args) const {
+    nlohmann::json send_request(std::string_view method, auto &&args) const {
         auto url = bot.base_url();
         url += bot.token();
         url += "/";
@@ -124,7 +149,7 @@ private:
             return a;
         }
     }
-    static void to_request_argument(auto &&arg, const char *n, auto &&r) {
+    static void to_request_argument(auto &&arg, std::string_view n, auto &&r) {
         if (auto v = to_request_argument(n, r); v)
             *arg++ = std::move(*v);
     }
@@ -152,12 +177,14 @@ private:
             return j;
         } else {
             nlohmann::json j;
-            refl<T>::for_each([&v, &j](auto n, auto f) {to_json(j, n, v.*f); });
+            boost::pfr::for_each_field(v, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {
+                to_json(j, boost::pfr::get_name<I, T>(), field);
+            });
             return j;
         }
     }
     template <typename T>
-    static void to_json(nlohmann::json &j, const char *k, const T &r) {
+    static void to_json(nlohmann::json &j, std::string_view k, const T &r) {
         if (auto v = to_json(r); !v.is_null())
             j[k] = v;
     }
@@ -183,12 +210,14 @@ private:
             return from_json(j, type<T>{});
         } else {
             T v;
-            refl<T>::for_each([&v, &j](auto n, auto f) {from_json(j, n, v.*f); });
+            boost::pfr::for_each_field(v, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {
+                from_json(j, boost::pfr::get_name<I, T>(), field);
+            });
             return v;
         }
     }
     template <typename T>
-    static void from_json(const nlohmann::json &j, const char *k, T &v) {
+    static void from_json(const nlohmann::json &j, std::string_view k, T &v) {
         if (j.contains(k))
             v = from_json<T>(j[k]);
     }

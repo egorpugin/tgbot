@@ -223,13 +223,13 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
         cpp.addLine("std::array<http_request_argument, " + std::to_string(fields.size()) + "> args;");
         cpp.addLine("auto i = args.begin();");
         for (auto &f: fields)
-            cpp.addLine("to_request_argument(i, \"" + f.name + "\", " + f.name + ");");
-        cpp.addLine("auto j = send_request(\"" + name + "\", http_request_arguments{args.begin(), i});");
+            cpp.addLine("to_request_argument(i, \"" + f.name + "\"sv, " + f.name + ");");
+        cpp.addLine("auto j = send_request(\"" + name + "\"sv, http_request_arguments{args.begin(), i});");
     } else {
         cpp.addLine("nlohmann::json j;");
         for (auto &f: fields)
-            cpp.addLine("to_json(j, \"" + f.name + "\", " + f.name + ");");
-        cpp.addLine("j = send_request(\"" + name + "\", j.dump());");
+            cpp.addLine("to_json(j, \"" + f.name + "\"sv, " + f.name + ");");
+        cpp.addLine("j = send_request(\"" + name + "\"sv, j.dump());");
     }
     cpp.addLine();
     cpp.addText("return from_json<");
@@ -241,16 +241,10 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
     // with request struct
     if (!fields.empty()) {
         cpp.addLine();
-        cpp.addText("auto " + name + "(const " + cpp_name() + " &r) const");
-        cpp.beginBlock();
-        cpp.addLine("return " + name + "(");
-        cpp.increaseIndent();
-        for (const auto &f: fields)
-            cpp.addLine("r." + f.name + ",");
-        cpp.trimEnd(1);
-        cpp.decreaseIndent();
-        cpp.addLine(");");
-        cpp.endBlock();
+        cpp.addText((!has_input_file ? "TBGOT_TO_JSON_REQUEST_MACRO"s : "TBGOT_TO_REQUEST_ARGUMENT_REQUEST_MACRO"s) +
+                    "(" + name + ", ");
+        return_type.emitFieldType(cpp, true, true);
+        cpp.addText(")");
         cpp.emptyLines();
     }
 }
@@ -312,6 +306,7 @@ void Emitter::emitTypesHeader() {
         m.emitRequestType(ctx);
     }
     ctx.emptyLines();
+    //write_file("types.inl.h", ctx.getText());
     write_file("types.inl.h", ctx.getText() + emitReflection());
 }
 
@@ -408,21 +403,24 @@ String Emitter::emitReflection() const {
     ctx.addLine();
     // refl
     for (auto &[n, t]: types) {
+        if (!t.is_received_variant(types)) {
+            continue;
+        }
         ctx.addLine("template <> struct refl<" + t.name + "> {");
         ctx.increaseIndent();
-        ctx.addLine("using T = " + t.name + ";");
-        ctx.addLine();
+        //ctx.addLine("using T = " + t.name + ";");
+        //ctx.addLine();
         ctx.addLine(
                 "static constexpr auto is_received_variant = "s + (t.is_received_variant(types) ? "true" : "false") +
                 ";");
         //ctx.addLine("static constexpr auto size() { return " + std::to_string(t.fields.size()) + "; }");
-        ctx.addLine();
+        /*ctx.addLine();
         ctx.addLine("template <typename F>");
         ctx.addLine("static void for_each(F &&f) {");
         ctx.increaseIndent();
         for (auto &f: t.fields)
             ctx.addLine("f(\"" + f.name + "\", &T::" + f.name + ");");
-        ctx.endBlock();
+        ctx.endBlock();*/
         ctx.endBlock(true);
         ctx.emptyLines();
     }
