@@ -30,7 +30,7 @@ jobs:
     - uses: egorpugin/sw-action@master
     - name: install
       run: brew install flex bison gcc      
-    - run: sudo xcode-select --switch /Library/Developer/CommandLineTools
+    #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
     - name: build
       run: |
         export PATH="/usr/local/opt/flex/bin:$PATH"
