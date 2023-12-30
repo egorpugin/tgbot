@@ -202,6 +202,9 @@ private:
             return p;
         } else if constexpr (is_instance<T, std::optional>::value) {
             return from_json<typename T::value_type>(j);
+        } else if constexpr (is_instance<T, std::variant>::value) {
+            throw std::logic_error{"no implemented"};
+            //return std::visit([&](auto &&r) { return from_json<std::decay_t<decltype(r)>>(r); }, j);
         } else if constexpr (is_simple_type<T>) {
             return j;
         } else if constexpr (requires { refl<T>::is_received_variant; requires refl<T>::is_received_variant; }) {
