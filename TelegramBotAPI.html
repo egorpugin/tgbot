@@ -53,6 +53,17 @@ To learn how to create…">
 <blockquote>
 <p>Subscribe to <a href="https://t.me/botnews">@BotNews</a> to be the first to know about the latest updates and join the discussion in <a href="https://t.me/bottalk">@BotTalk</a></p>
 </blockquote>
+<h4><a class="anchor" name="february-16-2024" href="#february-16-2024"><i class="anchor-icon"></i></a>February 16, 2024</h4>
+<p><strong>Bot API 7.1</strong></p>
+<ul>
+<li>Added support for the administrator rights <em>can_post_stories</em>, <em>can_edit_stories</em>, <em>can_delete_stories</em> in supergroups.</li>
+<li>Added the class <a href="#chatboostadded">ChatBoostAdded</a> and the field <em>boost_added</em> to the class <a href="#message">Message</a> for service messages about a user boosting a chat.</li>
+<li>Added the field <em>sender_boost_count</em> to the class <a href="#message">Message</a>.</li>
+<li>Added the field <em>reply_to_story</em> to the class <a href="#message">Message</a>.</li>
+<li>Added the fields <em>chat</em> and <em>id</em> to the class <a href="#story">Story</a>.</li>
+<li>Added the field <em>unrestrict_boost_count</em> to the class <a href="#chat">Chat</a>.</li>
+<li>Added the field <em>custom_emoji_sticker_set_name</em> to the class <a href="#chat">Chat</a>.</li>
+</ul>
 <h4><a class="anchor" name="december-29-2023" href="#december-29-2023"><i class="anchor-icon"></i></a>December 29, 2023</h4>
 <p><strong>Bot API 7.0</strong></p>
 <p><strong>Reactions</strong></p>
@@ -138,15 +149,6 @@ To learn how to create…">
 <li>Added the fields <em>from_request</em> and <em>from_attachment_menu</em> to the class <a href="#writeaccessallowed">WriteAccessAllowed</a>.</li>
 <li>Added the fields <em>added_to_attachment_menu</em> and <em>allows_write_to_pm</em> to the class <a href="/bots/webapps#webappuser">WebAppUser</a>.</li>
 </ul>
-<h4><a class="anchor" name="august-18-2023" href="#august-18-2023"><i class="anchor-icon"></i></a>August 18, 2023</h4>
-<p><strong>Bot API 6.8</strong></p>
-<ul>
-<li>Added the field <em>story</em> to the class <a href="#message">Message</a> for messages with forwarded stories. Currently, it holds no information.</li>
-<li>Added the field <em>voter_chat</em> to the class <a href="#pollanswer">PollAnswer</a>, to contain channel chat voters in <a href="#poll">Polls</a>. For backward compatibility, the field <em>user</em> in such objects will contain the user 136817688 (<a href="https://t.me/Channel_Bot">@Channel_Bot</a>).</li>
-<li>Added the field <em>emoji_status_expiration_date</em> to the class <a href="#chat">Chat</a>.</li>
-<li>Added the method <a href="#unpinallgeneralforumtopicmessages">unpinAllGeneralForumTopicMessages</a>.</li>
-<li>Increased to 512 characters the maximum length of the <em>startapp</em> parameter in direct Web App links.</li>
-</ul>
 <p><strong><a href="/bots/api-changelog">See earlier changes »</a></strong></p>
 <h3><a class="anchor" name="authorizing-your-bot" href="#authorizing-your-bot"><i class="anchor-icon"></i></a>Authorizing your bot</h3>
 <p>Each bot is given a unique authentication token <a href="/bots/features#botfather">when it is created</a>. The token looks something like <code>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</code>, but we&#39;ll use simply <strong>&lt;token&gt;</strong> in this document instead. You can learn about obtaining tokens and generating new ones in <a href="/bots/features#botfather">this document</a>.</p>
@@ -201,7 +203,7 @@ To learn how to create…">
 <tr>
 <td>update_id</td>
 <td>Integer</td>
-<td>The update&#39;s unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you&#39;re using <a href="#setwebhook">webhooks</a>, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.</td>
+<td>The update&#39;s unique identifier. Update identifiers start from a certain positive number and increase sequentially. This identifier becomes especially handy if you&#39;re using <a href="#setwebhook">webhooks</a>, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then identifier of the next update will be chosen randomly instead of sequentially.</td>
 </tr>
 <tr>
 <td>message</td>
@@ -211,7 +213,7 @@ To learn how to create…">
 <tr>
 <td>edited_message</td>
 <td><a href="#message">Message</a></td>
-<td><em>Optional</em>. New version of a message that is known to the bot and was edited</td>
+<td><em>Optional</em>. New version of a message that is known to the bot and was edited. This update may at times be triggered by changes to message fields that are either unavailable or not actively used by your bot.</td>
 </tr>
 <tr>
 <td>channel_post</td>
@@ -221,7 +223,7 @@ To learn how to create…">
 <tr>
 <td>edited_channel_post</td>
 <td><a href="#message">Message</a></td>
-<td><em>Optional</em>. New version of a channel post that is known to the bot and was edited</td>
+<td><em>Optional</em>. New version of a channel post that is known to the bot and was edited. This update may at times be triggered by changes to message fields that are either unavailable or not actively used by your bot.</td>
 </tr>
 <tr>
 <td>message_reaction</td>
@@ -231,7 +233,7 @@ To learn how to create…">
 <tr>
 <td>message_reaction_count</td>
 <td><a href="#messagereactioncountupdated">MessageReactionCountUpdated</a></td>
-<td><em>Optional</em>. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify <code>&quot;message_reaction_count&quot;</code> in the list of <em>allowed_updates</em> to receive these updates.</td>
+<td><em>Optional</em>. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify <code>&quot;message_reaction_count&quot;</code> in the list of <em>allowed_updates</em> to receive these updates. The updates are grouped and can be sent with delay up to a few minutes.</td>
 </tr>
 <tr>
 <td>inline_query</td>
@@ -261,7 +263,7 @@ To learn how to create…">
 <tr>
 <td>poll</td>
 <td><a href="#poll">Poll</a></td>
-<td><em>Optional</em>. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot</td>
+<td><em>Optional</em>. New poll state. Bots receive only updates about manually stopped polls and polls, which are sent by the bot</td>
 </tr>
 <tr>
 <td>poll_answer</td>
@@ -690,7 +692,12 @@ To learn how to create…">
 <tr>
 <td>slow_mode_delay</td>
 <td>Integer</td>
-<td><em>Optional</em>. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user; in seconds. Returned only in <a href="#getchat">getChat</a>.</td>
+<td><em>Optional</em>. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>unrestrict_boost_count</td>
+<td>Integer</td>
+<td><em>Optional</em>. For supergroups, the minimum number of boosts that a non-administrator user needs to add in order to ignore slow mode and chat permissions. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
 <td>message_auto_delete_time</td>
@@ -726,6 +733,11 @@ To learn how to create…">
 <td>can_set_sticker_set</td>
 <td>True</td>
 <td><em>Optional</em>. <em>True</em>, if the bot can change the group sticker set. Returned only in <a href="#getchat">getChat</a>.</td>
+</tr>
+<tr>
+<td>custom_emoji_sticker_set_name</td>
+<td>String</td>
+<td><em>Optional</em>. For supergroups, the name of the group&#39;s custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group. Returned only in <a href="#getchat">getChat</a>.</td>
 </tr>
 <tr>
 <td>linked_chat_id</td>
@@ -771,6 +783,11 @@ To learn how to create…">
 <td><em>Optional</em>. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field <em>from</em> contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.</td>
 </tr>
 <tr>
+<td>sender_boost_count</td>
+<td>Integer</td>
+<td><em>Optional</em>. If the sender of the message boosted the chat, the number of boosts added by the user</td>
+</tr>
+<tr>
 <td>date</td>
 <td>Integer</td>
 <td>Date the message was sent in Unix time. It is always a positive number, representing a valid date.</td>
@@ -809,6 +826,11 @@ To learn how to create…">
 <td>quote</td>
 <td><a href="#textquote">TextQuote</a></td>
 <td><em>Optional</em>. For replies that quote part of the original message, the quoted part of the message</td>
+</tr>
+<tr>
+<td>reply_to_story</td>
+<td><a href="#story">Story</a></td>
+<td><em>Optional</em>. For replies to a story, the original story</td>
 </tr>
 <tr>
 <td>via_bot</td>
@@ -1039,6 +1061,11 @@ To learn how to create…">
 <td>proximity_alert_triggered</td>
 <td><a href="#proximityalerttriggered">ProximityAlertTriggered</a></td>
 <td><em>Optional</em>. Service message. A user in the chat triggered another user&#39;s proximity alert while sharing Live Location.</td>
+</tr>
+<tr>
+<td>boost_added</td>
+<td><a href="#chatboostadded">ChatBoostAdded</a></td>
+<td><em>Optional</em>. Service message: user boosted the chat</td>
 </tr>
 <tr>
 <td>forum_topic_created</td>
@@ -1764,7 +1791,28 @@ To learn how to create…">
 </tbody>
 </table>
 <h4><a class="anchor" name="story" href="#story"><i class="anchor-icon"></i></a>Story</h4>
-<p>This object represents a message about a forwarded story in the chat. Currently holds no information.</p>
+<p>This object represents a story.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>chat</td>
+<td><a href="#chat">Chat</a></td>
+<td>Chat that posted the story</td>
+</tr>
+<tr>
+<td>id</td>
+<td>Integer</td>
+<td>Unique identifier for the story in the chat</td>
+</tr>
+</tbody>
+</table>
 <h4><a class="anchor" name="video" href="#video"><i class="anchor-icon"></i></a>Video</h4>
 <p>This object represents a video file.</p>
 <table class="table">
@@ -2122,7 +2170,7 @@ To learn how to create…">
 </tr>
 <tr>
 <td>horizontal_accuracy</td>
-<td>Float number</td>
+<td>Float</td>
 <td><em>Optional</em>. The radius of uncertainty for the location, measured in meters; 0-1500</td>
 </tr>
 <tr>
@@ -2256,6 +2304,24 @@ To learn how to create…">
 <td>message_auto_delete_time</td>
 <td>Integer</td>
 <td>New auto-delete time for messages in the chat; in seconds</td>
+</tr>
+</tbody>
+</table>
+<h4><a class="anchor" name="chatboostadded" href="#chatboostadded"><i class="anchor-icon"></i></a>ChatBoostAdded</h4>
+<p>This object represents a service message about a user boosting a chat.</p>
+<table class="table">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boost_count</td>
+<td>Integer</td>
+<td>Number of boosts added by the user</td>
 </tr>
 </tbody>
 </table>
@@ -2522,7 +2588,7 @@ To learn how to create…">
 <tr>
 <td>giveaway_message_id</td>
 <td>Integer</td>
-<td>Identifier of the messsage with the giveaway in the chat</td>
+<td>Identifier of the message with the giveaway in the chat</td>
 </tr>
 <tr>
 <td>winners_selection_date</td>
@@ -2623,12 +2689,12 @@ To learn how to create…">
 <tr>
 <td>prefer_small_media</td>
 <td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the media in the link preview is suppposed to be shrunk; ignored if the URL isn&#39;t explicitly specified or media size change isn&#39;t supported for the preview</td>
+<td><em>Optional</em>. <em>True</em>, if the media in the link preview is supposed to be shrunk; ignored if the URL isn&#39;t explicitly specified or media size change isn&#39;t supported for the preview</td>
 </tr>
 <tr>
 <td>prefer_large_media</td>
 <td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the media in the link preview is suppposed to be enlarged; ignored if the URL isn&#39;t explicitly specified or media size change isn&#39;t supported for the preview</td>
+<td><em>Optional</em>. <em>True</em>, if the media in the link preview is supposed to be enlarged; ignored if the URL isn&#39;t explicitly specified or media size change isn&#39;t supported for the preview</td>
 </tr>
 <tr>
 <td>show_above_text</td>
@@ -2753,12 +2819,12 @@ To learn how to create…">
 <tr>
 <td>selective</td>
 <td>Boolean</td>
-<td><em>Optional</em>. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the <em>text</em> of the <a href="#message">Message</a> object; 2) if the bot&#39;s message is a reply (has <em>reply_to_message_id</em>), sender of the original message.<br><br><em>Example:</em> A user requests to change the bot&#39;s language, bot replies to the request with a keyboard to select the new language. Other users in the group don&#39;t see the keyboard.</td>
+<td><em>Optional</em>. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the <em>text</em> of the <a href="#message">Message</a> object; 2) if the bot&#39;s message is a reply to a message in the same chat and forum topic, sender of the original message.<br><br><em>Example:</em> A user requests to change the bot&#39;s language, bot replies to the request with a keyboard to select the new language. Other users in the group don&#39;t see the keyboard.</td>
 </tr>
 </tbody>
 </table>
 <h4><a class="anchor" name="keyboardbutton" href="#keyboardbutton"><i class="anchor-icon"></i></a>KeyboardButton</h4>
-<p>This object represents one button of the reply keyboard. For simple text buttons, <em>String</em> can be used instead of this object to specify the button text. The optional fields <em>web_app</em>, <em>request_user</em>, <em>request_chat</em>, <em>request_contact</em>, <em>request_location</em>, and <em>request_poll</em> are mutually exclusive.</p>
+<p>This object represents one button of the reply keyboard. For simple text buttons, <em>String</em> can be used instead of this object to specify the button text. The optional fields <em>web_app</em>, <em>request_users</em>, <em>request_chat</em>, <em>request_contact</em>, <em>request_location</em>, and <em>request_poll</em> are mutually exclusive.</p>
 <table class="table">
 <thead>
 <tr>
@@ -2805,7 +2871,7 @@ To learn how to create…">
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> <em>request_contact</em> and <em>request_location</em> options will only work in Telegram versions released after 9 April, 2016. Older clients will display <em>unsupported message</em>.<br><strong>Note:</strong> <em>request_poll</em> option will only work in Telegram versions released after 23 January, 2020. Older clients will display <em>unsupported message</em>.<br><strong>Note:</strong> <em>web_app</em> option will only work in Telegram versions released after 16 April, 2022. Older clients will display <em>unsupported message</em>.<br><strong>Note:</strong> <em>request_user</em> and <em>request_chat</em> options will only work in Telegram versions released after 3 February, 2023. Older clients will display <em>unsupported message</em>.</p>
+<p><strong>Note:</strong> <em>request_users</em> and <em>request_chat</em> options will only work in Telegram versions released after 3 February, 2023. Older clients will display <em>unsupported message</em>.</p>
 <h4><a class="anchor" name="keyboardbuttonrequestusers" href="#keyboardbuttonrequestusers"><i class="anchor-icon"></i></a>KeyboardButtonRequestUsers</h4>
 <p>This object defines the criteria used to request suitable users. The identifiers of the selected users will be shared with the bot when the corresponding button is pressed. <a href="/bots/features#chat-and-user-selection">More about requesting users »</a></p>
 <table class="table">
@@ -2929,7 +2995,7 @@ To learn how to create…">
 <tr>
 <td>selective</td>
 <td>Boolean</td>
-<td><em>Optional</em>. Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the <em>text</em> of the <a href="#message">Message</a> object; 2) if the bot&#39;s message is a reply (has <em>reply_to_message_id</em>), sender of the original message.<br><br><em>Example:</em> A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven&#39;t voted yet.</td>
+<td><em>Optional</em>. Use this parameter if you want to remove the keyboard for specific users only. Targets: 1) users that are @mentioned in the <em>text</em> of the <a href="#message">Message</a> object; 2) if the bot&#39;s message is a reply to a message in the same chat and forum topic, sender of the original message.<br><br><em>Example:</em> A user votes in a poll, bot returns confirmation message in reply to the vote and removes the keyboard for that user, while still showing the keyboard with poll options to users who haven&#39;t voted yet.</td>
 </tr>
 </tbody>
 </table>
@@ -2951,7 +3017,6 @@ To learn how to create…">
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will display <em>unsupported message</em>.</p>
 <h4><a class="anchor" name="inlinekeyboardbutton" href="#inlinekeyboardbutton"><i class="anchor-icon"></i></a>InlineKeyboardButton</h4>
 <p>This object represents one button of an inline keyboard. You <strong>must</strong> use exactly one of the optional fields.</p>
 <table class="table">
@@ -2971,7 +3036,7 @@ To learn how to create…">
 <tr>
 <td>url</td>
 <td>String</td>
-<td><em>Optional</em>. HTTP or tg:// URL to be opened when the button is pressed. Links <code>tg://user?id=&lt;user_id&gt;</code> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.</td>
+<td><em>Optional</em>. HTTP or tg:// URL to be opened when the button is pressed. Links <code>tg://user?id=&lt;user_id&gt;</code> can be used to mention a user by their identifier without using a username, if this is allowed by their privacy settings.</td>
 </tr>
 <tr>
 <td>callback_data</td>
@@ -3169,7 +3234,7 @@ To learn how to create…">
 <tr>
 <td>selective</td>
 <td>Boolean</td>
-<td><em>Optional</em>. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the <em>text</em> of the <a href="#message">Message</a> object; 2) if the bot&#39;s message is a reply (has <em>reply_to_message_id</em>), sender of the original message.</td>
+<td><em>Optional</em>. Use this parameter if you want to force reply from specific users only. Targets: 1) users that are @mentioned in the <em>text</em> of the <a href="#message">Message</a> object; 2) if the bot&#39;s message is a reply to a message in the same chat and forum topic, sender of the original message.</td>
 </tr>
 </tbody>
 </table>
@@ -3291,7 +3356,7 @@ To learn how to create…">
 <tr>
 <td>can_manage_chat</td>
 <td>Boolean</td>
-<td><em>True</em>, if the administrator can access the chat event log, boost list in channels, see channel members, report spam messages, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege</td>
+<td><em>True</em>, if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any other administrator privilege.</td>
 </tr>
 <tr>
 <td>can_delete_messages</td>
@@ -3324,6 +3389,21 @@ To learn how to create…">
 <td><em>True</em>, if the user is allowed to invite new users to the chat</td>
 </tr>
 <tr>
+<td>can_post_stories</td>
+<td>Boolean</td>
+<td><em>True</em>, if the administrator can post stories to the chat</td>
+</tr>
+<tr>
+<td>can_edit_stories</td>
+<td>Boolean</td>
+<td><em>True</em>, if the administrator can edit stories posted by other users</td>
+</tr>
+<tr>
+<td>can_delete_stories</td>
+<td>Boolean</td>
+<td><em>True</em>, if the administrator can delete stories posted by other users</td>
+</tr>
+<tr>
 <td>can_post_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. <em>True</em>, if the administrator can post messages in the channel, or access channel statistics; channels only</td>
@@ -3337,21 +3417,6 @@ To learn how to create…">
 <td>can_pin_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. <em>True</em>, if the user is allowed to pin messages; groups and supergroups only</td>
-</tr>
-<tr>
-<td>can_post_stories</td>
-<td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the administrator can post stories in the channel; channels only</td>
-</tr>
-<tr>
-<td>can_edit_stories</td>
-<td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the administrator can edit stories posted by other users; channels only</td>
-</tr>
-<tr>
-<td>can_delete_stories</td>
-<td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the administrator can delete stories posted by other users; channels only</td>
 </tr>
 <tr>
 <td>can_manage_topics</td>
@@ -3485,7 +3550,7 @@ To learn how to create…">
 <tr>
 <td>can_manage_chat</td>
 <td>Boolean</td>
-<td><em>True</em>, if the administrator can access the chat event log, boost list in channels, see channel members, report spam messages, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege</td>
+<td><em>True</em>, if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any other administrator privilege.</td>
 </tr>
 <tr>
 <td>can_delete_messages</td>
@@ -3518,6 +3583,21 @@ To learn how to create…">
 <td><em>True</em>, if the user is allowed to invite new users to the chat</td>
 </tr>
 <tr>
+<td>can_post_stories</td>
+<td>Boolean</td>
+<td><em>True</em>, if the administrator can post stories to the chat</td>
+</tr>
+<tr>
+<td>can_edit_stories</td>
+<td>Boolean</td>
+<td><em>True</em>, if the administrator can edit stories posted by other users</td>
+</tr>
+<tr>
+<td>can_delete_stories</td>
+<td>Boolean</td>
+<td><em>True</em>, if the administrator can delete stories posted by other users</td>
+</tr>
+<tr>
 <td>can_post_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. <em>True</em>, if the administrator can post messages in the channel, or access channel statistics; channels only</td>
@@ -3531,21 +3611,6 @@ To learn how to create…">
 <td>can_pin_messages</td>
 <td>Boolean</td>
 <td><em>Optional</em>. <em>True</em>, if the user is allowed to pin messages; groups and supergroups only</td>
-</tr>
-<tr>
-<td>can_post_stories</td>
-<td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the administrator can post stories in the channel; channels only</td>
-</tr>
-<tr>
-<td>can_edit_stories</td>
-<td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the administrator can edit stories posted by other users; channels only</td>
-</tr>
-<tr>
-<td>can_delete_stories</td>
-<td>Boolean</td>
-<td><em>Optional</em>. <em>True</em>, if the administrator can delete stories posted by other users; channels only</td>
 </tr>
 <tr>
 <td>can_manage_topics</td>
@@ -3931,7 +3996,7 @@ To learn how to create…">
 <td>Type of the reaction, always “custom_emoji”</td>
 </tr>
 <tr>
-<td>custom_emoji</td>
+<td>custom_emoji_id</td>
 <td>String</td>
 <td>Custom emoji identifier</td>
 </tr>
@@ -4544,7 +4609,7 @@ To learn how to create…">
 <tr>
 <td>boost</td>
 <td><a href="#chatboost">ChatBoost</a></td>
-<td>Infomation about the chat boost</td>
+<td>Information about the chat boost</td>
 </tr>
 </tbody>
 </table>
@@ -5073,7 +5138,7 @@ To learn how to create…">
 <p>The Bot API supports basic formatting for messages. You can use bold, italic, underlined, strikethrough, spoiler text, block quotations as well as inline links and pre-formatted code in your bots&#39; messages. Telegram clients will render them accordingly. You can specify text entities directly, or use markdown-style or HTML-style formatting.</p>
 <p>Note that Telegram clients will display an <strong>alert</strong> to the user before opening an inline link (&#39;Open this link?&#39; together with the full URL).</p>
 <p>Message entities can be nested, providing following restrictions are met:<br>- If two entities have common characters, then one of them is fully contained inside another.<br>- <em>bold</em>, <em>italic</em>, <em>underline</em>, <em>strikethrough</em>, and <em>spoiler</em> entities can contain and can be part of any other entities, except <em>pre</em> and <em>code</em>.<br>- <em>blockquote</em> entities can&#39;t be nested.<br>- All other entities can&#39;t contain each other.</p>
-<p>Links <code>tg://user?id=&lt;user_id&gt;</code> can be used to mention a user by their ID without using a username. Please note:</p>
+<p>Links <code>tg://user?id=&lt;user_id&gt;</code> can be used to mention a user by their identifier without using a username. Please note:</p>
 <ul>
 <li>These links will work <strong>only</strong> if they are used inside an inline link or in an inline keyboard button. For example, they will not work, when used in a message text.</li>
 <li>Unless the user is a member of the chat where they were mentioned, these mentions are only guaranteed to work if the user has contacted the bot in private in the past or has sent a callback query to the bot via an inline button and doesn&#39;t have Forwarded Messages privacy enabled for the bot.</li>
@@ -5099,7 +5164,9 @@ pre-formatted fixed-width code block written in the Python programming language
 ```
 &gt;Block quotation started
 &gt;Block quotation continued
-&gt;The last line of the block quotation</code></pre>
+&gt;The last line of the block quotation**
+&gt;The second block quotation started right after the previous\r
+&gt;The third block quotation started right after the previous</code></pre>
 <p>Please note:</p>
 <ul>
 <li>Any character with code between 1 and 126 inclusively can be escaped anywhere with a preceding &#39;\&#39; character, in which case it is treated as an ordinary character and not a part of the markup. This implies that &#39;\&#39; character usually must be escaped with a preceding &#39;\&#39; character.</li>
@@ -6101,19 +6168,19 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>latitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Yes</td>
 <td>Latitude of the location</td>
 </tr>
 <tr>
 <td>longitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Yes</td>
 <td>Longitude of the location</td>
 </tr>
 <tr>
 <td>horizontal_accuracy</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Optional</td>
 <td>The radius of uncertainty for the location, measured in meters; 0-1500</td>
 </tr>
@@ -6187,13 +6254,13 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>latitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Yes</td>
 <td>Latitude of the venue</td>
 </tr>
 <tr>
 <td>longitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Yes</td>
 <td>Longitude of the venue</td>
 </tr>
@@ -6548,7 +6615,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h4><a class="anchor" name="setmessagereaction" href="#setmessagereaction"><i class="anchor-icon"></i></a>setMessageReaction</h4>
-<p>Use this method to change the chosen reactions on a message. Service messages can&#39;t be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. In albums, bots must react to the first message. Returns <em>True</em> on success.</p>
+<p>Use this method to change the chosen reactions on a message. Service messages can&#39;t be reacted to. Automatically forwarded messages from a channel to its discussion group have the same available reactions as messages in the channel. Returns <em>True</em> on success.</p>
 <table class="table">
 <thead>
 <tr>
@@ -6569,7 +6636,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>message_id</td>
 <td>Integer</td>
 <td>Yes</td>
-<td>Identifier of the target message</td>
+<td>Identifier of the target message. If the message belongs to a media group, the reaction is set to the first non-deleted message in the group instead.</td>
 </tr>
 <tr>
 <td>reaction</td>
@@ -6786,7 +6853,7 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>can_manage_chat</td>
 <td>Boolean</td>
 <td>Optional</td>
-<td>Pass <em>True</em> if the administrator can access the chat event log, boost list in channels, see channel members, report spam messages, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege</td>
+<td>Pass <em>True</em> if the administrator can access the chat event log, get boost list, see hidden supergroup and channel members, report spam messages and ignore slow mode. Implied by any other administrator privilege.</td>
 </tr>
 <tr>
 <td>can_delete_messages</td>
@@ -6825,6 +6892,24 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Pass <em>True</em> if the administrator can invite new users to the chat</td>
 </tr>
 <tr>
+<td>can_post_stories</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> if the administrator can post stories to the chat</td>
+</tr>
+<tr>
+<td>can_edit_stories</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> if the administrator can edit stories posted by other users</td>
+</tr>
+<tr>
+<td>can_delete_stories</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Pass <em>True</em> if the administrator can delete stories posted by other users</td>
+</tr>
+<tr>
 <td>can_post_messages</td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -6841,24 +6926,6 @@ pre-formatted fixed-width code block written in the Python programming language
 <td>Boolean</td>
 <td>Optional</td>
 <td>Pass <em>True</em> if the administrator can pin messages, supergroups only</td>
-</tr>
-<tr>
-<td>can_post_stories</td>
-<td>Boolean</td>
-<td>Optional</td>
-<td>Pass <em>True</em> if the administrator can post stories in the channel; channels only</td>
-</tr>
-<tr>
-<td>can_edit_stories</td>
-<td>Boolean</td>
-<td>Optional</td>
-<td>Pass <em>True</em> if the administrator can edit stories posted by other users; channels only</td>
-</tr>
-<tr>
-<td>can_delete_stories</td>
-<td>Boolean</td>
-<td>Optional</td>
-<td>Pass <em>True</em> if the administrator can delete stories posted by other users; channels only</td>
 </tr>
 <tr>
 <td>can_manage_topics</td>
@@ -8401,19 +8468,19 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>latitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Yes</td>
 <td>Latitude of new location</td>
 </tr>
 <tr>
 <td>longitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Yes</td>
 <td>Longitude of new location</td>
 </tr>
 <tr>
 <td>horizontal_accuracy</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Optional</td>
 <td>The radius of uncertainty for the location, measured in meters; 0-1500</td>
 </tr>
@@ -8753,17 +8820,17 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>x_shift</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Shift by X-axis measured in widths of the mask scaled to the face size, from left to right. For example, choosing -1.0 will place mask just to the left of the default mask position.</td>
 </tr>
 <tr>
 <td>y_shift</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Shift by Y-axis measured in heights of the mask scaled to the face size, from top to bottom. For example, 1.0 will place the mask just below the default mask position.</td>
 </tr>
 <tr>
 <td>scale</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Mask scaling coefficient. For example, 2.0 means double size.</td>
 </tr>
 </tbody>
@@ -9871,7 +9938,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultvoice" href="#inlinequeryresultvoice"><i class="anchor-icon"></i></a>InlineQueryResultVoice</h4>
 <p>Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this voice recording will be sent by the user. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the the voice message.</p>
 <table class="table">
@@ -9935,7 +10001,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultdocument" href="#inlinequeryresultdocument"><i class="anchor-icon"></i></a>InlineQueryResultDocument</h4>
 <p>Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the file. Currently, only <strong>.PDF</strong> and <strong>.ZIP</strong> files can be sent using this method.</p>
 <table class="table">
@@ -10019,7 +10084,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultlocation" href="#inlinequeryresultlocation"><i class="anchor-icon"></i></a>InlineQueryResultLocation</h4>
 <p>Represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the location.</p>
 <table class="table">
@@ -10043,12 +10107,12 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>latitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Location latitude in degrees</td>
 </tr>
 <tr>
 <td>longitude</td>
-<td>Float number</td>
+<td>Float</td>
 <td>Location longitude in degrees</td>
 </tr>
 <tr>
@@ -10058,7 +10122,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>horizontal_accuracy</td>
-<td>Float number</td>
+<td>Float</td>
 <td><em>Optional</em>. The radius of uncertainty for the location, measured in meters; 0-1500</td>
 </tr>
 <tr>
@@ -10103,7 +10167,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultvenue" href="#inlinequeryresultvenue"><i class="anchor-icon"></i></a>InlineQueryResultVenue</h4>
 <p>Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the venue.</p>
 <table class="table">
@@ -10192,7 +10255,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultcontact" href="#inlinequeryresultcontact"><i class="anchor-icon"></i></a>InlineQueryResultContact</h4>
 <p>Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the contact.</p>
 <table class="table">
@@ -10261,7 +10323,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultgame" href="#inlinequeryresultgame"><i class="anchor-icon"></i></a>InlineQueryResultGame</h4>
 <p>Represents a <a href="#games">Game</a>.</p>
 <table class="table">
@@ -10295,7 +10356,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after October 1, 2016. Older clients will not display any inline results if a game result is among them.</p>
 <h4><a class="anchor" name="inlinequeryresultcachedphoto" href="#inlinequeryresultcachedphoto"><i class="anchor-icon"></i></a>InlineQueryResultCachedPhoto</h4>
 <p>Represents a link to a photo stored on the Telegram servers. By default, this photo will be sent by the user with an optional caption. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the photo.</p>
 <table class="table">
@@ -10513,7 +10573,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016 for static stickers and after 06 July, 2019 for <a href="https://telegram.org/blog/animated-stickers">animated stickers</a>. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultcacheddocument" href="#inlinequeryresultcacheddocument"><i class="anchor-icon"></i></a>InlineQueryResultCachedDocument</h4>
 <p>Represents a link to a file stored on the Telegram servers. By default, this file will be sent by the user with an optional caption. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the file.</p>
 <table class="table">
@@ -10577,7 +10636,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultcachedvideo" href="#inlinequeryresultcachedvideo"><i class="anchor-icon"></i></a>InlineQueryResultCachedVideo</h4>
 <p>Represents a link to a video file stored on the Telegram servers. By default, this video file will be sent by the user with an optional caption. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the video.</p>
 <table class="table">
@@ -10699,7 +10757,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inlinequeryresultcachedaudio" href="#inlinequeryresultcachedaudio"><i class="anchor-icon"></i></a>InlineQueryResultCachedAudio</h4>
 <p>Represents a link to an MP3 audio file stored on the Telegram servers. By default, this audio file will be sent by the user. Alternatively, you can use <em>input_message_content</em> to send a message with the specified content instead of the audio.</p>
 <table class="table">
@@ -10753,7 +10810,6 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.</p>
 <h4><a class="anchor" name="inputmessagecontent" href="#inputmessagecontent"><i class="anchor-icon"></i></a>InputMessageContent</h4>
 <p>This object represents the content of a message to be sent as a result of an inline query. Telegram clients currently support the following 5 types:</p>
 <ul>
@@ -10819,7 +10875,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tr>
 <tr>
 <td>horizontal_accuracy</td>
-<td>Float number</td>
+<td>Float</td>
 <td><em>Optional</em>. The radius of uncertainty for the location, measured in meters; 0-1500</td>
 </tr>
 <tr>
@@ -11122,7 +11178,7 @@ pre-formatted fixed-width code block written in the Python programming language
 </tbody>
 </table>
 <h3><a class="anchor" name="payments" href="#payments"><i class="anchor-icon"></i></a>Payments</h3>
-<p>Your bot can accept payments from Telegram users. Please see the <a href="/bots/payments">introduction to payments</a> for more details on the process and how to set up payments for your bot. Please note that users will need Telegram v.4.0 or higher to use payments (released on May 18, 2017).</p>
+<p>Your bot can accept payments from Telegram users. Please see the <a href="/bots/payments">introduction to payments</a> for more details on the process and how to set up payments for your bot.</p>
 <h4><a class="anchor" name="sendinvoice" href="#sendinvoice"><i class="anchor-icon"></i></a>sendInvoice</h4>
 <p>Use this method to send invoices. On success, the sent <a href="#message">Message</a> is returned.</p>
 <table class="table">
