@@ -24,8 +24,7 @@ jobs:
     - run: ./sw setup
     - run: ./sw install org.sw.demo.tgbot
     - run: ./sw path org.sw.demo.tgbot
-    - run: ls -al /github/home/
-    - run: export
+    - run: ls -al /github/home/    
       
   macos:
     runs-on: macos-13
