@@ -20,7 +20,8 @@ jobs:
         sudo dnf -y install cmake
     - uses: egorpugin/sw-action@master
     - run: pwd
-    - run: ls -al .sw
+    - run: ls -al /github/home/
+    - run: sw setup
       
   macos:
     runs-on: macos-13
