@@ -15,6 +15,9 @@ jobs:
     container: fedora:latest
     steps:
     - uses: actions/checkout@v1
+    - name: prepare
+      run: |
+        sudo dnf -y install cmake
     - uses: egorpugin/sw-action@master
     - run: pwd
     - run: ls -al .sw
