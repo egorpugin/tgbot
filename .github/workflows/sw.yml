@@ -22,7 +22,8 @@ jobs:
     - run: pwd
     - run: ls -al /github/home/
     - run: ./sw setup
-    - run: ./sw install org.sw.demo.tgbot    
+    - run: ./sw install org.sw.demo.tgbot
+    - run: ./sw path org.sw.demo.tgbot
     - run: ls -al /github/home/
     - run: export
       
