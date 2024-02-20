@@ -15,13 +15,9 @@ jobs:
     container: fedora:latest
     steps:
     - uses: actions/checkout@v1
-    - name: prepare
-      run: |
-        sudo dnf -y update
-        sudo dnf -y install flex bison cmake which gcc clang clang-tools-extra lld git \
-          mesa-libGL-devel mesa-libEGL-devel
     - uses: egorpugin/sw-action@master
-    - run: ./sw build -compiler gcc
+    - run: pwd
+    - run: ls -al .sw
       
   macos:
     runs-on: macos-13
