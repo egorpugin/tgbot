@@ -21,7 +21,10 @@ jobs:
     - uses: egorpugin/sw-action@master
     - run: pwd
     - run: ls -al /github/home/
-    - run: sw setup
+    - run: ./sw setup
+    - run: ./sw install org.sw.demo.tgbot    
+    - run: ls -al /github/home/
+    - run: export
       
   macos:
     runs-on: macos-13
