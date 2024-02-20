@@ -17,15 +17,12 @@ jobs:
     - uses: actions/checkout@v1
     - name: prepare
       run: |
-        sudo dnf -y install cmake
+        sudo dnf -y update
+        sudo dnf -y install flex bison cmake which gcc clang clang-tools-extra lld git \
+          mesa-libGL-devel mesa-libEGL-devel
     - uses: egorpugin/sw-action@master
-    - run: pwd
-    - run: ls -al /github/home/
-    - run: ./sw setup
-    - run: ./sw install org.sw.demo.tgbot
-    - run: ./sw path org.sw.demo.tgbot
-    - run: ls -al /github/home/    
-      
+    - run: ./sw build -compiler gcc
+
   macos:
     runs-on: macos-13
     steps:
