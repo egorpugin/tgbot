@@ -101,7 +101,7 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
         ctx.addText("Vector<");
     if (types.size() > 1) {
         ctx.addText("Variant<");
-        for (auto &f: types)
+        for (auto &f : types)
             ctx.addText(f + ", ");
         ctx.trimEnd(2);
         ctx.addText(">");
@@ -128,7 +128,7 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
 
 std::vector<String> Type::get_dependent_types() const {
     std::vector<String> t;
-    for (auto &f: fields) {
+    for (auto &f : fields) {
         auto dt = f.get_dependent_types();
         t.insert(t.end(), dt.begin(), dt.end());
     }
@@ -140,21 +140,25 @@ void Type::emit(primitives::CppEmitter &ctx) const {
     if (!is_oneof()) {
         ctx.beginBlock("struct " + name);
         emitEnums(ctx);
-        for (auto &f: fields)
+        for (auto &f : fields)
             f.emitField(ctx);
         ctx.endBlock(true);
     } else {
-        ctx.increaseIndent("using " + name + " = Variant<");
-        for (auto &f: oneof)
-            ctx.addLine(f + ",");
-        ctx.trimEnd(1);
-        ctx.decreaseIndent(">;");
+        if (name == "MaybeInaccessibleMessage"s) {
+            ctx.addLine("using " + name + " = Message;");
+        } else {
+            ctx.increaseIndent("using " + name + " = Variant<");
+            for (auto &f : oneof)
+                ctx.addLine(f + ",");
+            ctx.trimEnd(1);
+            ctx.decreaseIndent(">;");
+        }
     }
     ctx.emptyLines();
 }
 
 void basic_info::emitEnums(primitives::CppEmitter &ctx) const {
-    for (auto &f: fields) {
+    for (auto &f : fields) {
         if (!f.is_enum() || f.enum_values.empty())
             continue;
         ctx.beginBlock("enum class " + f.get_enum_name());
@@ -178,7 +182,7 @@ void Method::emitRequestType(primitives::CppEmitter &ctx) const {
         return;
     ctx.beginBlock("struct " + cpp_name());
     emitEnums(ctx);
-    for (auto &f: fields)
+    for (auto &f : fields)
         f.emitField(ctx, true);
     ctx.endBlock(true);
     //
@@ -222,12 +226,12 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
     if (has_input_file) {
         cpp.addLine("std::array<http_request_argument, " + std::to_string(fields.size()) + "> args;");
         cpp.addLine("auto i = args.begin();");
-        for (auto &f: fields)
+        for (auto &f : fields)
             cpp.addLine("to_request_argument(i, \"" + f.name + "\"sv, " + f.name + ");");
         cpp.addLine("auto j = send_request(\"" + name + "\"sv, http_request_arguments{args.begin(), i});");
     } else {
         cpp.addLine("nlohmann::json j;");
-        for (auto &f: fields)
+        for (auto &f : fields)
             cpp.addLine("to_json(j, \"" + f.name + "\"sv, " + f.name + ");");
         cpp.addLine("j = send_request(\"" + name + "\"sv, j.dump());");
     }
@@ -319,7 +323,7 @@ void Emitter::emitTypesCpp() {
         std::map<String, std::vector<std::pair<Type *, Field *>>> fields;
         for (auto &tn: t.oneof) {
             auto &t2 = types.find(tn)->second;
-            for (auto &f: t2.fields) {
+            for (auto &f : t2.fields) {
                 if (!f.always.empty())
                     fields[f.name].push_back({&t2, &f});
             }
@@ -376,7 +380,7 @@ void Emitter::emitTypesCpp() {
         for (auto &[n, t]: v) {
             if (t.is_oneof())
                 continue;
-            for (auto &f: t.fields) {
+            for (auto &f : t.fields) {
                 if (!f.is_enum() || f.enum_values.empty())
                     continue;
                 print_enum(f.get_enum_type(t.name + suffix), f.enum_values, suffix);
@@ -418,7 +422,7 @@ String Emitter::emitReflection() const {
         ctx.addLine("template <typename F>");
         ctx.addLine("static void for_each(F &&f) {");
         ctx.increaseIndent();
-        for (auto &f: t.fields)
+        for (auto &f : t.fields)
             ctx.addLine("f(\"" + f.name + "\", &T::" + f.name + ");");
         ctx.endBlock();*/
         ctx.endBlock(true);
