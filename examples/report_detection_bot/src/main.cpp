@@ -68,6 +68,7 @@ public:
                 offset = process_updates(offset, limit, timeout, allowed_updates);
             } catch (std::exception &e) {
                 printf("error: %s\n", e.what());
+                ++offset; // we skip erroneous message
             }
         }
     }
