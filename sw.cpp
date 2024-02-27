@@ -35,6 +35,7 @@ void build(Solution &s)
                 << cmd::out("methods.inl.h")
                 ;
             // to make dependency? (in VS IDE only?)
+            // causes cyclic deps for some reason
             //tgbot.Public += "types.inl.h";
             //tgbot.Public += "methods.inl.h";
         }
