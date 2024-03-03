@@ -36,5 +36,5 @@ jobs:
         export PATH="/opt/homebrew/opt/flex/bin:$PATH"
         export PATH="/opt/homebrew/opt/bison/bin:$PATH"
         export PATH="/opt/homebrew/opt/gcc/bin:$PATH"
-        ./sw build -compiler gcc-13
+        ./sw build -compiler gcc-13 -platform x64
         
