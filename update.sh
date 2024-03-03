@@ -6,10 +6,16 @@ if [ $# -eq 0 ]; then
 fi
 
 SW_VERSION=1.1.5
-OLD_VERSION=`git tag | tail -n 1`
+OLD_SW_VERSION=`git tag | tail -n 1`
 NEW_VERSION=$1 # Telegram Bot API version (e.g. 6.1, 6.2 etc.)
 shift 1
 NEW_SW_VERSION=$SW_VERSION.$NEW_VERSION
+
+OLD_VERSION=${OLD_SW_VERSION}
+# remove sw version prefix
+OLD_VERSION=${OLD_VERSION#*.}
+OLD_VERSION=${OLD_VERSION#*.}
+OLD_VERSION=${OLD_VERSION#*.}
 
 SED=sed
 if [ -x "$(command -v gsed)" ]; then
@@ -20,7 +26,7 @@ git pull --tags origin master
 curl https://core.telegram.org/bots/api > TelegramBotAPI.html
 $SED -i -e '$ d' TelegramBotAPI.html # remove the last line with generation time
 $SED -i -e "s/$OLD_VERSION/$NEW_VERSION/g" README.md
-$SED -i -e "s/$OLD_VERSION/$NEW_SW_VERSION/g" sw.cpp
+$SED -i -e "s/$OLD_SW_VERSION/$NEW_SW_VERSION/g" sw.cpp
 die() { echo "$*" 1>&2 ; exit 1; }
 sw build $* || die "Build failed"
 git commit -am "Update Bot API to $NEW_VERSION."
