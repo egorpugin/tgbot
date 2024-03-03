@@ -33,8 +33,8 @@ jobs:
     #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
     - name: build
       run: |
-        export PATH="/usr/local/opt/flex/bin:$PATH"
-        export PATH="/usr/local/opt/bison/bin:$PATH"
-        export PATH="/usr/local/opt/gcc/bin:$PATH"
+        export PATH="/opt/homebrew/opt/flex/bin:$PATH"
+        export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+        export PATH="/opt/homebrew/opt/gcc/bin:$PATH"
         ./sw build -compiler gcc-13
         
