@@ -223,12 +223,12 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
             }
             nt = nt->next;
         }
-        checkNullptr(p); // there is return type in desc
 
         if (is_type) {
             Type t;
             t.name = name;
-            t.description = getAllText(p->children);
+            if (p)
+                t.description = getAllText(p->children);
             if (ul)
                 parseTypeOneOf(t, ul->children);
             if (tb)
@@ -250,7 +250,8 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
         } else {
             Method t;
             t.name = name;
-            t.description = getAllText(p->children);
+            if (p)
+                t.description = getAllText(p->children);
             t.return_type = extract_return_type(t.description);
             if (tb)
                 parseType(t, tb);
