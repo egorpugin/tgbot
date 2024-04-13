@@ -135,13 +135,31 @@ std::vector<String> Type::get_dependent_types() const {
     return t;
 }
 
+void emit_get_field_name(auto &ctx, auto &&fields) {
+    ctx.addLine();
+    ctx.beginBlock("template <auto I> static auto get_field_name()");
+    ctx.addLine("if constexpr (0) {}");
+    for (int i = 0; auto &f : fields) {
+        ctx.addLine(std::format("else if constexpr (I == {}) {{ return \"{}\"sv; }}", i++, f.name));
+    }
+    ctx.endBlock();
+    ctx.beginBlock("void for_each_field(this auto &&v, auto &&f)");
+    for (int i = 0; auto &f : fields) {
+        ctx.addLine(std::format("f(v.{}, \"{}\"sv);", f.name, f.name));
+    }
+    ctx.endBlock();
+}
+
 void Type::emit(primitives::CppEmitter &ctx) const {
     ctx.addLine("// " + description);
     if (!is_oneof()) {
         ctx.beginBlock("struct " + name);
+        ctx.addLine(std::format("static constexpr auto number_of_fields = {};", fields.size()));
+        ctx.addLine();
         emitEnums(ctx);
         for (auto &f : fields)
             f.emitField(ctx);
+        emit_get_field_name(ctx, fields);
         ctx.endBlock(true);
     } else {
         if (name == "MaybeInaccessibleMessage"s) {
@@ -181,9 +199,12 @@ void Method::emitRequestType(primitives::CppEmitter &ctx) const {
     if (fields.empty())
         return;
     ctx.beginBlock("struct " + cpp_name());
+    ctx.addLine(std::format("static constexpr auto number_of_fields = {};", fields.size()));
+    ctx.addLine();
     emitEnums(ctx);
     for (auto &f : fields)
         f.emitField(ctx, true);
+    emit_get_field_name(ctx, fields);
     ctx.endBlock(true);
     //
     ctx.emptyLines();
@@ -222,33 +243,47 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
     get_parameters(cpp, true, last_non_optional);
     cpp.decreaseIndent();
     cpp.addLine(") const");
-    cpp.beginBlock();
-    if (has_input_file) {
-        cpp.addLine("std::array<http_request_argument, " + std::to_string(fields.size()) + "> args;");
-        cpp.addLine("auto i = args.begin();");
-        for (auto &f : fields)
-            cpp.addLine("to_request_argument(i, \"" + f.name + "\"sv, " + f.name + ");");
-        cpp.addLine("auto j = send_request(\"" + name + "\"sv, http_request_arguments{args.begin(), i});");
-    } else {
-        cpp.addLine("nlohmann::json j;");
-        for (auto &f : fields)
-            cpp.addLine("to_json(j, \"" + f.name + "\"sv, " + f.name + ");");
-        cpp.addLine("j = send_request(\"" + name + "\"sv, j.dump());");
-    }
-    cpp.addLine();
-    cpp.addText("return from_json<");
-    return_type.emitFieldType(cpp, true, true);
-    cpp.addText(">(j);");
-    cpp.endBlock();
+    auto func = [&](std::string var = {}) {
+        cpp.beginBlock();
+        if (has_input_file) {
+            cpp.addLine("std::array<http_request_argument, " + std::to_string(fields.size()) + "> args;");
+            cpp.addLine("auto i = args.begin();");
+            for (auto &f : fields)
+                cpp.addLine("to_request_argument(i, \"" + f.name + "\"sv, " + var + f.name + ");");
+            cpp.addLine("auto j = send_request(\"" + name + "\"sv, http_request_arguments{args.begin(), i});");
+        } else {
+            cpp.addLine("nlohmann::json j;");
+            for (auto &f : fields)
+                cpp.addLine("to_json(j, \"" + f.name + "\"sv, " + var + f.name + ");");
+            cpp.addLine("j = send_request(\"" + name + "\"sv, j.dump());");
+        }
+        cpp.addLine();
+        cpp.addText("return from_json<");
+        return_type.emitFieldType(cpp, true, true);
+        cpp.addText(">(j);");
+        cpp.endBlock();
+    };
+    func();
     cpp.emptyLines();
 
     // with request struct
     if (!fields.empty()) {
         cpp.addLine();
-        cpp.addText((!has_input_file ? "TBGOT_TO_JSON_REQUEST_MACRO"s : "TBGOT_TO_REQUEST_ARGUMENT_REQUEST_MACRO"s) +
+        cpp.addText("auto " + name + "(const " + cpp_name() + " &r) const");
+        func("r."s);
+        /*cpp.beginBlock();
+        cpp.addLine("return " + name + "(");
+        cpp.increaseIndent();
+        for (const auto &f : fields)
+            cpp.addLine("r." + f.name + ",");
+        cpp.trimEnd(1);
+        cpp.decreaseIndent();
+        cpp.addLine(");");
+        cpp.endBlock();*/
+        /*cpp.addText((!has_input_file ? "TBGOT_TO_JSON_REQUEST_MACRO"s : "TBGOT_TO_REQUEST_ARGUMENT_REQUEST_MACRO"s) +
                     "(" + name + ", ");
         return_type.emitFieldType(cpp, true, true);
-        cpp.addText(")");
+        cpp.addText(")");*/
         cpp.emptyLines();
     }
 }

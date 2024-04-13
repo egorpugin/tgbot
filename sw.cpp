@@ -24,7 +24,8 @@ void build(Solution &s)
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.Public.CompileOptions.push_back("/Zc:__cplusplus");
         tgbot.Public += "org.sw.demo.nlohmann.json"_dep;
-        tgbot.Public += "org.sw.demo.boostorg.pfr-develop"_dep;
+        // https://github.com/boostorg/pfr/issues/168 or clang bug
+        //tgbot.Public += "org.sw.demo.boost.pfr"_dep;
         {
             auto c = tgbot.addCommand();
             c << cmd::prog(apitool)

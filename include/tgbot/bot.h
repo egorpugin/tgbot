@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/pfr.hpp>
+//#include <boost/pfr.hpp>
 #include <nlohmann/json.hpp>
 
 #include <cstdint>
@@ -14,23 +14,12 @@
 
 #define TBGOT_TO_JSON_REQUEST_MACRO(f, ret)                                                                            \
     auto f(const f##Request &r) const {                                                                                \
-        nlohmann::json j;                                                                                              \
-        boost::pfr::for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {                   \
-            to_json(j, boost::pfr::get_name<I, f##Request>(), field);                                                  \
-        });                                                                                                            \
-        j = send_request(#f, j.dump());                                                                                \
-        return from_json<ret>(j);                                                                                      \
+        return send_request_to_json<ret>(r, #f);                                                                       \
     }
 
 #define TBGOT_TO_REQUEST_ARGUMENT_REQUEST_MACRO(f, ret)                                                                \
     auto f(const f##Request &r) const {                                                                                \
-        std::array<http_request_argument, boost::pfr::tuple_size<f##Request>::value> args;                             \
-        auto i = args.begin();                                                                                         \
-        boost::pfr::for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {                   \
-            to_request_argument(i, boost::pfr::get_name<I, f##Request>(), field);                                      \
-        });                                                                                                            \
-        auto j = send_request(#f, http_request_arguments{args.begin(), i});                                            \
-        return from_json<ret>(j);                                                                                      \
+        return send_request_to_arguments<ret>(r, #f);                                                                  \
     }
 
 namespace tgbot {
@@ -64,6 +53,35 @@ auto create_ptr(Args && ... args) {
     return std::make_unique<PtrArgs...>(args...);
 }
 
+// introspection helpers
+
+// boost::pfr::tuple_size<f##Request>::value does not work in clang
+// https://github.com/boostorg/pfr/issues/168
+/*template <typename T>
+struct tuple_size {
+    static constexpr auto value = boost::pfr::tuple_size<T>::value;
+};
+template <auto I, typename T>
+auto get_name() {
+    return boost::pfr::get_name<I, T>();
+}
+void for_each_field(auto &&v, auto &&f) {
+    boost::pfr::for_each_field(v, f);
+}*/
+template <typename T>
+struct tuple_size {
+    static constexpr auto value = T::number_of_fields;
+};
+template <auto I, typename T>
+auto get_name() {
+    return T::template get_field_name<I>();
+}
+void for_each_field(auto &&v, auto &&f) {
+    v.for_each_field(f);
+}
+
+//
+
 #include <types.inl.h>
 
 /// Used to send files using their filenames in some requests.
@@ -87,6 +105,26 @@ private:
 
 public:
     api(const Bot &b) : bot{b} {}
+
+    /*template <typename Ret>
+    auto send_request_to_json(const auto &r, std::string_view reqname) const {
+        nlohmann::json j;
+        for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {
+            to_json(j, get_name<I, std::decay_t<decltype(r)>>(), field);
+        });
+        j = send_request(reqname, j.dump());
+        return from_json<Ret>(j);
+    }
+    template <typename Ret>
+    auto send_request_to_arguments(const auto &r, std::string_view reqname) const {
+        std::array<http_request_argument, tuple_size<std::decay_t<decltype(r)>>::value> args;
+        auto i = args.begin();
+        for_each_field(r, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {
+            to_request_argument(i, get_name<I, std::decay_t<decltype(r)>>(), field);
+        });
+        auto j = send_request(reqname, http_request_arguments{args.begin(), i});
+        return from_json<Ret>(j);
+    }*/
 
 #include <methods.inl.h>
 
@@ -177,8 +215,8 @@ private:
             return j;
         } else {
             nlohmann::json j;
-            boost::pfr::for_each_field(v, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {
-                to_json(j, boost::pfr::get_name<I, T>(), field);
+            for_each_field(v, [&](auto &&field, std::string_view name) {
+                to_json(j, name, field);
             });
             return j;
         }
@@ -213,8 +251,8 @@ private:
             return from_json(j, type<T>{});
         } else {
             T v;
-            boost::pfr::for_each_field(v, [&]<auto I>(auto &&field, std::integral_constant<size_t, I>) {
-                from_json(j, boost::pfr::get_name<I, T>(), field);
+            for_each_field(v, [&](auto &&field, std::string_view name) {
+                from_json(j, name, field);
             });
             return v;
         }
