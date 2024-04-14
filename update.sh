@@ -5,7 +5,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-SW_VERSION=1.1.5
+SW_VERSION=1.1.6
 OLD_SW_VERSION=`git tag | tail -n 1`
 NEW_VERSION=$1 # Telegram Bot API version (e.g. 6.1, 6.2 etc.)
 shift 1
