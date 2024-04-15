@@ -2,14 +2,56 @@
 
 #include <nlohmann/json.hpp>
 #include <primitives/emitter.h>
+#include <primitives/xml.h>
 
 struct Emitter;
 
-struct Field
-{
+String getAllText(xmlNode *in);
+
+struct Field {
+    struct desc {
+        xmlNode *node;
+        std::string text;
+        std::string display_text;
+        std::map<String, String> enum_values_map;
+        std::set<String> enum_values_keys;
+        int idx{};
+
+        String getAllText(xmlNode *in) {
+            String s;
+            if (getName(in) == "text") {
+                s += getContent(in);
+            }
+            if (getName(in) == "img") {
+                if (in->properties && in->properties->children &&
+                    (const char *)in->properties->children->content == "emoji"s) {
+                    s += (const char *)in->properties->next->next->next->next->children->content;
+                    if (std::ranges::any_of(s, [](auto c){return c < 32 || c > 127;})) {
+                        if (enum_values_keys.insert(s).second) {
+                            auto val = s;
+                            s = std::format("value_{}", ++idx);
+                            enum_values_map[s] = val;
+                        } else {
+                            s = enum_values_map[s];
+                        }
+                    }
+                }
+            }
+            if (in->children)
+                s += getAllText(in->children);
+            if (in->next)
+                s += getAllText(in->next);
+            return s;
+        }
+        void parse(xmlNode *in) {
+            text = getAllText(in);
+            display_text = ::getAllText(in);
+        }
+    };
+
     String name;
     std::vector<String> types;
-    String description;
+    desc description;
     bool optional = false;
     int array = 0;
     std::map<String, String> enum_values;

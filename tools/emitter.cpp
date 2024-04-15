@@ -23,8 +23,8 @@ void Field::save(nlohmann::json &j) const {
         j["optional"] = optional;
     if (array)
         j["array"] = array;
-    if (!description.empty())
-        j["description"] = description;
+    if (!description.text.empty())
+        j["description"] = description.display_text;
 }
 
 bool Field::is_enum() const {
@@ -41,7 +41,7 @@ std::vector<String> Field::get_dependent_types() const {
 }
 
 void Field::emitField(primitives::CppEmitter &ctx, bool emitoptional) const {
-    ctx.addLine("// " + description);
+    ctx.addLine("// " + description.display_text);
     ctx.addLine();
     emitFieldType(ctx, emitoptional);
     ctx.addText(" " + name + ";");
@@ -411,7 +411,7 @@ void Emitter::emitTypesCpp() {
         ctx.addLine("}");
         ctx.endFunction();
     };
-    auto print_enums = [&ctx, &print_enum](auto &&v, const String &suffix = {}) {
+    auto print_enums = [&](auto &&v, const String &suffix = {}) {
         for (auto &[n, t]: v) {
             if (t.is_oneof())
                 continue;

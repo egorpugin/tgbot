@@ -60,10 +60,16 @@ static Field extract_return_type(const String &desc) {
     return f;
 }
 
-static String getAllText(xmlNode *in) {
+String getAllText(xmlNode *in) {
     String s;
-    if (getName(in) == "text")
+    if (getName(in) == "text") {
         s += getContent(in);
+    }
+    if (getName(in) == "img") {
+        if (in->properties && in->properties->children && (const char *)in->properties->children->content == "emoji"s) {
+            s += (const char *)in->properties->next->next->next->next->children->content;
+        }
+    }
     if (in->children)
         s += getAllText(in->children);
     if (in->next)
@@ -111,28 +117,32 @@ static void parseType(auto &t, xmlNode *tb) {
                     getName(comment->children->children) == "text" &&
                     getContent(comment->children->children) == "Optional")
                     f.optional = true;
-                if (comment->children)
-                    f.description = getAllText(comment->children);
+                if (comment->children) {
+                    f.description.parse(comment->children);
+                }
             },
             [&](Method &t) {
                 if (comment->children && getName(comment->children) == "text" && comment->children->content &&
                     getContent(comment->children) == "Optional")
                     f.optional = true;
                 auto desc = getNext(comment, "td");
-                if (desc && desc->children)
-                    f.description = getAllText(desc->children);
+                if (desc && desc->children) {
+                    f.description.parse(desc->children);
+                }
             })(t);
 
-        if (!f.description.empty()) {
-            boost::replace_all(f.description, "\xe2\x80\x9c", "\"");
-            boost::replace_all(f.description, "\xe2\x80\x9d", "\"");
+        if (!f.description.text.empty()) {
+            auto &text = f.description.text;
+            boost::replace_all(text, "\xe2\x80\x9c", "\"");
+            boost::replace_all(text, "\xe2\x80\x9d", "\"");
 
-            auto p = f.description.find(" one of ");
-            if (p == f.description.npos)
-                p = f.description.find("One of ");
-            if (p != f.description.npos) {
-                auto end = f.description.find(".", p);
-                auto sub = f.description.substr(p, end - p);
+            auto p = text.find(" one of \"");
+            if (p == text.npos) {
+                p = text.find("One of \"");
+            }
+            if (p != text.npos) {
+                auto end = text.find(".", p);
+                auto sub = text.substr(p);
                 p = 0;
                 while (1) {
                     p = sub.find("\"", p);
@@ -142,9 +152,11 @@ static void parseType(auto &t, xmlNode *tb) {
                     auto s = sub.substr(p + 1, end - p - 1);
                     if (!s.empty()) {
                         boost::replace_all(s, "/", "_");
-                        if (s == "static")
-                            s += "_";
-                        f.enum_values[s] = s;
+                        auto enum_key = s;
+                        auto enum_value = f.description.enum_values_map.empty() ? s : f.description.enum_values_map[s];
+                        if (enum_key == "static")
+                            enum_key += "_";
+                        f.enum_values[enum_key] = enum_value;
                     }
                     p = end + 1;
                 }
@@ -152,9 +164,11 @@ static void parseType(auto &t, xmlNode *tb) {
 
             std::regex r{", always \"(.*?)\""};
             std::smatch m;
-            if (std::regex_search(f.description, m, r)) {
+            if (std::regex_search(text, m, r)) {
                 f.always = m[1].str();
             }
+
+            // also add 'defaults to'
         }
 
         if (f.name == "parse_mode") {
@@ -237,13 +251,13 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
                 Field fn;
                 fn.name = "file_name";
                 fn.types.push_back("String");
-                fn.description = "Local file name of file to upload.";
+                fn.description.text = "Local file name of file to upload.";
                 t.fields.push_back(fn);
 
                 Field mt;
                 mt.name = "mime_type";
                 mt.types.push_back("String");
-                mt.description = "MIME type of file to upload.";
+                mt.description.text = "MIME type of file to upload.";
                 t.fields.push_back(mt);
             }
             types.push_back(t);
