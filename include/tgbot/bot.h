@@ -181,6 +181,8 @@ private:
             } else if constexpr (std::is_same_v<T, InputFile>) {
                 a.filename = r.file_name;
                 a.mimetype = r.mime_type;
+            } else if constexpr (std::is_enum_v<T>) {
+                a.value = to_json(r, type<T>{});
             } else {
                 a.value = to_json(r).dump();
             }
@@ -210,9 +212,7 @@ private:
         } else if constexpr (is_simple_type<T>) {
             return v;
         } else if constexpr (requires { to_json(v, type<T>{}); }) {
-            nlohmann::json j;
-            to_json(j, type<T>{});
-            return j;
+            return to_json(v, type<T>{});
         } else {
             nlohmann::json j;
             for_each_field(v, [&](auto &&field, std::string_view name) {

@@ -349,6 +349,36 @@ void Emitter::emitTypesHeader() {
     write_file("types.inl.h", ctx.getText() + emitReflection());
 }
 
+auto print_enum(auto &ctx, const auto &name, auto &&vals) {
+    ctx.beginFunction("static " + name + " from_json(const nlohmann::json &j, type<" + name + ">)");
+    ctx.addLine("std::string s = j;");
+    for (auto &[k, v] : vals) {
+        ctx.addLine("if (s == \"" + v + "\")");
+        ctx.increaseIndent();
+        ctx.addLine("return " + name + "::" + k + ";");
+        ctx.decreaseIndent();
+    }
+    ctx.addLine("throw std::runtime_error(\"no such enum value: \" + s);");
+    ctx.endFunction();
+    // ctx.emptyLines();
+
+    ctx.beginFunction("static nlohmann::json to_json(const " + name + " &v, type<" + name + ">)");
+    ctx.addLine("switch (v)");
+    ctx.addLine("{");
+    for (auto &[k, v] : vals) {
+        ctx.addLine("case " + name + "::" + k + ":");
+        ctx.increaseIndent();
+        ctx.addLine("return \"" + v + "\";");
+        ctx.decreaseIndent();
+    }
+    ctx.addLine("default:");
+    ctx.increaseIndent();
+    ctx.addLine("throw std::runtime_error(\"bad enum value\");");
+    ctx.decreaseIndent();
+    ctx.addLine("}");
+    ctx.endFunction();
+}
+
 void Emitter::emitTypesCpp() {
     primitives::CppEmitter ctx;
     ctx.addLine("// variants");
@@ -382,55 +412,38 @@ void Emitter::emitTypesCpp() {
     ctx.emptyLines();
 
     ctx.addLine("// enums");
-    auto print_enum = [&ctx](const auto &name, auto &&vals, const String &suffix = {}) {
-        ctx.beginFunction("static " + name + " from_json(const nlohmann::json &j, type<" + name + ">)");
-        ctx.addLine("std::string s = j;");
-        for (auto &[k, v]: vals) {
-            ctx.addLine("if (s == \"" + v + "\")");
-            ctx.increaseIndent();
-            ctx.addLine("return " + name + "::" + k + ";");
-            ctx.decreaseIndent();
-        }
-        ctx.addLine("throw std::runtime_error(\"no such enum value: \" + s);");
-        ctx.endFunction();
-        //ctx.emptyLines();
-
-        ctx.beginFunction("static nlohmann::json to_json(const " + name + " &v, type<" + name + ">)");
-        ctx.addLine("switch (v)");
-        ctx.addLine("{");
-        for (auto &[k, v]: vals) {
-            ctx.addLine("case " + name + "::" + k + ":");
-            ctx.increaseIndent();
-            ctx.addLine("return \"" + v + "\";");
-            ctx.decreaseIndent();
-        }
-        ctx.addLine("default:");
-        ctx.increaseIndent();
-        ctx.addLine("throw std::runtime_error(\"bad enum value\");");
-        ctx.decreaseIndent();
-        ctx.addLine("}");
-        ctx.endFunction();
-    };
-    auto print_enums = [&](auto &&v, const String &suffix = {}) {
+    auto print_enums = [](auto &ctx, auto &&v, const String &suffix = {}) {
         for (auto &[n, t]: v) {
             if (t.is_oneof())
                 continue;
             for (auto &f : t.fields) {
                 if (!f.is_enum() || f.enum_values.empty())
                     continue;
-                print_enum(f.get_enum_type(t.name + suffix), f.enum_values, suffix);
+                print_enum(ctx, f.get_enum_type(t.name + suffix), f.enum_values);
             }
         }
     };
-    for (auto &[n, vals]: enums)
-        print_enum(n, vals);
-    print_enums(types);
+    for (auto &[n, vals] : enums)
+        print_enum(ctx, n, vals);
+    print_enums(ctx, types);
 
     write_file("methods.inl.h", emitMethods() + ctx.getText());
 }
 
 String Emitter::emitMethods() const {
     primitives::CppEmitter h;
+
+    auto print_enums = [&](auto &ctx, auto &&v, const String &suffix = {}) {
+        for (auto &[n, t] : v) {
+            for (auto &f : t.fields) {
+                if (!f.is_enum() || f.enum_values.empty())
+                    continue;
+                print_enum(ctx, f.get_enum_type(t.name + suffix), f.enum_values);
+            }
+        }
+    };
+    print_enums(h, methods, "Request");
+
     for (auto &[n, m]: methods)
         m.emit(*this, h);
     return h.getText();
