@@ -1,7 +1,7 @@
 ﻿#include "curl_http_client.h"
 
 #include <primitives/http.h>
-#include <primitives/sw/main.h>
+#include <primitives/main.h>
 #include <primitives/sw/settings.h>
 
 #include <fstream>
