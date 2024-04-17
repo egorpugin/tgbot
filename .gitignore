@@ -2,6 +2,7 @@
 .sw
 .settings
 *.patch
+*.diff
 *.json
 cmake*
 CMake*
