@@ -35,7 +35,7 @@ public:
         tgbot::Integer timeout = default_update_timeout,
         const tgbot::Optional<tgbot::Vector<String>> &allowed_updates = {}) {
         // update timeout here for getUpdates()
-        ((curl_http_client&)http_client()).set_timeout(timeout);
+        ((curl_http_client&)http_client()).set_timeout((long)timeout);
 
         auto updates = api().getUpdates(offset, limit, timeout, allowed_updates);
         for (const auto &item : updates) {
