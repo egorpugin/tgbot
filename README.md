@@ -7,6 +7,7 @@ Features:
 * Bot API v7.2
 * Generated API structures and methods. No manual typing errors. Easily updatable for API changes.
 * C++23
+* Header only
 * License: MIT
 
 # Build

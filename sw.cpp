@@ -1,3 +1,17 @@
+#pragma sw header on
+
+#define MAKE_SIMPLE_BOT(n, ...) \
+    void build(Solution &s) \
+    { \
+        auto &bot = s.addTarget<ExecutableTarget>(#n); \
+        bot.PackageDefinitions = true; \
+        bot += cpp23; \
+        bot += #n ".cpp"; \
+        bot += "org.sw.demo.tgbot.curl_skeleton"_dep __VA_OPT__(,) __VA_ARGS__ ; \
+    }
+
+#pragma sw header off
+
 void build(Solution &s)
 {
     auto &tgbot = s.addLibrary("tgbot", "1.1.6.7.2");
@@ -52,6 +66,18 @@ void build(Solution &s)
             "pub.egorpugin.primitives.http"_dep,
             "pub.egorpugin.primitives.sw.main"_dep,
             tgbot
+            ;
+    }
+
+    auto &curl_skeleton = tgbot.addTarget<Library>("curl_skeleton");
+    {
+        curl_skeleton.setRootDirectory("src/curl_skeleton");
+        curl_skeleton.Public +=
+            tgbot,
+            "org.sw.demo.nlohmann.json.natvis"_dep,
+            "pub.egorpugin.primitives.templates2"_dep,
+            "pub.egorpugin.primitives.http"_dep,
+            "pub.egorpugin.primitives.sw.main"_dep
             ;
     }
 }
