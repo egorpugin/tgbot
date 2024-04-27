@@ -7,10 +7,15 @@
 #include <primitives/sw/settings.h>
 #include <primitives/templates2/overload.h>
 
+#include <concepts>
 #include <coroutine>
 #include <format>
 #include <fstream>
-//#include <print>
+#ifdef _WIN32
+#include <print>
+#endif
+
+using tg_bot_curl = tgbot::bot<curl_http_client>;
 
 decltype(auto) visit(auto &var, auto &&...f) {
     return ::std::visit(overload{FWD(f)...}, var);
@@ -30,22 +35,63 @@ struct types {
 };
 
 struct coro_command_base {
-    struct task {
+    template <typename T = int>
+    struct task : std::coroutine_handle<> {
         struct promise_type {
+            coro_command_base *c{};
+            std::coroutine_handle<> prev{};
+            T retval{};
+
             task get_return_object() {
                 return {std::coroutine_handle<promise_type>::from_promise(*this)};
             }
-            std::suspend_never initial_suspend() noexcept {
+            std::suspend_always initial_suspend() noexcept {
                 return {};
             }
-            std::suspend_always final_suspend() noexcept {
-                return {};
+            auto final_suspend() noexcept {
+                struct aw {
+                    promise_type &p;
+                    bool await_ready() noexcept {
+                        return false;
+                    }
+                    std::coroutine_handle<> await_suspend(std::coroutine_handle<>) noexcept {
+                        if (p.prev) {
+                            p.c->last_coro = p.prev;
+                            return p.prev;
+                        }
+                        return nullptr;
+                    }
+                    void await_resume() noexcept {
+                    }
+                };
+                return aw{*this};
             }
-            void return_void() {
-            }
-            void unhandled_exception() {
+            /*void return_void() {
                 int a = 5;
                 a++;
+            }*/
+            void return_value(auto &&ret) {
+                retval = std::move(ret);
+            }
+            void unhandled_exception() {
+                try {
+                    tgbot::sendMessageRequest req;
+                    req.chat_id = c->chat_id;
+                    req.text = "internal error";
+                    c->bot->api().sendMessage(req);
+                } catch (std::exception &) {
+                }
+                throw;
+            }
+            template <typename T2>
+            auto await_transform(task<T2> &&t) {
+                t.h.promise().c = c;
+                t.h.promise().prev = c->last_coro;
+                c->last_coro = t.h;
+                return std::move(t);
+            }
+            auto await_transform(auto &&t) {
+                return std::move(t);
             }
         };
 
@@ -53,6 +99,7 @@ struct coro_command_base {
 
         task() = default;
         task(std::coroutine_handle<promise_type> h) : h{h} {
+            //std::println("created {}", h.address());
         }
         task(const task &) = delete;
         task &operator=(const task &) = delete;
@@ -67,7 +114,24 @@ struct coro_command_base {
         }
         ~task() {
             if (h && h.done()) {
+                //std::println("destroy {}", h.address());
                 h.destroy();
+            }
+        }
+
+        bool await_ready() {
+            return !h || h.done();
+        }
+        std::coroutine_handle<> await_suspend(std::coroutine_handle<>) {
+            if (h && h.promise().c->last_coro) {
+                return h.promise().c->last_coro;
+            }
+            return nullptr;
+        }
+        T await_resume() {
+            if constexpr (!std::same_as<T, void>) {
+                return h.promise().retval;
+            } else {
             }
         }
     };
@@ -83,48 +147,114 @@ struct coro_command_base {
         }
     };
 
-    task h;
+    tg_bot_curl *bot{};
+    task<> top_coro;
+    std::coroutine_handle<> last_coro{};
     tgbot::Integer chat_id;
     const tgbot::Message *m;
 
-    auto sendMessage(auto &bot, const tgbot::sendMessageRequest &req) {
-        bot.api().sendMessage(req);
-        return aw{*this};
-    }
-    auto sendMessage(auto &bot, const std::string &text) {
-        tgbot::sendMessageRequest req;
-        req.chat_id = chat_id;
-        req.text = text;
-        return sendMessage(bot, req);
-    }
-
+    // create or coro function
+    // returns true if coroutine/coro stack ended
     bool coro(this auto &&cmd, auto &bot, auto &u) {
+        cmd.bot = &bot;
         cmd.chat_id = u.id;
-        cmd.h = std::move(cmd.coro2(bot, u));
-        return !cmd.h.h || cmd.h.h.done();
+        cmd.top_coro = std::move(cmd.coro2(bot, u));
+        cmd.top_coro.h.promise().c = &cmd;
+        cmd.last_coro = cmd.top_coro.h;
+        return cmd.coro_resume(); // we resume top coro manually
     }
+    // continue functions
+    // returns true if coroutine/coro stack ended
     bool coro(auto &bot, const tgbot::CallbackQuery &q) {
         tgbot::Message mm;
         mm.text = q.data;
         m = &mm;
-        if (!h.h || h.h.done()) {
-            return true;
-        }
-        h.h.resume();
-        return h.h.done();
+        return coro_resume();
     }
     bool coro(auto &bot, const tgbot::Message &message) {
         m = &message;
-        if (!h.h || h.h.done()) {
+        return coro_resume();
+    }
+    bool coro_resume() {
+        if (!last_coro) {
             return true;
         }
-        h.h.resume();
-        return h.h.done();
+        auto &h = last_coro;
+        if (!h || h.done()) {
+        } else {
+            h.resume();
+        }
+        return coro_done();
+    }
+    bool coro_done() const {
+        return !last_coro || last_coro.done();
+    }
+
+    // helpers
+    auto send_message(const tgbot::sendMessageRequest &req) {
+        bot->api().sendMessage(req);
+        return aw{*this};
+    }
+    auto send_message(const std::string &text) {
+        tgbot::sendMessageRequest req;
+        req.chat_id = chat_id;
+        req.text = text;
+        return send_message(req);
+    }
+
+    // useful coros
+    task<std::string> get_text(const std::string &message) {
+        tgbot::sendMessageRequest req;
+        req.chat_id = chat_id;
+        req.text = message;
+        co_return co_await get_text(req);
+    }
+    task<std::string> get_text(const tgbot::sendMessageRequest &req) {
+        auto msg = &co_await send_message(req);
+        while (!msg->text) {
+            msg = &co_await send_message(req);
+        }
+        co_return *msg->text;
+    }
+    task<int> get_integer(const std::string &message, auto && ... args) {
+        tgbot::sendMessageRequest req;
+        req.chat_id = chat_id;
+        req.text = message;
+        co_return co_await get_integer(req, args...);
+    }
+    task<int> get_integer(const tgbot::sendMessageRequest &req, auto && ... args) {
+        co_return co_await get_number<int>(req, [](auto &&v){return std::stoi(v);}, args...);
+    }
+    task<double> get_float(const std::string &message, auto &&...args) {
+        tgbot::sendMessageRequest req;
+        req.chat_id = chat_id;
+        req.text = message;
+        co_return co_await get_float(req, args...);
+    }
+    task<double> get_float(const tgbot::sendMessageRequest &req, auto &&...args) {
+        co_return co_await get_number<double>(req, [](auto &&v){return std::stod(v);}, args...);
+    }
+    template <typename T>
+    task<T> get_number(const tgbot::sendMessageRequest &req, auto &&f,
+        T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max()) {
+        while (1) {
+            auto msg = &co_await send_message(req);
+            try {
+                auto v = f(*msg->text);
+                if (v < min || v > max) {
+                    send_message(std::format("bad number: must be between in range [{}, {}]", min, max));
+                    continue;
+                }
+                co_return v;
+            } catch (std::exception &) {
+                send_message(std::format("bad number: must be between in range [{}, {}]", min, max));
+            }
+        }
     }
 };
 
-struct tg_bot : tgbot::bot<curl_http_client> {
-    using base = tgbot::bot<curl_http_client>;
+struct tg_bot : tg_bot_curl {
+    using base = tg_bot_curl;
 
     std::string botname;
     std::string botvisiblename;
