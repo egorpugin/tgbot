@@ -59,7 +59,7 @@ struct coro_command_base {
                             p.c->last_coro = p.prev;
                             return p.prev;
                         }
-                        return nullptr;
+                        return std::noop_coroutine();
                     }
                     void await_resume() noexcept {
                     }
@@ -113,7 +113,7 @@ struct coro_command_base {
             return *this;
         }
         ~task() {
-            if (h && h.done()) {
+            if (h) {
                 //std::println("destroy {}", h.address());
                 h.destroy();
             }
@@ -203,6 +203,60 @@ struct coro_command_base {
     }
 
     // useful coros
+    template <typename T>
+    task<T> select_one_of(const std::string &message, const std::string &label1, const T &value1, auto && ... args) {
+        tgbot::sendMessageRequest req;
+        req.chat_id = chat_id;
+        req.text = message;
+        tgbot::InlineKeyboardMarkup m;
+        auto add_buttons = [&](this auto &&f, const std::string &label1, const T &value1, auto &&...args2) {
+            decltype(m.inline_keyboard)::value_type v;
+            auto b = std::make_unique<tgbot::InlineKeyboardButton>();
+            b->text = label1;
+            if constexpr (requires { std::to_string(value1); }) {
+                b->callback_data = std::to_string(value1);
+            } else {
+                b->callback_data = value1;
+            }
+            v.emplace_back(std::move(b));
+            m.inline_keyboard.emplace_back(std::move(v));
+            if constexpr (sizeof...(args2)) {
+                f(args2...);
+            }
+        };
+        add_buttons(label1, value1, args...);
+        req.reply_markup = std::move(m);
+        auto msg = &co_await send_message(req);
+        while (1) {
+            if (!msg->text) {
+                msg = &co_await send_message("Bad input");
+                continue;
+            }
+            std::optional<T> ret{};
+            auto check_val = [&](this auto &&f, const std::string &label1, const T &value1, auto &&...args2) {
+                if constexpr (requires { std::to_string(value1); }) {
+                    if (*msg->text == std::to_string(value1)) {
+                        ret = value1;
+                        return;
+                    }
+                } else {
+                    if (*msg->text == value1) {
+                        ret = value1;
+                        return;
+                    }
+                }
+                if constexpr (sizeof...(args2)) {
+                    f(args2...);
+                }
+            };
+            check_val(label1, value1, args...);
+            if (!ret) {
+                msg = &co_await send_message("Bad input");
+                continue;
+            }
+            co_return *ret;
+        }
+    }
     task<std::string> get_text(const std::string &message) {
         tgbot::sendMessageRequest req;
         req.chat_id = chat_id;
