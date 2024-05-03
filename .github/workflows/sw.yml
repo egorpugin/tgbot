@@ -29,18 +29,14 @@ jobs:
     - uses: actions/checkout@v1
     - uses: egorpugin/sw-action@master
     - name: install
-      run: brew install flex bison
-    - name: install
-      run: brew uninstall gcc
-    - name: install
-      run: brew install gcc --HEAD
+      run: brew install flex bison gcc
     #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
     - name: build
       run: |
         export PATH="/usr/local/opt/flex/bin:$PATH"
         export PATH="/usr/local/opt/bison/bin:$PATH"
         export PATH="/usr/local/opt/gcc/bin:$PATH"
-        ./sw build -compiler gcc-14
+        ./sw build -compiler gcc-13
         # /opt/homebrew/opt/gcc/bin for macos-14
         #-platform x64
         
