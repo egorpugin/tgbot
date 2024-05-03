@@ -315,22 +315,24 @@ struct tg_bot : tg_bot_curl {
     tgbot::Integer my_id{};
 
     static const int default_update_limit = 100;
-    static const int default_update_timeout = 10;
+    static const int default_update_timeout = 30;
     static const int default_net_delay_on_error = 1;
 
 public:
     using base::base;
 
     void init(this auto &&bot) {
-        auto me = bot.api().getMe();
-        if (!me.username)
-            throw SW_RUNTIME_ERROR("Empty bot name");
-        bot.botname = *me.username;
-        bot.botvisiblename = me.first_name;
-        bot.my_id = me.id;
-        printf("bot username: %s (%s)\n", me.username->c_str(), me.first_name.c_str());
-        // not yet
-        //std::printf("bot username: {} ({})", me.username->c_str(), me.first_name.c_str());
+        try {
+            auto me = bot.api().getMe();
+            if (!me.username)
+                throw SW_RUNTIME_ERROR("Empty bot name");
+            bot.botname = *me.username;
+            bot.botvisiblename = me.first_name;
+            bot.my_id = me.id;
+            std::cout << std::format("bot username: {} ({})\n", me.username->c_str(), me.first_name.c_str());
+        } catch (std::exception &) {
+            throw std::runtime_error{"cannot connect: probably bad or missing bot token"};
+        }
 
         using T = std::decay_t<decltype(bot)>;
         if constexpr (requires { typename T::command_list; }) {
@@ -378,7 +380,7 @@ public:
                     net_delay_on_error = default_net_delay_on_error;
                 }
             } catch (std::exception &e) {
-                printf("error: %s\n", e.what());
+                std::cerr << std::format("error: {}\n", e.what());
 
                 std::this_thread::sleep_for(std::chrono::seconds(net_delay_on_error));
                 if (net_delay_on_error < 30)
@@ -435,7 +437,15 @@ int main(int argc, char *argv[]) {
 
     auto bot = std::make_unique<Bot>(token, client);
     bot->init();
-    bot->long_poll();
+    while (1) {
+        try {
+            // we can throw still during getting updates
+            bot->long_poll();
+            break; // empty long_poll() = ok
+        } catch (std::exception &e) {
+            std::cerr << std::format("error: {}\n", e.what());
+        }
+    }
 
     return 0;
 }

@@ -1,5 +1,9 @@
 #pragma sw header on
 
+//#include <iostream>
+//auto var = #n;
+//std::cerr << var << "\n";
+
 #define MAKE_SIMPLE_BOT(n, ...) \
     void build(Solution &s) \
     { \
@@ -9,6 +13,9 @@
         bot += #n ".cpp"; \
         bot += "org.sw.demo.tgbot.curl_skeleton"_dep __VA_OPT__(,) __VA_ARGS__ ; \
     }
+
+#define MAKE_SIMPLE_BOT1(x) MAKE_SIMPLE_BOT(x)
+#define MAKE_SIMPLE_BOT2 MAKE_SIMPLE_BOT1(__FILE__)
 
 #pragma sw header off
 
