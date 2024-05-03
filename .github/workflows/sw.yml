@@ -31,6 +31,8 @@ jobs:
     - name: install
       run: brew install flex bison
     - name: install
+      run: brew uninstall gcc
+    - name: install
       run: brew install gcc --HEAD
     #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
     - name: build
