@@ -79,6 +79,7 @@ void build(Solution &s)
     auto &curl_skeleton = tgbot.addTarget<Library>("curl_skeleton");
     {
         curl_skeleton.setRootDirectory("src/curl_skeleton");
+        curl_skeleton += ".*"_rr;
         curl_skeleton.Public +=
             tgbot,
             "org.sw.demo.nlohmann.json.natvis"_dep,
