@@ -46,7 +46,7 @@ jobs:
         export PATH="/opt/homebrew/opt/bison/bin:$PATH"
         export PATH="/opt/homebrew/opt/flex/bin:$PATH"
         export PATH="/opt/homebrew/opt/gcc/bin:$PATH"
-        ./sw build -compiler clang --trace
+        ./sw build -compiler clang
         # /opt/homebrew/opt/gcc/bin for macos-14
         #-platform x64
         
