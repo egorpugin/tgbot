@@ -41,13 +41,12 @@ jobs:
     #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
     - name: build
       run: |
-        export PATH="/usr/local/opt/flex/bin:$PATH"
-        export PATH="/usr/local/opt/bison/bin:$PATH"
-        export PATH="/usr/local/opt/gcc/bin:$PATH"
-        export PATH="/usr/local/opt/llvm/bin:$PATH"
         export PATH="/opt/homebrew/Cellar/llvm/bin:$PATH"
         export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-        ./sw build -compiler clang
+        export PATH="/opt/homebrew/opt/bison/bin:$PATH"
+        export PATH="/opt/homebrew/opt/flex/bin:$PATH"
+        export PATH="/opt/homebrew/opt/gcc/bin:$PATH"
+        ./sw build -compiler clang --trace
         # /opt/homebrew/opt/gcc/bin for macos-14
         #-platform x64
         
