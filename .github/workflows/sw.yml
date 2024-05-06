@@ -44,7 +44,7 @@ jobs:
         export PATH="/usr/local/opt/llvm/bin:$PATH"
         export PATH="/opt/homebrew/Cellar/llvm/bin:$PATH"
         export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-        ./sw build -compiler clang-18
+        ./sw build -compiler clang-18 --trace
         # /opt/homebrew/opt/gcc/bin for macos-14
         #-platform x64
         
