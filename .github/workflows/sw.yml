@@ -36,7 +36,7 @@ jobs:
     - name: install
       run: |
         brew update
-        brew upgrade
+        #brew upgrade
         brew install flex bison gcc llvm
     #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
     - name: build
