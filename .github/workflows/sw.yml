@@ -36,12 +36,12 @@ jobs:
     - name: install
       run: |
         brew update
-        brew install flex bison gcc llvm
+        brew install flex bison gcc # llvm
     - name: build
       run: |
         export PATH="/opt/homebrew/opt/bison/bin:$PATH"
         export PATH="/opt/homebrew/opt/flex/bin:$PATH"
-        export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+        #export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
         export PATH="/opt/homebrew/opt/gcc/bin:$PATH"
-        ./sw build
+        ./sw build -compiler gcc-14
         
