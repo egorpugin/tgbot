@@ -24,9 +24,13 @@ static String prepare_type(const String &t) {
 
 static String extract_return_type_sentence(const String &desc) {
     static std::vector<std::regex> rs{
-            std::regex{"An (.*?) is returned\\."},
-            std::regex{"Returns (.*?)\\."},
-            std::regex{"On success, (.*?)\\."}
+        std::regex{"An (.*?) is returned\\."},
+        std::regex{"On success, (.*?)\\."},
+        std::regex{"On success, returns a (.*?)\\."},
+        std::regex{"On success, returns an (.*?)\\."},
+        std::regex{"returns a (.*?)\\."},
+        std::regex{"returns an (.*?)\\."},
+        std::regex{"Returns (.*?)\\."},
     };
 
     for (auto &&r: rs) {
