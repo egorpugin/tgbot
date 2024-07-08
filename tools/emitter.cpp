@@ -286,6 +286,27 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
         cpp.addText(")");*/
         cpp.emptyLines();
     }
+
+    // try version
+    // this also covers 'with request struct'
+    auto name_upper = name;
+    name_upper[0] = toupper(name_upper[0]);
+    cpp.addLine();
+    cpp.addText("auto try" + name_upper + "(auto && ... args) const");
+    cpp.beginBlock();
+    cpp.addLine("try {");
+    cpp.increaseIndent();
+    cpp.addLine("return std::optional{" + name + "(args...)};");
+    cpp.decreaseIndent();
+    cpp.addLine("} catch (std::exception &) {");
+    cpp.increaseIndent();
+    cpp.addLine("return std::optional<");
+    return_type.emitFieldType(cpp, true, true);
+    cpp.addText(">{};");
+    cpp.decreaseIndent();
+    cpp.addLine("}");
+    cpp.endBlock();
+    cpp.emptyLines();
 }
 
 Emitter::Emitter(const Parser &p) {
