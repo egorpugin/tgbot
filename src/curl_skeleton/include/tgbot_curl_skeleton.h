@@ -403,7 +403,7 @@ public:
 };
 
 template <typename Bot>
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[], const std::string &in_token = {}) {
     primitives::http::setupSafeTls();
 
     sw::setting<std::string> bot_token("bot_token");
@@ -416,6 +416,9 @@ int main(int argc, char *argv[]) {
     std::string token = bot_token;
     if (auto t = getenv("BOT_TOKEN")) {
         token = t;
+    }
+    if (!in_token.empty()) {
+        token = in_token;
     }
 
     curl_http_client client;
