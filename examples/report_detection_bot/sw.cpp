@@ -5,11 +5,6 @@ void build(Solution &s)
         bot.PackageDefinitions = true;
         bot += cpp23;
         bot += "src/.*"_rr;
-        bot +=
-            "pub.egorpugin.primitives.http"_dep,
-            "pub.egorpugin.primitives.sw.main"_dep,
-            "pub.egorpugin.tgbot"_dep,
-            "org.sw.demo.nlohmann.json"_dep
-            ;
+        bot += "pub.egorpugin.tgbot.curl_skeleton"_dep;
     }
 }
