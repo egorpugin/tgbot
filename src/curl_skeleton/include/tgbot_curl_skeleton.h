@@ -210,7 +210,7 @@ struct coro_command_base {
         req.text = message;
         tgbot::InlineKeyboardMarkup m;
         auto add_buttons = [&](this auto &&f, const std::string &label1, const T &value1, auto &&...args2) {
-            decltype(m.inline_keyboard)::value_type v;
+            typename decltype(m.inline_keyboard)::value_type v;
             auto b = std::make_unique<tgbot::InlineKeyboardButton>();
             b->text = label1;
             if constexpr (requires { std::to_string(value1); }) {
