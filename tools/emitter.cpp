@@ -96,9 +96,12 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
 
     if (opt) // we do not need Optional since we have Ptr already
         ctx.addText("Optional<");
+    bool vec{};
     auto a = array;
-    while (a--)
+    while (a--) {
         ctx.addText("Vector<");
+        vec = true;
+    }
     if (types.size() > 1) {
         ctx.addText("Variant<");
         for (auto &f : types)
@@ -110,14 +113,19 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
             ctx.addText(">");
     } else {
         auto type = emitoptional ? "Optional<" : "Ptr<";
+        auto end = ">";
+        if (vec) {
+            type = "";
+            end = "";
+        }
         if (is_enum()) {
-            if (optional)
+            if (optional && !vec)
                 ctx.addText("Optional<");
             ctx.addText(get_enum_type(parent_type));
-            if (optional)
+            if (optional && !vec)
                 ctx.addText(">");
         } else
-            ctx.addText((simple || return_type ? "" : type) + t + (simple || return_type ? "" : ">"));
+            ctx.addText((simple || return_type ? "" : type) + t + (simple || return_type ? "" : end));
         auto a = array;
         while (a--)
             ctx.addText(">");

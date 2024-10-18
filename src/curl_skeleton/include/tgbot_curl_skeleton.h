@@ -211,12 +211,12 @@ struct coro_command_base {
         tgbot::InlineKeyboardMarkup m;
         auto add_buttons = [&](this auto &&f, const std::string &label1, const T &value1, auto &&...args2) {
             typename decltype(m.inline_keyboard)::value_type v;
-            auto b = std::make_unique<tgbot::InlineKeyboardButton>();
-            b->text = label1;
+            auto b = tgbot::InlineKeyboardButton{};
+            b.text = label1;
             if constexpr (requires { std::to_string(value1); }) {
-                b->callback_data = std::to_string(value1);
+                b.callback_data = std::to_string(value1);
             } else {
-                b->callback_data = value1;
+                b.callback_data = value1;
             }
             v.emplace_back(std::move(b));
             m.inline_keyboard.emplace_back(std::move(v));
