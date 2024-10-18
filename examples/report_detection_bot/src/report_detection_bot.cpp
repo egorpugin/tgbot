@@ -47,16 +47,18 @@ struct tg_report_detection_bot : tg_bot {
             if (*message.text == "/report"sv) {
                 for (auto &&member : api().getChatAdministrators(message.chat->id)) {
                     std::visit([this, &message](auto &&u) {
-                        if (!users.contains(u.user->id))
+                        if (!users.contains(u.user->id)) {
                             return;
+                        }
                         tgbot::sendMessageRequest r;
                         r.chat_id = u.user->id;
                         r.text = "report is called";
-                        if (message.chat->username)
+                        if (message.chat->username) {
                             r.text += " in chat t.me/" + *message.chat->username + "/" + std::to_string(message.message_id);
-                        else
+                        } else {
                             r.text += " in private chat";
-                        api().sendMessage(r);
+                        }
+                        request(r);
                     }, member);
                 }
             }

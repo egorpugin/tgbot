@@ -274,6 +274,10 @@ struct bot {
     /// returns object which can execute Telegram Bot API methods
     const auto &api() const { return api_; }
 
+    /// executes Telegram Bot API method (request)
+    auto api(auto &&request) const { return api_(std::forward<decltype(request)>(request)); }
+    auto request(auto &&r) const { return api_(std::forward<decltype(r)>(r)); }
+
     /// used for fine tune setup of http connections
     const auto &http_client() const { return http_client_; }
 

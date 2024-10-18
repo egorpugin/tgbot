@@ -279,6 +279,13 @@ void Method::emit(const Emitter &e, primitives::CppEmitter &h) const {
         cpp.addLine();
         cpp.addText("auto " + name + "(const " + cpp_name() + " &r) const");
         func("r."s);
+
+        cpp.addLine();
+        // we can name this 'request()', but it can interfere with possible bot api method
+        // so we use C++'s operator()
+        cpp.beginFunction("auto operator()(const " + cpp_name() + " &r) const");
+        cpp.addLine("return " + name + "(r);");
+        cpp.endFunction();
         /*cpp.beginBlock();
         cpp.addLine("return " + name + "(");
         cpp.increaseIndent();
