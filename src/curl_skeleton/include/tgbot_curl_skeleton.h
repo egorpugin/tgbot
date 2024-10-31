@@ -438,12 +438,12 @@ int main(int argc, char *argv[], const std::string &in_token = {}) {
         }
     }
 
-    auto bot = std::make_unique<Bot>(token, client);
-    bot->init();
+    Bot bot{token, client};
+    bot.init();
     while (1) {
         try {
             // we can throw still during getting updates
-            bot->long_poll();
+            bot.long_poll();
             break; // empty long_poll() = ok
         } catch (std::exception &e) {
             std::cerr << std::format("error: {}\n", e.what());
