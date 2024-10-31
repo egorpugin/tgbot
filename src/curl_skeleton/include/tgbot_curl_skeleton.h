@@ -316,7 +316,7 @@ struct tg_bot : tg_bot_curl {
 
     static const int default_update_limit = 100;
     static const int default_update_timeout = 30;
-    static const int default_net_delay_on_error = 1;
+    int default_net_delay_on_error = 1;
 
 public:
     using base::base;
@@ -366,7 +366,7 @@ public:
         // update timeout here for getUpdates()
         ((curl_http_client &)bot.http_client()).set_timeout(timeout);
 
-        int net_delay_on_error = default_net_delay_on_error;
+        int net_delay_on_error = bot.default_net_delay_on_error;
         auto updates = bot.api().getUpdates(offset, limit, timeout, allowed_updates);
         for (auto &&update : updates) {
             if (update.update_id >= offset) {
@@ -377,14 +377,15 @@ public:
 
                 net_delay_on_error /= 2;
                 if (net_delay_on_error == 0) {
-                    net_delay_on_error = default_net_delay_on_error;
+                    net_delay_on_error = bot.default_net_delay_on_error;
                 }
             } catch (std::exception &e) {
                 std::cerr << std::format("error: {}\n", e.what());
 
                 std::this_thread::sleep_for(std::chrono::seconds(net_delay_on_error));
-                if (net_delay_on_error < 30)
+                if (net_delay_on_error < 30) {
                     net_delay_on_error *= 2;
+                }
             }
         }
         return offset;
