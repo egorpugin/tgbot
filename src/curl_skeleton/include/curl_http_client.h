@@ -4,6 +4,7 @@
 #include <tgbot/bot.h>
 #include <primitives/templates.h>
 
+#include <iostream>
 #include <stdexcept>
 
 static std::size_t curl_write_string(char *ptr, std::size_t size, std::size_t nmemb, void *userdata) {
@@ -102,8 +103,15 @@ private:
         if (!use_connection_pool)
             curl_easy_cleanup(curl);
 
-        if (res != CURLE_OK)
-            throw std::runtime_error(std::string("curl error: ") + curl_easy_strerror(res));
+        if (res != CURLE_OK) {
+            throw std::runtime_error(std::string{"curl error: "} + curl_easy_strerror(res));
+        }
+        if (http_code / 100 != 2) {
+            if (http_code != 400) {
+                std::cerr << std::format("http error: {}: {}\n", std::to_string(http_code), response);
+            }
+            //throw std::runtime_error(std::format("http error: {}: {}"s + std::to_string(http_code));
+        }
         return response;
     }
     CURL *setup_connection(CURL *in, const std::string &url) const {
