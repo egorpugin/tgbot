@@ -141,14 +141,16 @@ private:
         url += method;
 
         auto response = bot.http_client().make_request(url, args);
-        if (!response.compare(0, 6, "<html>"))
-            throw std::runtime_error("tgbot library has got html page instead of json response. Maybe you entered wrong bot token.");
+        if (response.starts_with("<html>"sv)) {
+            throw std::runtime_error{"tgbot library has got html page instead of json response. Maybe you entered wrong bot token."};
+        }
 
         auto result = nlohmann::json::parse(response);
-        if (result["ok"] == true)
+        if (result["ok"] == true) {
             return std::move(result["result"]);
-        else
+        } else {
             throw std::runtime_error(result["description"].template get<std::string>());
+        }
     }
 
     template<typename, template <typename...> typename>
