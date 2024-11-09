@@ -38,6 +38,7 @@ jobs:
         brew update
         brew install flex bison gcc llvm m4
     #- run: sudo xcode-select --switch /Library/Developer/CommandLineTools
+    - run: sudo xcode-select --install
     - name: build
       run: |
         export PATH="/opt/homebrew/opt/m4/bin:$PATH"
