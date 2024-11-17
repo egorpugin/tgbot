@@ -56,8 +56,13 @@ static Field extract_return_type(const String &desc) {
             capital_words.push_back(w);
     }
 
-    if (capital_words.empty())
-        throw SW_LOGIC_ERROR("check capitals logic for: " + sent);
+    if (capital_words.empty()) {
+        auto p = desc.find(sent);
+        if (p == -1) {
+            throw SW_LOGIC_ERROR("check capitals logic for: " + sent);
+        }
+        return extract_return_type(desc.substr(p + sent.size()));
+    }
 
     f.types.push_back(*capital_words.begin());
     f.types[0] = prepare_type(f.types[0]);
