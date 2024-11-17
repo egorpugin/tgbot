@@ -28,7 +28,8 @@ struct curl_http_client {
         curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
         curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 120L);
         curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 30L);
-        // python bot also sets TCP_KEEPCNT 8, but there is no such curl setting atm
+        // python bot also sets TCP_KEEPCNT 8
+        // curl default is 9
     }
     ~curl_http_client() {
         curl_easy_cleanup(curl_settings());
@@ -82,13 +83,13 @@ struct curl_http_client {
     void set_timeout(long timeout) {
         if (timeout < connect_timeout)
             return;
-        read_timeout = connect_timeout + timeout + 2;
+        total_timeout = connect_timeout + timeout + 2;
     }
 
 private:
     CURL *curl_settings_;
-    long connect_timeout = 5;
-    long read_timeout = 5;
+    long connect_timeout = 15;
+    long total_timeout = 0;
     bool use_connection_pool = true;
 
     std::string execute(CURL *curl) const {
@@ -117,7 +118,7 @@ private:
     CURL *setup_connection(CURL *in, const std::string &url) const {
         auto curl = use_connection_pool ? in : curl_easy_duphandle(in);
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, read_timeout);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, total_timeout);
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, nullptr); // we must reset http headers, since we free them after use
         return curl;
     }
