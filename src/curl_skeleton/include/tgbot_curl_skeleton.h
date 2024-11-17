@@ -397,6 +397,11 @@ public:
 
         auto text = "Available commands:\n"s;
         typename T::command_list{}([&](auto &&c) {
+            if constexpr (requires { c.hidden; }) {
+                if (c.hidden) {
+                    return;
+                }
+            }
             text += std::format("/{} {}\n", c.name, c.description);
         });
         return text;
