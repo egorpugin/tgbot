@@ -31,6 +31,9 @@ using Integer = std::int64_t;
 using Float = double;
 using String = std::string;
 
+// for try version of apis
+struct try_tag{};
+
 template<typename T>
 constexpr bool is_simple_type = std::disjunction_v<
     std::is_same<T, Boolean>,
@@ -279,6 +282,7 @@ struct bot {
     /// executes Telegram Bot API method (request)
     auto api(auto &&request) const { return api_(std::forward<decltype(request)>(request)); }
     auto request(auto &&r) const { return api_(std::forward<decltype(r)>(r)); }
+    auto try_request(auto &&r) const { return api_(try_tag{}, std::forward<decltype(r)>(r)); }
 
     /// used for fine tune setup of http connections
     const auto &http_client() const { return http_client_; }
