@@ -8,6 +8,11 @@ struct Emitter;
 
 String getAllText(xmlNode *in);
 
+void prepare_desc(auto &text) {
+    boost::replace_all(text, "“", "\"");
+    boost::replace_all(text, "”", "\"");
+}
+
 struct Field {
     struct desc {
         xmlNode *node;
@@ -46,6 +51,9 @@ struct Field {
         void parse(xmlNode *in) {
             text = getAllText(in);
             display_text = ::getAllText(in);
+
+            prepare_desc(text);
+            prepare_desc(display_text);
         }
     };
 

@@ -69,7 +69,7 @@ static Field extract_return_type(const String &desc) {
     return f;
 }
 
-String getAllText(xmlNode *in) {
+static String getAllText1(xmlNode *in) {
     String s;
     if (getName(in) == "text") {
         s += getContent(in);
@@ -80,10 +80,15 @@ String getAllText(xmlNode *in) {
         }
     }
     if (in->children)
-        s += getAllText(in->children);
+        s += getAllText1(in->children);
     if (in->next)
-        s += getAllText(in->next);
+        s += getAllText1(in->next);
     return s;
+}
+String getAllText(xmlNode *in) {
+    auto text = getAllText1(in);
+    // we can't do all replacements here because we rely on the in different places
+    return text;
 }
 
 static void parseTypeOneOf(auto &t, xmlNode *ul) {
@@ -142,8 +147,7 @@ static void parseType(auto &t, xmlNode *tb) {
 
         if (!f.description.text.empty()) {
             auto &text = f.description.text;
-            boost::replace_all(text, "\xe2\x80\x9c", "\"");
-            boost::replace_all(text, "\xe2\x80\x9d", "\"");
+            prepare_desc(text);
 
             auto p = text.find(" one of \"");
             if (p == text.npos) {
@@ -269,6 +273,7 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
                 mt.description.text = "MIME type of file to upload.";
                 t.fields.push_back(mt);
             }
+            prepare_desc(t.description);
             types.push_back(t);
         } else {
             Method t;
@@ -282,6 +287,7 @@ void Parser::enumerateSectionChildren(xmlNode *in, const String &name) {
             std::stable_sort(t.fields.begin(), t.fields.end(), [](auto &&f1, auto &&f2){
                 return f1.optional < f2.optional;
             });
+            prepare_desc(t.description);
             methods.push_back(t);
         }
     } while (n && getName(n) != "h3");
