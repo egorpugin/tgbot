@@ -105,7 +105,9 @@ private:
             curl_easy_cleanup(curl);
 
         if (res != CURLE_OK) {
-            throw std::runtime_error(std::string{"curl error: "} + curl_easy_strerror(res));
+            char *url = NULL;
+            curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &url);
+            throw std::runtime_error(std::format("curl error on url: {}: {}", url, curl_easy_strerror(res)));
         }
         if (http_code / 100 != 2) {
             if (http_code != 400) {
