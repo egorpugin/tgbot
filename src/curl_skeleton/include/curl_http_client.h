@@ -101,8 +101,9 @@ private:
         long http_code = 0;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 
-        if (!use_connection_pool)
+        if (!use_connection_pool) {
             curl_easy_cleanup(curl);
+        }
 
         if (res != CURLE_OK) {
             char *url = NULL;
