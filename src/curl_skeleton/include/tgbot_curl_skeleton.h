@@ -369,9 +369,7 @@ public:
         int net_delay_on_error = bot.default_net_delay_on_error;
         auto updates = bot.api().getUpdates(offset, limit, timeout, allowed_updates);
         for (auto &&update : updates) {
-            if (update.update_id >= offset) {
-                offset = update.update_id + 1;
-            }
+            offset = update.update_id + 1;
             try {
                 bot.handle_update(std::move(update));
 
