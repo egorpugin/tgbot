@@ -30,6 +30,8 @@ static String extract_return_type_sentence(const String &desc) {
         std::regex{"On success, returns an (.*?)\\."},
         std::regex{"returns a (.*?)\\."},
         std::regex{"returns an (.*?)\\."},
+        std::regex{".*Returns (.*?) on success\\."},
+        std::regex{".*Returns (.*?)\\."},
         std::regex{"Returns (.*?)\\."},
     };
 
