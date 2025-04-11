@@ -11,6 +11,8 @@
         bot.PackageDefinitions = true; \
         bot += cpp23; \
         bot += #n ".cpp"; \
+        if (bot.getCompilerType() == CompilerType::MSVC) \
+            bot.CompileOptions.push_back("/bigobj"); \
         bot += "org.sw.demo.tgbot.curl_skeleton"_dep __VA_OPT__(,) __VA_ARGS__ ; \
     }
 
