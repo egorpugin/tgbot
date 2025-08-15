@@ -23,7 +23,7 @@
 
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.1.8.9.1");
+    auto &tgbot = s.addLibrary("tgbot", "1.1.8.9.2");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto &apitool = tgbot.addExecutable("apitool");
