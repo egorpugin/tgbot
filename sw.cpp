@@ -13,6 +13,8 @@
         bot += #n ".cpp"; \
         if (bot.getCompilerType() == CompilerType::MSVC) \
             bot.CompileOptions.push_back("/bigobj"); \
+        if (bot.getCompilerType() == CompilerType::GNU) \
+            bot += "stdc++exp"_slib; \
         bot += "org.sw.demo.tgbot.curl_skeleton"_dep __VA_OPT__(,) __VA_ARGS__ ; \
     }
 
