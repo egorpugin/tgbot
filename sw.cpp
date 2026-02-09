@@ -26,11 +26,13 @@ void build(Solution &s)
     auto &tgbot = s.addLibrary("tgbot", "1.1.8.9.3");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
+    auto cppstd = cpp23;
+
     auto &apitool = tgbot.addExecutable("apitool");
     {
         auto &t = apitool;
         t.PackageDefinitions = true;
-        t += cpp23;
+        t += cppstd;
         t += "tools/.*"_rr;
         t += "pub.egorpugin.primitives.emitter"_dep;
         t += "pub.egorpugin.primitives.xml"_dep;
@@ -42,7 +44,7 @@ void build(Solution &s)
 
     //
     {
-        tgbot += cpp23;
+        tgbot += cppstd;
         tgbot += "include/.*"_rr;
         if (tgbot.getCompilerType() == CompilerType::MSVC)
             tgbot.Public.CompileOptions.push_back("/Zc:__cplusplus");
@@ -82,7 +84,7 @@ void build(Solution &s)
     {
         auto &bot = report_detection_bot;
         bot.PackageDefinitions = true;
-        bot += cpp23;
+        bot += cppstd;
         bot += "examples/report_detection_bot/src/.*"_rr;
         bot += curl_skeleton;
     }
