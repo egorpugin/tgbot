@@ -25,7 +25,7 @@
 
 void build(Solution &s)
 {
-    auto &tgbot = s.addLibrary("tgbot", "1.1.8.9.3");
+    auto &tgbot = s.addLibrary("tgbot", "1.1.9.9.4");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
     auto cppstd = cpp23;
