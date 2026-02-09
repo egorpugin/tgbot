@@ -4,6 +4,7 @@
 #include <nlohmann/json.hpp>
 
 #include <cstdint>
+#include <format>
 #include <memory>
 #include <optional>
 #include <span>
@@ -134,26 +135,8 @@ public:
 private:
     const Bot &bot;
 
-    // Bot's HttpClient must implement
-    //std::string make_request(const std::string &url, const http_request_arguments &args) const;
-    //std::string make_request(const std::string &url, const std::string &json) const;
     nlohmann::json send_request(std::string_view method, auto &&args) const {
-        auto url = bot.base_url();
-        url += bot.token();
-        url += "/";
-        url += method;
-
-        auto response = bot.http_client().make_request(url, args);
-        if (response.starts_with("<html>"sv)) {
-            throw std::runtime_error{"tgbot library has got html page instead of json response. Maybe you entered wrong bot token."};
-        }
-
-        auto result = nlohmann::json::parse(response);
-        if (result["ok"] == true) {
-            return std::move(result["result"]);
-        } else {
-            throw std::runtime_error(result["description"].template get<std::string>());
-        }
+        return bot.send_request(method, args);
     }
 
     template<typename, template <typename...> typename>
@@ -277,24 +260,42 @@ struct bot {
     const std::string &token() const { return token_; }
 
     /// returns object which can execute Telegram Bot API methods
-    const auto &api() const { return api_; }
+    auto api(this auto &bot) { return ::tgbot::api<std::decay_t<decltype(bot)>>{bot}; }
 
     /// executes Telegram Bot API method (request)
-    auto api(auto &&request) const { return api_(std::forward<decltype(request)>(request)); }
-    auto request(auto &&r) const { return api_(std::forward<decltype(r)>(r)); }
-    auto try_request(auto &&r) const { return api_(try_tag{}, std::forward<decltype(r)>(r)); }
+    auto api(this auto &bot, auto &&request) { return bot.api()(std::forward<decltype(request)>(request)); }
+    auto request(this auto &bot, auto &&r) { return bot.api()(std::forward<decltype(r)>(r)); }
+    auto try_request(this auto &bot, auto &&r) { return bot.api()(try_tag{}, std::forward<decltype(r)>(r)); }
 
     /// used for fine tune setup of http connections
     const auto &http_client() const { return http_client_; }
 
     const std::string &base_url() const { return base_url_; }
     const std::string &base_file_url() const { return base_file_url_; }
-    std::string make_file_url(const std::string &file_path) const { return base_file_url_ + token_ + "/" + file_path; }
+    std::string make_file_url(const std::string &file_path) const { return std::format("{}{}/{}"sv, base_file_url(), token(), file_path); }
+
+    // HttpClient must implement
+    //std::string make_request(const std::string &url, const http_request_arguments &args) const;
+    //std::string make_request(const std::string &url, const std::string &json) const;
+    nlohmann::json send_request(std::string_view method, auto &&args) const {
+        auto url = std::format("{}{}/{}"sv, base_url(), token(), method);
+
+        auto response = http_client().make_request(url, args);
+        if (response.starts_with("<html>"sv)) {
+            throw std::runtime_error{ "tgbot library has got html page instead of json response. Maybe you entered wrong bot token." };
+        }
+
+        auto result = nlohmann::json::parse(response);
+        if (result["ok"sv] == true) {
+            return std::move(result["result"sv]);
+        } else {
+            throw std::runtime_error(result["description"sv].template get<std::string>());
+        }
+    }
 
 private:
     std::string token_;
     const HttpClient &http_client_;
-    ::tgbot::api<bot<HttpClient>> api_{*this};
     std::string base_url_{ "https://api.telegram.org/bot" };
     std::string base_file_url_{ "https://api.telegram.org/file/bot" };
 };
