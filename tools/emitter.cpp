@@ -119,10 +119,10 @@ void Field::emitFieldType(primitives::CppEmitter &ctx, bool emitoptional, bool r
             end = "";
         }
         if (is_enum()) {
-            if (optional && !vec)
+            if (optional && !vec && !opt)
                 ctx.addText("Optional<");
             ctx.addText(get_enum_type(parent_type));
-            if (optional && !vec)
+            if (optional && !vec && !opt)
                 ctx.addText(">");
         } else
             ctx.addText((simple || return_type ? "" : type) + t + (simple || return_type ? "" : end));
