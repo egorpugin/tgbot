@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 project(report_detection_bot CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 #set(SW_BUILD_SHARED_LIBS 1)
 set(DEPENDENCIES
     org.sw.demo.tgbot

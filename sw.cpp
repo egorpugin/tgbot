@@ -9,7 +9,7 @@
     { \
         auto &bot = s.addTarget<ExecutableTarget>(#n); \
         bot.PackageDefinitions = true; \
-        bot += cpp23; \
+        bot += cpp26; \
         bot += #n ".cpp"; \
         if (bot.getCompilerType() == CompilerType::MSVC) \
             bot.CompileOptions.push_back("/bigobj"); \
@@ -28,7 +28,7 @@ void build(Solution &s)
     auto &tgbot = s.addLibrary("tgbot", "1.1.9.9.4");
     tgbot += Git("https://github.com/egorpugin/tgbot");
 
-    auto cppstd = cpp23;
+    auto cppstd = cpp26;
 
     auto &apitool = tgbot.addExecutable("apitool");
     {
