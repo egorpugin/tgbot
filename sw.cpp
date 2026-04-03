@@ -12,7 +12,7 @@
         bot += cpp26; \
         bot += #n ".cpp"; \
         if (bot.getCompilerType() == CompilerType::MSVC) \
-            bot.CompileOptions.push_back("/bigobj"); \
+            bot.Public.CompileOptions.push_back("/bigobj"); \
         else \
             bot += "stdc++exp"_slib; \
         bot += "org.sw.demo.tgbot.curl_skeleton"_dep __VA_OPT__(,) __VA_ARGS__ ; \
