@@ -193,8 +193,8 @@ static void parseType(auto &t, xmlNode *tb) {
                 t.name == "Dice" && f.name == "emoji" ||
                 t.name == "sendDice" && f.name == "emoji"
                 ) {
-            f.types[0] = "DiceEmoji";
-            f.enum_ = true;
+            //f.types[0] = "DiceEmoji";
+            //f.enum_ = true;
         }
 
         t.fields.push_back(f);
