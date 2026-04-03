@@ -378,19 +378,19 @@ Emitter::Emitter(const Parser &p) {
     for (auto &t: p.methods)
         methods[t.name] = t;
 
-    enums["ParseMode"] = {
+    /*enums["ParseMode"] = {
             {"HTML",       "HTML"},
             {"Markdown",   "Markdown"},
             {"MarkdownV2", "MarkdownV2"},
-    };
-    enums["DiceEmoji"] = {
+    };*/
+    /*enums["DiceEmoji"] = {
             {"dice",         "🎲"},
             {"darts",        "🎯"},
             {"basketball",   "🏀"},
             {"football",     "⚽"},
             {"bowling",      "🎳"},
             {"slot_machine", "🎰"},
-    };
+    };*/
 }
 
 void Emitter::emitTypesHeader() {

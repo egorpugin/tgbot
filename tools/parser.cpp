@@ -187,12 +187,14 @@ static void parseType(auto &t, xmlNode *tb) {
         }
 
         if (f.name == "parse_mode") {
-            f.types[0] = "ParseMode";
-            f.enum_ = true;
+            // this one can be disabled to be more pure and closer to the api
+            //f.types[0] = "ParseMode";
+            //f.enum_ = true;
         } else if (
                 t.name == "Dice" && f.name == "emoji" ||
                 t.name == "sendDice" && f.name == "emoji"
-                ) {
+            ) {
+            // this one has more occurences now, so provide it manually
             //f.types[0] = "DiceEmoji";
             //f.enum_ = true;
         }
@@ -200,7 +202,6 @@ static void parseType(auto &t, xmlNode *tb) {
         t.fields.push_back(f);
     }
 }
-
 
 Parser::Parser(const String &s) {
     ctx = htmlNewParserCtxt();
