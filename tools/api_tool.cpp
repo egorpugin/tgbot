@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
     p.enumerateSectionChildren("available-methods");
     p.enumerateSectionChildren("updating-messages");
     p.enumerateSectionChildren("stickers");
+    p.enumerateSectionChildren("rich-messages"); // 10.1
     p.enumerateSectionChildren("inline-mode");
     p.enumerateSectionChildren("payments");
     p.enumerateSectionChildren("telegram-passport");
