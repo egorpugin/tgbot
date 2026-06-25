@@ -122,7 +122,7 @@ static void parseType(auto &t, xmlNode *tb) {
         pystring::split(tt, f.types, " or ");
         if (f.types.size() == 1)
             pystring::split(tt, f.types, " and ");
-        for (auto &t: f.types)
+        for (auto &t : f.types)
             t = prepare_type(t);
 
         auto comment = getNext(field_type, "td");
@@ -151,29 +151,31 @@ static void parseType(auto &t, xmlNode *tb) {
             auto &text = f.description.text;
             prepare_desc(text);
 
-            auto p = text.find(" one of \"");
-            if (p == text.npos) {
-                p = text.find("One of \"");
-            }
-            if (p != text.npos) {
-                auto end = text.find(".", p);
-                auto sub = text.substr(p);
-                p = 0;
-                while (1) {
-                    p = sub.find("\"", p);
-                    if (p == sub.npos)
-                        break;
-                    end = sub.find("\"", p + 1);
-                    auto s = sub.substr(p + 1, end - p - 1);
-                    if (!s.empty()) {
-                        boost::replace_all(s, "/", "_");
-                        auto enum_key = s;
-                        auto enum_value = f.description.enum_values_map.empty() ? s : f.description.enum_values_map[s];
-                        if (enum_key == "static")
-                            enum_key += "_";
-                        f.enum_values[enum_key] = enum_value;
+            if (tt != "String") {
+                auto p = text.find(" one of \"");
+                if (p == text.npos) {
+                    p = text.find("One of \"");
+                }
+                if (p != text.npos) {
+                    auto end = text.find(".", p);
+                    auto sub = text.substr(p);
+                    p = 0;
+                    while (1) {
+                        p = sub.find("\"", p);
+                        if (p == sub.npos)
+                            break;
+                        end = sub.find("\"", p + 1);
+                        auto s = sub.substr(p + 1, end - p - 1);
+                        if (!s.empty()) {
+                            boost::replace_all(s, "/", "_");
+                            auto enum_key = s;
+                            auto enum_value = f.description.enum_values_map.empty() ? s : f.description.enum_values_map[s];
+                            if (enum_key == "static")
+                                enum_key += "_";
+                            f.enum_values[enum_key] = enum_value;
+                        }
+                        p = end + 1;
                     }
-                    p = end + 1;
                 }
             }
 
