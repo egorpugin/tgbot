@@ -24,7 +24,7 @@ jobs:
       run: |
         sudo dnf -y update
         sudo dnf -y install flex bison cmake which gcc clang clang-tools-extra lld git \
-          mesa-libGL-devel mesa-libEGL-devel perl-File-Find perl-Compress-Raw-Zlib
+          mesa-libGL-devel mesa-libEGL-devel perl-File-Find perl-IO-Zlib perl-Compress-Raw-Zlib
     - uses: egorpugin/sw-action@master
     - run: ./sw build -compiler gcc
 
