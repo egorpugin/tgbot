@@ -172,6 +172,17 @@ void Type::emit(primitives::CppEmitter &ctx) const {
     } else {
         if (name == "MaybeInaccessibleMessage"s) {
             ctx.addLine("using " + name + " = Message;");
+        } else if (name == "RichText"s) {
+            ctx.increaseIndent("struct " + name + " {");
+            ctx.increaseIndent("using Type = Variant<");
+            ctx.addLine("String,");
+            ctx.addLine("Vector<RichText>,");
+            for (auto &f : oneof)
+                ctx.addLine(f + ",");
+            ctx.trimEnd(1);
+            ctx.decreaseIndent(">;");
+            ctx.addLine("Ptr<Type> value;");
+            ctx.decreaseIndent("};");
         } else {
             ctx.increaseIndent("using " + name + " = Variant<");
             for (auto &f : oneof)
@@ -483,10 +494,14 @@ void Emitter::emitTypesCpp() {
             ctx.addLine("auto v = from_json<");
             f.begin()->second->emitFieldType(ctx);
             ctx.addText(">(j[\"" + f.begin()->second->name + "\"]);");
-            for (auto &[t, f2]: f) {
+            for (auto &[t2, f2]: f) {
                 ctx.addLine("if (v == \"" + f2->always + "\")");
                 ctx.increaseIndent();
-                ctx.addLine("return from_json<" + t->name + ">(j);");
+                if (t.name == "RichText"sv) {
+                    ctx.addLine("return RichText{std::make_unique<RichText::Type>(from_json<" + t2->name + ">(j))};");
+                } else {
+                    ctx.addLine("return from_json<" + t2->name + ">(j);");
+                }
                 ctx.decreaseIndent();
             }
             ctx.addLine("throw std::runtime_error(\"unreachable\");");

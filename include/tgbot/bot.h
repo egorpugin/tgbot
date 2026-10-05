@@ -81,7 +81,13 @@ auto get_name() {
     return T::template get_field_name<I>();
 }
 void for_each_field(auto &&v, auto &&f) {
-    v.for_each_field(f);
+    //if constexpr (requires {v.for_each_field(f);}) {
+        v.for_each_field(f);
+    //} else if constexpr (requires {v.value;}) {
+    //    if (v.value) {
+    //        for_each_field(*v.value, f);
+    //    }
+    //}
 }
 
 //
@@ -197,6 +203,11 @@ private:
             return to_json(*v);
         } else if constexpr (is_instance<T, std::variant>::value) {
             return std::visit([](auto &&v) { return to_json(v); }, v);
+        } else if constexpr (std::same_as<T, RichText>) {
+            if (v.value) {
+                return std::visit([](auto &&v) { return to_json(v); }, *v.value);
+            }
+            return {};
         } else if constexpr (is_simple_type<T>) {
             return v;
         } else if constexpr (requires { to_json(v, type<T>{}); }) {
@@ -228,12 +239,33 @@ private:
             return p;
         } else if constexpr (is_instance<T, std::optional>::value) {
             return from_json<typename T::value_type>(j);
-        } else if constexpr (is_instance<T, std::variant>::value) {
-            return from_json_variant(j, type<T>{}); // probably the same as in refl<T>::is_received_variant
+        } else if constexpr (is_instance<T, std::variant>::value || requires { refl<T>::is_received_variant; requires refl<T>::is_received_variant; }) {
+            if constexpr (std::same_as<T, RichText>) {
+                // RichText
+                // This object represents a rich formatted text. Currently, it can be either a String for plain text, an Array of RichText, or any of the following types:
+                if (j.is_object()) {
+                    return from_json_variant(j, type<T>{}); // probably the same as in refl<T>::is_received_variant
+                } else if (j.is_array()) {
+                    RichText v;
+                    Vector<RichText> vv;
+                    for (auto &i : j) {
+                        vv.emplace_back(from_json<T>(i));
+                    }
+                    v.value = std::make_unique<RichText::Type>(std::move(vv));
+                    return v;
+                } else if (j.is_string()) {
+                    std::string s = j;
+                    RichText v;
+                    v.value = std::make_unique<RichText::Type>(s);
+                    return v;
+                } else {
+                    throw std::runtime_error{"unhandled variant"};
+                }
+            } else {
+                return from_json_variant(j, type<T>{});
+            }
         } else if constexpr (is_simple_type<T>) {
             return j;
-        } else if constexpr (requires { refl<T>::is_received_variant; requires refl<T>::is_received_variant; }) {
-            return from_json_variant(j, type<T>{});
         } else if constexpr (requires { from_json(j, type<T>{}); }) {
             return from_json(j, type<T>{});
         } else {
