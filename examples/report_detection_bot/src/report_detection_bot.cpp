@@ -72,10 +72,16 @@ struct tg_report_detection_bot : tg_bot {
         auto cmd = t.substr(1, t.find_first_of(" @"));
         if (cmd == "start"sv) {
             add_user(message.from->id);
-            api().sendMessage(message.from->id, "ok");
+            tgbot::sendMessageRequest r;
+            r.chat_id = message.from->id;
+            r.text = "ok";
+            api().sendMessage(r);
         } else if (cmd == "stop"sv) {
             remove_user(message.from->id);
-            api().sendMessage(message.from->id, "ok");
+            tgbot::sendMessageRequest r;
+            r.chat_id = message.from->id;
+            r.text = "ok";
+            api().sendMessage(r);
         } else if (cmd == "help"sv) {
             auto text =
                 "Available commands:\n"
@@ -83,10 +89,16 @@ struct tg_report_detection_bot : tg_bot {
                 "/stop\n"
                 "/help\n"
                 ;
-            api().sendMessage(message.from->id, text);
+            tgbot::sendMessageRequest r;
+            r.chat_id = message.from->id;
+            r.text = text;
+            api().sendMessage(r);
         } else {
             auto text = "Command '" + *message.text +  "' is not implemented.";
-            api().sendMessage(message.from->id, text);
+            tgbot::sendMessageRequest r;
+            r.chat_id = message.from->id;
+            r.text = text;
+            api().sendMessage(r);
         }
     }
 };
