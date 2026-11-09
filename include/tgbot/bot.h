@@ -136,6 +136,14 @@ public:
         return from_json<Ret>(j);
     }*/
 
+    // very useful shorthand(s)
+    void sendMessage(auto &&cid, auto &&text) {
+        tgbot::sendMessageRequest r;
+        r.chat_id = cid;
+        r.text = text;
+        sendMessage(r);
+    }
+
 #include <methods.inl.h>
 
 private:
